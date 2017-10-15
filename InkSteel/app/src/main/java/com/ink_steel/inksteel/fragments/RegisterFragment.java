@@ -1,6 +1,5 @@
 package com.ink_steel.inksteel.fragments;
 
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,7 +23,7 @@ public class RegisterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-///------
+
         View view = inflater.inflate(R.layout.fragment_register, container, false);
 
         mLoginActivity = (LoginActivity) getActivity();
