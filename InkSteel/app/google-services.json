@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "291908436240",
+    "firebase_url": "https://inksteel-7911e.firebaseio.com",
+    "project_id": "inksteel-7911e",
+    "storage_bucket": "inksteel-7911e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:291908436240:android:8062d1657fd3b5e1",
+        "android_client_info": {
+          "package_name": "com.ink_steel.inksteel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "291908436240-bg5ko5v3hkfplkpg4sn32qttpl47b9jk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ink_steel.inksteel",
+            "certificate_hash": "6e7711971ae1170d63a4dd7d01577ed178271c53"
+          }
+        },
+        {
+          "client_id": "291908436240-d3r3cqnpl7egm55jj16th70t66fl3ro4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAslOjVp9-HQqwOTeypRNJDWwI3USusXMs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "291908436240-d3r3cqnpl7egm55jj16th70t66fl3ro4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
