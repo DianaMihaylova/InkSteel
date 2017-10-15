@@ -41,11 +41,20 @@ public class LoginFragment extends Fragment {
         logBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String userEmail = email.getText().toString();
                 String password = pass.getText().toString();
-
-                mLoginActivity.onFragmentButtonListener(LoginActivity.LOGIN_BUTTON, userEmail, password);
+                boolean valid = true;
+                if (userEmail.isEmpty()) {
+                    email.setError("Invalid email!");
+                    valid = false;
+                }
+                if (password.isEmpty()) {
+                    pass.setError("Invalid pass!");
+                    valid = false;
+                }
+                if (valid) {
+                    mLoginActivity.onFragmentButtonListener(LoginActivity.LOGIN_BUTTON, userEmail, password);
+                }
             }
         });
 
@@ -53,7 +62,6 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentManager manager = getFragmentManager();
-
                 RegisterFragment fragment = new RegisterFragment();
                 FragmentTransaction fragmentTransaction = manager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_placeholder, fragment);
