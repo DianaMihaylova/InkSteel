@@ -1,54 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.ink_steel.inksteel.LoginActivity">
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context="com.ink_steel.inksteel.LoginActivity">
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/text_input_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginRight="64dp"
+        android:layout_marginStart="64dp"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_layout1"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp">
+        android:layout_marginBottom="8dp">
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/login_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
             android:hint="Email"
+            android:inputType="text"
+            android:maxLines="1"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_layout1" />
+            app:layout_constraintTop_toBottomOf="@+id/text_input_layout1"/>
 
 
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/text_input_layout1"
-        android:layout_width="344dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/text_input_layout">
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintLeft_toLeftOf="@+id/text_input_layout"
+        app:layout_constraintRight_toRightOf="@+id/text_input_layout">
 
         <EditText
             android:id="@+id/editText1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:inputType="text"
             android:hint="Password"/>
 
 
@@ -58,25 +60,57 @@
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/text_input_layout1"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent" />
+        android:text="Button"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintLeft_toLeftOf="@+id/text_input_layout1"
+        app:layout_constraintRight_toRightOf="@+id/text_input_layout1"/>
 
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:scaleType="fitStart"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_layout"
         app:layout_constraintDimensionRatio=""
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/logo"/>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"/>
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/button2"
+        app:layout_constraintRight_toRightOf="@+id/button2"
+        />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="0dp"
+        android:text="Not a member? Register"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintLeft_toLeftOf="@+id/button2"
+        app:layout_constraintRight_toRightOf="@+id/button2"/>
+
 </android.support.constraint.ConstraintLayout>
