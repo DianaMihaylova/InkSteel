@@ -6,9 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -20,8 +18,8 @@ import java.util.Map;
 
 public class UserInfoActivity extends AppCompatActivity {
 
-    public static final String USERNAME_KEY = "username";
-    public static final String USERCITY = "usercity";
+    public static final String USER_NAME = "userName";
+    public static final String USER_CITY = "userCity";
     public static final String USER_AGE = "userAge";
 
     private EditText userName, age, city;
@@ -48,8 +46,8 @@ public class UserInfoActivity extends AppCompatActivity {
                 String userAge = age.getText().toString();
 
                 Map<String, Object> data = new HashMap<>();
-                data.put(USERNAME_KEY, username);
-                data.put(USERCITY, userCity);
+                data.put(USER_NAME, username);
+                data.put(USER_CITY, userCity);
                 data.put(USER_AGE, userAge);
                 saveInfo.set(data);
             }
@@ -63,8 +61,8 @@ public class UserInfoActivity extends AppCompatActivity {
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()) {
-                    userName.setText(documentSnapshot.getString(USERNAME_KEY));
-                    city.setText(documentSnapshot.getString(USERCITY));
+                    userName.setText(documentSnapshot.getString(USER_NAME));
+                    city.setText(documentSnapshot.getString(USER_CITY));
                     age.setText(documentSnapshot.getString(USER_AGE));
                 }
             }

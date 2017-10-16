@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
         });
     }
 
-    private void registerUser(String email, String password) {
+    private void registerUser(final String email, final String password) {
         Toast.makeText(this, "REGISTER", Toast.LENGTH_SHORT).show();
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
