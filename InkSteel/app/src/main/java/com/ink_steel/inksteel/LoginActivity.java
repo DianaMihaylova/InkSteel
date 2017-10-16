@@ -64,7 +64,8 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
             public void onComplete(@NonNull Task<AuthResult> task) {
                 Toast.makeText(LoginActivity.this, task.getResult()+"", Toast.LENGTH_SHORT).show();
                 if (task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Sign in " + mAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Sign in " + mAuth.getCurrentUser()
+                            .getEmail(), Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(LoginActivity.this, UserInfoActivity.class);
                     startActivity(i);
                 } else {
