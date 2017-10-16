@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null)
             Toast.makeText(this, "Already SIGNED-IN\n" + currentUser.getEmail(),
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_SHORT).show(); // add some intent or delete it
     }
 
     @Override
@@ -55,8 +55,6 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
                 registerUser(email, password);
                 break;
         }
-        Intent i = new Intent(LoginActivity.this, UserInfoActivity.class);
-        startActivity(i);
     }
 
     private void loginUser(String email, String password) {
@@ -67,6 +65,8 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
                 Toast.makeText(LoginActivity.this, task.getResult()+"", Toast.LENGTH_SHORT).show();
                 if (task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, "Sign in " + mAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(LoginActivity.this, UserInfoActivity.class);
+                    startActivity(i);
                 } else {
                     Toast.makeText(LoginActivity.this, "Not sign in!", Toast.LENGTH_SHORT).show();
                 }
@@ -85,6 +85,7 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
                             Toast.makeText(LoginActivity.this, "User registered!\n" +
                                             currentUser.getEmail(),
                                     Toast.LENGTH_SHORT).show();
+                            loginUser(email, password);
                         } else {
                             Toast.makeText(LoginActivity.this, "User NOT registered!",
                                     Toast.LENGTH_SHORT).show();

@@ -5,22 +5,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuth;;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class UserInfoActivity extends AppCompatActivity {
 
-    public static final String USER_NAME = "userName";
-    public static final String USER_CITY = "userCity";
-    public static final String USER_AGE = "userAge";
+    private static final String USER_NAME = "userName";
+    private static final String USER_CITY = "userCity";
+    private static final String USER_AGE = "userAge";
 
     private EditText userName, age, city;
     private Button cancelBtn, saveBtn;
