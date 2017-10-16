@@ -44,11 +44,10 @@ public class HomeActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
                 DocumentSnapshot snapshot = task.getResult();
-                
+
                 name.setText(snapshot.getString(UserInfoActivity.USER_NAME));
                 age.setText(snapshot.getString(UserInfoActivity.USER_AGE));
-                date.setText(snapshot.getLong(UserInfoActivity.USER_CREATED) + "");
-
+//                date.setText(snapshot.getLong(UserInfoActivity.USER_CREATED) + "");
             }
         });
 

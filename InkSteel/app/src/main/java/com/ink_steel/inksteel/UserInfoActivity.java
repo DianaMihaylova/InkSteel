@@ -34,9 +34,9 @@ import java.util.Map;
 
 public class UserInfoActivity extends AppCompatActivity {
 
-    private static final String USER_NAME = "userName";
-    private static final String USER_CITY = "userCity";
-    private static final String USER_AGE = "userAge";
+    public static final String USER_NAME = "userName";
+    public static final String USER_CITY = "userCity";
+    public static final String USER_AGE = "userAge";
 
     private EditText userName, age, city;
     private Button cancelBtn, saveBtn;
