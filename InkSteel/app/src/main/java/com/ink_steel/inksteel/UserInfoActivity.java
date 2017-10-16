@@ -38,6 +38,8 @@ public class UserInfoActivity extends AppCompatActivity {
     public static final String USER_CITY = "userCity";
     public static final String USER_AGE = "userAge";
 
+    public static final int PICK_IMAGE = 1;
+
     private EditText userName, age, city;
     private Button cancelBtn, saveBtn;
     private ImageView imageView;
@@ -100,15 +102,16 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     private void chooseImage() {
-        Intent i = new Intent(Intent.ACTION_PICK);
-        i.setType("image/*");
-        startActivityForResult(i, 1);
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK) {
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
             selectedImage = data.getData();
             Picasso.with(this).load(selectedImage).into(imageView);
             uploadImage();
