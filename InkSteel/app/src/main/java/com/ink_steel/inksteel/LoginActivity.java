@@ -2,8 +2,10 @@ package com.ink_steel.inksteel;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -42,7 +44,7 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null)
             Toast.makeText(this, "Already SIGNED-IN\n" + currentUser.getEmail(),
-                    Toast.LENGTH_SHORT).show(); // add some intent or delete it
+                    Toast.LENGTH_SHORT).show(); // add intent
     }
 
     @Override
@@ -58,18 +60,28 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
     }
 
     private void loginUser(String email, String password) {
-        Toast.makeText(this, "LOGIN", Toast.LENGTH_SHORT).show();
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                Toast.makeText(LoginActivity.this, task.getResult()+"", Toast.LENGTH_SHORT).show();
                 if (task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, "Sign in " + mAuth.getCurrentUser()
                             .getEmail(), Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(LoginActivity.this, UserInfoActivity.class);
                     startActivity(i);
                 } else {
-                    Toast.makeText(LoginActivity.this, "Not sign in!", Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(LoginActivity.this);
+                    alertBuilder.setMessage("Wrong e-mail or password! Try again.")
+                            .setCancelable(false)
+                            .setPositiveButton("BACK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog ad = alertBuilder.create();
+                    ad.setTitle("WARNING MESSAGE");
+                    ad.setIcon(R.drawable.warning_msg);
+                    ad.show();
                 }
             }
         });

@@ -83,10 +83,20 @@ public class ScreenSlidePageFragment extends Fragment {
             }
         });
 
-        viewPager.setCurrentItem(1);
+//        viewPager.setCurrentItem(1);
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+
+        //To hide the first tab
+        ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(0).setVisibility(View.GONE);
+        //Set the next  tab as selected tab
+        TabLayout.Tab tab = tabLayout.getTabAt(1);
+        tab.select();
+
+
+
+
 
         return view;
     }
