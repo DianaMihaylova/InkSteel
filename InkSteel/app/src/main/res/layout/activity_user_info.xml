@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.ink_steel.inksteel.UserInfoActivity">
 
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/user_profile_img"
+    <ImageView
+        android:id="@+id/profile_picture"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="16dp"
-        android:layout_weight="2"
-        android:src="@drawable/tatto1"/>
+        android:layout_margin="32dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/user_s_profile_picture"
+        android:src="@drawable/ic_add"/>
 
     <EditText
         android:id="@+id/user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginLeft="64dp"
         android:layout_marginRight="64dp"
+        android:layout_marginTop="16dp"
         android:gravity="bottom|center"
-        android:inputType="textPersonName"
-        android:hint="Username" />
+        android:hint="@string/username"
+        android:inputType="textPersonName"/>
 
     <EditText
         android:id="@+id/user_age"
@@ -34,38 +33,41 @@
         android:layout_marginLeft="64dp"
         android:layout_marginRight="64dp"
         android:gravity="bottom|center"
-        android:inputType="textPersonName"
-        android:hint="Age" />
+        android:hint="@string/age"
+        android:inputType="textPersonName"/>
 
     <EditText
         android:id="@+id/user_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:layout_marginLeft="64dp"
         android:layout_marginRight="64dp"
-        android:layout_marginBottom="16dp"
         android:gravity="bottom|center"
-        android:inputType="textPersonName"
-        android:hint="City" />
+        android:hint="@string/city"
+        android:inputType="textPersonName"/>
 
     <LinearLayout
+        style="?android:buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/button_cancel"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancel" />
+            android:text="@string/cancel"/>
 
         <Button
             android:id="@+id/button_save"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Save" />
+            android:text="@string/save"/>
 
     </LinearLayout>
 

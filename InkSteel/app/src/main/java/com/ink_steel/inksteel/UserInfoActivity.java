@@ -23,6 +23,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,25 +34,29 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+
 public class UserInfoActivity extends AppCompatActivity {
 
-    public static final String EMAIL = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-    private static final String USER_NAME = "userName";
-    private static final String USER_CITY = "userCity";
-    private static final String USER_AGE = "userAge";
+    //    public static final String EMAIL = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+    public static final String USER_NAME = "userName";
+    public static final String USER_CITY = "userCity";
+    public static final String USER_AGE = "userAge";
+    public static final String USER_PROFILE_IMG = "userProfileImage";
 
     public static final int PICK_IMAGE = 1;
+    public static final String DEFAULT_IMG = "https://firebasestorage.googleapis.com/v0/b/inksteel-7911e.appspot.com/o/default.jpg?alt=media&token=2a0f4edc-81e5-40a2-9558-015e18b8b1ff";
 
     private EditText userName, age, city;
-    private Button cancelBtn, saveBtn;
     private ImageView imageView;
-    private DocumentReference saveInfo = FirebaseFirestore.getInstance().collection("users").
-            document(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+    private DocumentReference saveInfo;
 
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference mRefStrorage = storage.getReference();
-    private UploadTask uploadTask;
     private Uri selectedImage;
+    private Uri mImgDownload;
+
+    private String userEmail = " ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +66,16 @@ public class UserInfoActivity extends AppCompatActivity {
         userName = (EditText) findViewById(R.id.user_name);
         age = (EditText) findViewById(R.id.user_age);
         city = (EditText) findViewById(R.id.user_city);
-        imageView = (ImageView) findViewById(R.id.user_profile_img);
-        cancelBtn = (Button) findViewById(R.id.button_cancel);
-        saveBtn = (Button) findViewById(R.id.button_save);
+        imageView = (ImageView) findViewById(R.id.profile_picture);
+        Button cancelBtn = (Button) findViewById(R.id.button_cancel);
+        Button saveBtn = (Button) findViewById(R.id.button_save);
+
+        mImgDownload = Uri.parse(DEFAULT_IMG);
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null)
+            userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        saveInfo = FirebaseFirestore.getInstance().collection("users").
+                document(userEmail);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +88,9 @@ public class UserInfoActivity extends AppCompatActivity {
                 data.put(USER_NAME, username);
                 data.put(USER_CITY, userCity);
                 data.put(USER_AGE, userAge);
+
+                data.put(USER_PROFILE_IMG, mImgDownload.toString());
+
                 saveInfo.set(data);
             }
         });
@@ -97,6 +113,14 @@ public class UserInfoActivity extends AppCompatActivity {
                     userName.setText(documentSnapshot.getString(USER_NAME));
                     city.setText(documentSnapshot.getString(USER_CITY));
                     age.setText(documentSnapshot.getString(USER_AGE));
+
+                    if (documentSnapshot.contains(USER_PROFILE_IMG)) {
+                        mImgDownload = Uri.parse(documentSnapshot.getString(USER_PROFILE_IMG));
+                        Picasso.with(UserInfoActivity.this)
+                                .load(mImgDownload)
+                                .transform(new CropCircleTransformation())
+                                .into(imageView);
+                    }
                 }
             }
         });
@@ -119,15 +143,18 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     private void uploadImage() {
-        StorageReference spaceRef = mRefStrorage.child(EMAIL + "/profile.jpg");
-        uploadTask = spaceRef.putFile(selectedImage);
+        StorageReference spaceRef = mRefStrorage.child(userEmail + "/profile.jpg");
+        UploadTask uploadTask = spaceRef.putFile(selectedImage);
 
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Toast.makeText(UserInfoActivity.this, "Ready!", Toast.LENGTH_SHORT).show();
-                Uri imgDownload = taskSnapshot.getDownloadUrl();
-                Picasso.with(UserInfoActivity.this).load(imgDownload).into(imageView);
+                mImgDownload = taskSnapshot.getDownloadUrl();
+                Picasso.with(UserInfoActivity.this)
+                        .load(mImgDownload)
+                        .transform(new CropCircleTransformation())
+                        .into(imageView);
             }
         });
     }
