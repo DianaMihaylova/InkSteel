@@ -42,9 +42,16 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null)
+        if (currentUser != null) {
             Toast.makeText(this, "Already SIGNED-IN\n" + currentUser.getEmail(),
                     Toast.LENGTH_SHORT).show();
+            goToFeed(currentUser);
+        }
+    }
+
+    private void goToFeed(FirebaseUser user) {
+        Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+        startActivity(i);
     }
 
     @Override

@@ -20,7 +20,7 @@
         android:id="@+id/profile"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:contentDescription="@string/user_s_profile_picture"
         android:padding="16dp"
         android:src="@drawable/tatto1"/>
@@ -32,7 +32,7 @@
         android:fontFamily="casual"
         android:gravity="center"
         android:text="@string/username"
-        android:textSize="24sp"
+        android:textSize="16sp"
         android:textStyle="bold"/>
 
     <TextView
@@ -42,7 +42,7 @@
         android:fontFamily="casual"
         android:gravity="center"
         android:text="@string/email"
-        android:textSize="24sp"
+        android:textSize="16sp"
         android:textStyle="bold"/>
 
     <TextView
@@ -52,7 +52,7 @@
         android:fontFamily="casual"
         android:gravity="center"
         android:text="@string/age"
-        android:textSize="24sp"
+        android:textSize="16sp"
         android:textStyle="bold"/>
 
     <TextView
@@ -62,35 +62,32 @@
         android:fontFamily="casual"
         android:gravity="center"
         android:text="@string/city"
-        android:textSize="24sp"
+        android:textSize="16sp"
         android:textStyle="bold"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="horizontal">
 
-        <ImageButton
+        <Button
             android:id="@+id/btn_gallery"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:layout_weight="1"
-            android:background="@drawable/message_icon"
-            android:contentDescription="@string/gallery"
-            app:srcCompat="@drawable/galery_icon"/>
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/image_galery"/>
 
-        <ImageButton
+        <Button
             android:id="@+id/btn_msg"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
             android:layout_weight="1"
-            android:background="@drawable/message_icon"
-            android:contentDescription="@string/chat"
-            app:srcCompat="@drawable/message_icon"/>
+            android:background="@drawable/btn_msg" />
 
     </LinearLayout>
 
@@ -102,6 +99,6 @@
         android:fontFamily="casual"
         android:text="@string/edit_profile"
         android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
 </LinearLayout>

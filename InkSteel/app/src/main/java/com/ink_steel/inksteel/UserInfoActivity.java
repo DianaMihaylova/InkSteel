@@ -129,6 +129,8 @@ public class UserInfoActivity extends AppCompatActivity {
                                 .into(imageView);
                     }
                 }
+                Intent i = new Intent(UserInfoActivity.this, HomeActivity.class);
+                startActivity(i);
             }
         });
     }
