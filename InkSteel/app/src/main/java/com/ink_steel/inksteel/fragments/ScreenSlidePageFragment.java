@@ -67,7 +67,7 @@ public class ScreenSlidePageFragment extends Fragment {
                 String title = "";
                 switch (position) {
                     case 0:
-                        title = "Profile";
+                        title = "";
                         break;
                     case 1:
                         title = "Feed";
@@ -83,20 +83,11 @@ public class ScreenSlidePageFragment extends Fragment {
             }
         });
 
-//        viewPager.setCurrentItem(1);
+        viewPager.setCurrentItem(1);
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
-
-        //To hide the first tab
-        ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(0).setVisibility(View.GONE);
-        //Set the next  tab as selected tab
-        TabLayout.Tab tab = tabLayout.getTabAt(1);
-        tab.select();
-
-
-
-
+        tabLayout.getTabAt(0).setIcon(R.drawable.profile);
 
         return view;
     }
