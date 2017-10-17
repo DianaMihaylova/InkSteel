@@ -38,7 +38,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class UserInfoActivity extends AppCompatActivity {
 
-    //    public static final String EMAIL = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+    public static final String EMAIL = FirebaseAuth.getInstance().getCurrentUser().getEmail();
     public static final String USER_NAME = "userName";
     public static final String USER_CITY = "userCity";
     public static final String USER_AGE = "userAge";
@@ -88,7 +88,6 @@ public class UserInfoActivity extends AppCompatActivity {
                 data.put(USER_NAME, username);
                 data.put(USER_CITY, userCity);
                 data.put(USER_AGE, userAge);
-
                 data.put(USER_PROFILE_IMG, mImgDownload.toString());
 
                 saveInfo.set(data);

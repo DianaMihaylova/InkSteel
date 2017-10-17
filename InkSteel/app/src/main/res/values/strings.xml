@@ -9,4 +9,9 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="user_s_profile_picture">user\'s profile picture</string>
+    <string name="profile">Profile</string>
+    <string name="email">Email</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="chat">chat</string>
+    <string name="gallery">gallery</string>
 </resources>

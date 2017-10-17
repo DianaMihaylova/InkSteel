@@ -1,5 +1,6 @@
 package com.ink_steel.inksteel.fragments;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,8 +19,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.UserInfoActivity;
+import com.squareup.picasso.Picasso;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.Executor;
+
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class ProfileFragment extends Fragment {
 
@@ -29,7 +35,7 @@ public class ProfileFragment extends Fragment {
     private Button editProfileBtn;
 
     private DocumentReference saveInfo = FirebaseFirestore.getInstance().collection("users").
-            document(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+            document(UserInfoActivity.EMAIL);
 
     public ProfileFragment() {
     }
@@ -41,7 +47,7 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        imageView = (ImageView) view.findViewById(R.id.user_profile_img);
+        imageView = (ImageView) view.findViewById(R.id.profile);
         username = (TextView) view.findViewById(R.id.user_name);
         email = (TextView) view.findViewById(R.id.user_email);
         age = (TextView) view.findViewById(R.id.user_age);
@@ -64,6 +70,15 @@ public class ProfileFragment extends Fragment {
                     username.setText("Username: " + documentSnapshot.getString(UserInfoActivity.USER_NAME));
                     city.setText("City: " + documentSnapshot.getString(UserInfoActivity.USER_CITY));
                     age.setText("Age: " + documentSnapshot.getString(UserInfoActivity.USER_AGE));
+
+                    Uri imageDownloadUrl = Uri.parse(documentSnapshot
+                            .getString(UserInfoActivity.USER_PROFILE_IMG));
+
+                    Picasso.with(getActivity())
+                            .load(imageDownloadUrl)
+                            .transform(new CropCircleTransformation())
+                            .into(imageView);
+
                 }
             }
         });

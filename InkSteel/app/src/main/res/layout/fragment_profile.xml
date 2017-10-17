@@ -1,10 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.ink_steel.inksteel.fragments.ProfileFragment">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.ink_steel.inksteel.fragments.ProfileFragment">
 
     <TextView
         android:layout_width="match_parent"
@@ -12,16 +12,17 @@
         android:layout_marginTop="10dp"
         android:fontFamily="casual"
         android:gravity="center"
-        android:text="Profile"
+        android:text="@string/profile"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/user_profile_img"
+    <ImageView
+        android:id="@+id/profile"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="16dp"
         android:layout_weight="2"
+        android:contentDescription="@string/user_s_profile_picture"
+        android:padding="16dp"
         android:src="@drawable/tatto1"/>
 
     <TextView
@@ -30,9 +31,9 @@
         android:layout_height="wrap_content"
         android:fontFamily="casual"
         android:gravity="center"
-        android:text="Username"
+        android:text="@string/username"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/user_email"
@@ -40,9 +41,9 @@
         android:layout_height="wrap_content"
         android:fontFamily="casual"
         android:gravity="center"
-        android:text="Email"
+        android:text="@string/email"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/user_age"
@@ -50,9 +51,9 @@
         android:layout_height="wrap_content"
         android:fontFamily="casual"
         android:gravity="center"
-        android:text="Age"
+        android:text="@string/age"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/user_city"
@@ -60,9 +61,9 @@
         android:layout_height="wrap_content"
         android:fontFamily="casual"
         android:gravity="center"
-        android:text="City"
+        android:text="@string/city"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -73,19 +74,23 @@
             android:id="@+id/btn_gallery"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
+            android:layout_weight="1"
             android:background="@drawable/message_icon"
-            app:srcCompat="@drawable/galery_icon" />
+            android:contentDescription="@string/gallery"
+            app:srcCompat="@drawable/galery_icon"/>
 
         <ImageButton
             android:id="@+id/btn_msg"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
             android:background="@drawable/message_icon"
-            app:srcCompat="@drawable/message_icon" />
+            android:contentDescription="@string/chat"
+            app:srcCompat="@drawable/message_icon"/>
 
     </LinearLayout>
 
@@ -93,10 +98,10 @@
         android:id="@+id/btn_edit_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="casual"
         android:layout_margin="16dp"
-        android:text="Edit Profile"
+        android:fontFamily="casual"
+        android:text="@string/edit_profile"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
 </LinearLayout>

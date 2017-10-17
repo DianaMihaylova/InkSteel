@@ -15,11 +15,11 @@
         android:layout_marginLeft="64dp"
         android:layout_marginRight="64dp"
         android:layout_marginStart="64dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <EditText
             android:id="@+id/login_email"
@@ -41,9 +41,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="@+id/text_input_layout"
         app:layout_constraintRight_toRightOf="@+id/text_input_layout"
-        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/text_input_layout">
 
         <EditText
@@ -63,10 +63,10 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
         android:text="Log in"
         app:layout_constraintLeft_toLeftOf="@+id/text_input_layout1"
         app:layout_constraintRight_toRightOf="@+id/text_input_layout1"
-        android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@+id/text_input_layout1" />
 
 
@@ -76,11 +76,11 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
+        android:layout_marginTop="8dp"
         android:text="Register"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/login_login_btn"
         app:layout_constraintRight_toRightOf="@+id/login_login_btn"
-        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/login_reg_tv" />
 
     <TextView
@@ -89,10 +89,10 @@
         android:layout_height="0dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="0dp"
+        android:layout_marginTop="16dp"
         android:text="Not a member? Register"
         app:layout_constraintLeft_toLeftOf="@+id/login_login_btn"
         app:layout_constraintRight_toRightOf="@+id/login_login_btn"
-        android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@+id/login_login_btn" />
 
 </android.support.constraint.ConstraintLayout>
