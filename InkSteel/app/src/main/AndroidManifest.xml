@@ -18,12 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-<<<<<<< HEAD
         <activity android:name=".UserInfoActivity"></activity>
         <activity android:name=".HomeActivity"></activity>
-=======
-        <activity android:name=".UserInfoActivity"/>
->>>>>>> a2508c322af589ccc65afb4144428bb60f7ee917
     </application>
 
 </manifest>
