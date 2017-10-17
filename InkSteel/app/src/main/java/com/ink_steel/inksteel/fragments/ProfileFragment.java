@@ -40,7 +40,6 @@ public class ProfileFragment extends Fragment {
     public ProfileFragment() {
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,7 +65,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()) {
-                    email.setText("Email: " + documentSnapshot.getString(UserInfoActivity.EMAIL));
+                    email.setText("Email: " + FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
                     username.setText("Username: " + documentSnapshot.getString(UserInfoActivity.USER_NAME));
                     city.setText("City: " + documentSnapshot.getString(UserInfoActivity.USER_CITY));
                     age.setText("Age: " + documentSnapshot.getString(UserInfoActivity.USER_AGE));
