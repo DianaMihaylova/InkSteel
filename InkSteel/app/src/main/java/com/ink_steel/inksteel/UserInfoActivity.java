@@ -79,6 +79,14 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         });
 
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(UserInfoActivity.this, HomeActivity.class);
+                startActivity(i);
+            }
+        });
+
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
