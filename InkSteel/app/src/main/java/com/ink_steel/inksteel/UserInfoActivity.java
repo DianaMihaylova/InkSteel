@@ -34,9 +34,10 @@ import java.util.Map;
 
 public class UserInfoActivity extends AppCompatActivity {
 
-    public static final String USER_NAME = "userName";
-    public static final String USER_CITY = "userCity";
-    public static final String USER_AGE = "userAge";
+    public static final String EMAIL = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+    private static final String USER_NAME = "userName";
+    private static final String USER_CITY = "userCity";
+    private static final String USER_AGE = "userAge";
 
     public static final int PICK_IMAGE = 1;
 
@@ -113,18 +114,20 @@ public class UserInfoActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
             selectedImage = data.getData();
-            Picasso.with(this).load(selectedImage).into(imageView);
             uploadImage();
         }
     }
 
     private void uploadImage() {
-        StorageReference spaceRef = mRefStrorage.child("images/space.jpg");
+        StorageReference spaceRef = mRefStrorage.child(EMAIL + "/profile.jpg");
         uploadTask = spaceRef.putFile(selectedImage);
+
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Toast.makeText(UserInfoActivity.this, "Ready!", Toast.LENGTH_SHORT).show();
+                Uri imgDownload = taskSnapshot.getDownloadUrl();
+                Picasso.with(UserInfoActivity.this).load(imgDownload).into(imageView);
             }
         });
     }
