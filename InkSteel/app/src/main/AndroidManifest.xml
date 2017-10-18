@@ -22,8 +22,7 @@
         </activity>
         <activity android:name=".UserInfoActivity"/>
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"/>
-        <activity android:name=".UserInfoActivity"></activity>
-        <activity android:name=".HomeActivity"></activity>
+        <activity android:name=".HomeActivity"/>
     </application>
 
 </manifest>

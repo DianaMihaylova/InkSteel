@@ -37,6 +37,12 @@ public class LoginFragment extends Fragment {
         regBtn = (Button) view.findViewById(R.id.login_register_btn);
         regTv = (TextView) view.findViewById(R.id.login_reg_tv);
 
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            email.setText(bundle.getString(LoginActivity.LOGIN_EMAIL));
+            pass.setText("1234567");
+        }
+
         logBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
