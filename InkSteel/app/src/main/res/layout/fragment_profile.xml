@@ -75,9 +75,9 @@
             android:id="@+id/btn_gallery"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="16dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
             android:background="@drawable/image_galery"/>
 
         <Button
@@ -87,7 +87,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
             android:layout_weight="1"
-            android:background="@drawable/btn_msg" />
+            android:background="@drawable/btn_msg"/>
 
     </LinearLayout>
 
@@ -99,6 +99,6 @@
         android:fontFamily="casual"
         android:text="@string/edit_profile"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
 </LinearLayout>

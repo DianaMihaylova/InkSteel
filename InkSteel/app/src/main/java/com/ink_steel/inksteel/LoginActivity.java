@@ -48,8 +48,8 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
         }
 
         fragmentTransaction.commit();
-            goToFeed(currentUser);
-        }
+        goToFeed(currentUser);
+    }
     }
 
     private void goToFeed(FirebaseUser user) {
