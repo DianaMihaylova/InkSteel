@@ -17,6 +17,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.ink_steel.inksteel.ChatActivity;
+import com.ink_steel.inksteel.ConstantUtils;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.UserInfoActivity;
 import com.squareup.picasso.Picasso;
@@ -30,7 +32,7 @@ public class ProfileFragment extends Fragment {
     private Button galeryBtn, messageBtn, editProfileBtn;
 
     private DocumentReference saveInfo = FirebaseFirestore.getInstance().collection("users").
-            document(UserInfoActivity.EMAIL);
+            document(ConstantUtils.EMAIL);
 
     public ProfileFragment() {
     }
@@ -50,6 +52,22 @@ public class ProfileFragment extends Fragment {
         messageBtn = (Button) view.findViewById(R.id.btn_msg);
         editProfileBtn = (Button) view.findViewById(R.id.btn_edit_profile);
 
+        messageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        editProfileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 
@@ -60,13 +78,13 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()) {
-                    email.setText("Email: " + FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
-                    username.setText("Username: " + documentSnapshot.getString(UserInfoActivity.USER_NAME));
-                    city.setText("City: " + documentSnapshot.getString(UserInfoActivity.USER_CITY));
-                    age.setText("Age: " + documentSnapshot.getString(UserInfoActivity.USER_AGE));
+                    email.setText("Email: " + ConstantUtils.EMAIL);
+                    username.setText("Username: " + documentSnapshot.getString(ConstantUtils.USER_NAME));
+                    city.setText("City: " + documentSnapshot.getString(ConstantUtils.USER_CITY));
+                    age.setText("Age: " + documentSnapshot.getString(ConstantUtils.USER_AGE));
 
                     Uri imageDownloadUrl = Uri.parse(documentSnapshot
-                            .getString(UserInfoActivity.USER_PROFILE_IMG));
+                            .getString(ConstantUtils.USER_PROFILE_IMG));
 
                     Picasso.with(getActivity())
                             .load(imageDownloadUrl)

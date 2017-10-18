@@ -13,12 +13,6 @@ import com.ink_steel.inksteel.R;
 
 public class ScreenSlidePageFragment extends Fragment {
 
-    public static final int FRAGMENT_TABS = 4;
-    private ProfileFragment profileFragment;
-    private FeedFragment feedFragment;
-    private ExploreFragment exploreFragment;
-    private ContactStudioFragment contactStudioFragment;
-
     public ScreenSlidePageFragment() {
     }
 
@@ -28,58 +22,31 @@ public class ScreenSlidePageFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_screen_slide_page, container, false);
 
-        profileFragment = new ProfileFragment();
-        feedFragment = new FeedFragment();
-        exploreFragment = new ExploreFragment();
-        contactStudioFragment = new ContactStudioFragment();
+        ProfileFragment profileFragment = new ProfileFragment();
+        FeedFragment feedFragment = new FeedFragment();
+        ExploreFragment exploreFragment = new ExploreFragment();
+        ContactStudioFragment contactStudioFragment = new ContactStudioFragment();
+
+        final Fragment[] fragments = {profileFragment, feedFragment, exploreFragment,
+                contactStudioFragment};
+        final String[] tabTitle = {"", "Feed", "Explore", "Studios Contacts"};
 
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                Fragment tab = null;
-
-                switch (position) {
-                    case 0:
-                        tab = profileFragment;
-                        break;
-                    case 1:
-                        tab = feedFragment;
-                        break;
-                    case 2:
-                        tab = exploreFragment;
-                        break;
-                    case 3:
-                        tab = contactStudioFragment;
-                        break;
-                }
-                return tab;
+                return fragments[position];
             }
 
             @Override
             public int getCount() {
-                return FRAGMENT_TABS;
+                return fragments.length;
             }
 
 
             @Override
             public CharSequence getPageTitle(int position) {
-                String title = "";
-                switch (position) {
-                    case 0:
-                        title = "";
-                        break;
-                    case 1:
-                        title = "Feed";
-                        break;
-                    case 2:
-                        title = "Explore";
-                        break;
-                    case 3:
-                        title = "Studios contacts";
-                        break;
-                }
-                return title;
+                return tabTitle[position];
             }
         });
 
