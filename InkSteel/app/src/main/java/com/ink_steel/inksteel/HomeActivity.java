@@ -28,6 +28,5 @@ public class HomeActivity extends AppCompatActivity {
         ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
         transaction.replace(R.id.view_pager, fragment);
         transaction.commit();
-
     }
 }
