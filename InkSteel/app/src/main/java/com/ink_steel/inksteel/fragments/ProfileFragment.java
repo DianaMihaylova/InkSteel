@@ -31,8 +31,7 @@ public class ProfileFragment extends Fragment {
 
     private ImageView imageView;
     private TextView username, email, age, city;
-    private ImageButton galeryBtn, messageBtn;
-    private Button editProfileBtn;
+    private Button galeryBtn, messageBtn, editProfileBtn;
 
     private DocumentReference saveInfo = FirebaseFirestore.getInstance().collection("users").
             document(UserInfoActivity.EMAIL);
@@ -51,8 +50,8 @@ public class ProfileFragment extends Fragment {
         email = (TextView) view.findViewById(R.id.user_email);
         age = (TextView) view.findViewById(R.id.user_age);
         city = (TextView) view.findViewById(R.id.user_city);
-        galeryBtn = (ImageButton) view.findViewById(R.id.btn_gallery);
-        messageBtn = (ImageButton) view.findViewById(R.id.btn_msg);
+        galeryBtn = (Button) view.findViewById(R.id.btn_gallery);
+        messageBtn = (Button) view.findViewById(R.id.btn_msg);
         editProfileBtn = (Button) view.findViewById(R.id.btn_edit_profile);
 
         return view;
