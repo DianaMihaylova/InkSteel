@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <Button
+        android:id="@+id/user_info_cancel_btn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/user_info_save_btn"/>
+
+    <Button
+        android:id="@+id/user_info_save_btn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/user_info_cancel_btn"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <EditText
+        android:id="@+id/user_info_city_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginRight="64dp"
+        android:hint="City"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/user_info_cancel_btn"
+        app:layout_constraintLeft_toLeftOf="@+id/user_info_cancel_btn"
+        app:layout_constraintRight_toRightOf="@+id/user_info_save_btn"/>
+
+    <EditText
+        android:id="@+id/user_info_age_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Age"
+        android:inputType="numberSigned"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/user_info_city_et"
+        app:layout_constraintLeft_toLeftOf="@+id/user_info_city_et"
+        app:layout_constraintRight_toRightOf="@+id/user_info_city_et"/>
+
+    <EditText
+        android:id="@+id/user_info_username_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/user_info_age_et"
+        app:layout_constraintLeft_toLeftOf="@+id/user_info_age_et"
+        app:layout_constraintRight_toRightOf="@+id/user_info_age_et"
+        app:layout_constraintTop_toBottomOf="@+id/user_info_profile_picture_iv"/>
+
+    <ImageView
+        android:id="@+id/user_info_profile_picture_iv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="32dp"
+        android:layout_marginBottom="16dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/user_info_username_et"
+        app:layout_constraintLeft_toLeftOf="@+id/user_info_cancel_btn"
+        app:layout_constraintRight_toRightOf="@+id/user_info_save_btn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_add"/>
+
+    <ProgressBar
+        android:id="@+id/user_info_picture_pb"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/user_info_profile_picture_iv"
+        app:layout_constraintLeft_toLeftOf="@+id/user_info_profile_picture_iv"
+        app:layout_constraintRight_toRightOf="@+id/user_info_profile_picture_iv"
+        app:layout_constraintTop_toTopOf="@+id/user_info_profile_picture_iv"/>
+</android.support.constraint.ConstraintLayout>

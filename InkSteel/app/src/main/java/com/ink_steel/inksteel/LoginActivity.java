@@ -22,6 +22,7 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
 
     public static final int LOGIN_BUTTON = 1;
     public static final int REGISTER_BUTTON = 2;
+    public static final String LOGIN_EMAIL = "login_email";
 
     private FirebaseAuth mAuth;
 
@@ -30,22 +31,34 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        mAuth = FirebaseAuth.getInstance();
+
         LoginFragment fragment = new LoginFragment();
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_placeholder, fragment);
-        fragmentTransaction.commit();
-        mAuth = FirebaseAuth.getInstance();
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null)
+        if (currentUser != null) {
             Toast.makeText(this, "Already SIGNED-IN\n" + currentUser.getEmail(),
                     Toast.LENGTH_SHORT).show();
+            Bundle bundle = new Bundle();
+            bundle.putString(LOGIN_EMAIL, currentUser.getEmail());
+            fragment.setArguments(bundle);
+        }
+
+        fragmentTransaction.commit();
     }
+
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        if (currentUser != null) {
+//            Toast.makeText(this, "Already SIGNED-IN\n" + currentUser.getEmail(),
+//                    Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     @Override
     public void onFragmentButtonListener(int which, String email, String password) {

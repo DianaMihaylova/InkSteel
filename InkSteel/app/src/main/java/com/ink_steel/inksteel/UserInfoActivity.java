@@ -2,10 +2,11 @@ package com.ink_steel.inksteel;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,11 +27,7 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URI;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,24 +41,23 @@ public class UserInfoActivity extends AppCompatActivity {
     public static final String USER_AGE = "userAge";
     public static final String USER_PROFILE_IMG = "userProfileImage";
 
-    public static final int PICK_IMAGE = 1;
-    public static final String DEFAULT_IMG = "https://firebasestorage.googleapis.com/v0/b/inksteel-7911e.appspot.com/o/default.jpg?alt=media&token=2a0f4edc-81e5-40a2-9558-015e18b8b1ff";
+    public static final String DEFAULT_IMG_URL = "https://firebasestorage.googleapis.com/v0/b/inksteel-7911e.appspot.com/o/default.jpg?alt=media&token=2a0f4edc-81e5-40a2-9558-015e18b8b1ff";
 
     private EditText userName, age, city;
     private ImageView imageView;
     private DocumentReference saveInfo;
 
     private FirebaseStorage storage = FirebaseStorage.getInstance();
-    private StorageReference mRefStrorage = storage.getReference();
-    private Uri selectedImage;
+    private StorageReference mRefStorage = storage.getReference();
     private Uri mImgDownload;
-
-    private String userEmail = " ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
+
+        if (EMAIL != null)
+            saveInfo = FirebaseFirestore.getInstance().collection("users").document(EMAIL);
 
         userName = (EditText) findViewById(R.id.user_name);
         age = (EditText) findViewById(R.id.user_age);
@@ -70,12 +66,7 @@ public class UserInfoActivity extends AppCompatActivity {
         Button cancelBtn = (Button) findViewById(R.id.button_cancel);
         Button saveBtn = (Button) findViewById(R.id.button_save);
 
-        mImgDownload = Uri.parse(DEFAULT_IMG);
-
-        if (FirebaseAuth.getInstance().getCurrentUser() != null)
-            userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        saveInfo = FirebaseFirestore.getInstance().collection("users").
-                document(userEmail);
+        mImgDownload = Uri.parse(DEFAULT_IMG_URL);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,12 +74,13 @@ public class UserInfoActivity extends AppCompatActivity {
                 String username = userName.getText().toString();
                 String userCity = city.getText().toString();
                 String userAge = age.getText().toString();
+                String userProfilePictureUrl = mImgDownload.toString();
 
                 Map<String, Object> data = new HashMap<>();
                 data.put(USER_NAME, username);
                 data.put(USER_CITY, userCity);
                 data.put(USER_AGE, userAge);
-                data.put(USER_PROFILE_IMG, mImgDownload.toString());
+                data.put(USER_PROFILE_IMG, userProfilePictureUrl);
 
                 saveInfo.set(data);
             }
@@ -105,7 +97,11 @@ public class UserInfoActivity extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseImage();
+                CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .setCropShape(CropImageView.CropShape.OVAL)
+                        .setFixAspectRatio(true)
+                        .start(UserInfoActivity.this);
             }
         });
     }
@@ -123,45 +119,40 @@ public class UserInfoActivity extends AppCompatActivity {
 
                     if (documentSnapshot.contains(USER_PROFILE_IMG)) {
                         mImgDownload = Uri.parse(documentSnapshot.getString(USER_PROFILE_IMG));
-                        Picasso.with(UserInfoActivity.this)
-                                .load(mImgDownload)
-                                .transform(new CropCircleTransformation())
-                                .into(imageView);
+                        loadImage();
                     }
                 }
             }
         });
     }
 
-    private void chooseImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+    private void loadImage() {
+        Picasso.with(UserInfoActivity.this)
+                .load(mImgDownload)
+                .transform(new CropCircleTransformation())
+                .into(imageView);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
-            selectedImage = data.getData();
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE
+                && resultCode == RESULT_OK) {
+            mImgDownload = CropImage.getActivityResult(data).getUri();
             uploadImage();
         }
     }
 
     private void uploadImage() {
-        StorageReference spaceRef = mRefStrorage.child(userEmail + "/profile.jpg");
-        UploadTask uploadTask = spaceRef.putFile(selectedImage);
+        StorageReference spaceRef = mRefStorage.child(EMAIL + "/profile.jpg");
+        UploadTask uploadTask = spaceRef.putFile(mImgDownload);
 
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Toast.makeText(UserInfoActivity.this, "Ready!", Toast.LENGTH_SHORT).show();
                 mImgDownload = taskSnapshot.getDownloadUrl();
-                Picasso.with(UserInfoActivity.this)
-                        .load(mImgDownload)
-                        .transform(new CropCircleTransformation())
-                        .into(imageView);
+                loadImage();
             }
         });
     }
