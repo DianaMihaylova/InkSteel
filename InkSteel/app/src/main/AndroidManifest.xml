@@ -3,6 +3,7 @@
     package="com.ink_steel.inksteel">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -27,6 +28,7 @@
         <activity android:name=".activities.HomeActivity" />
         <activity android:name=".activities.ChatActivity" />
         <activity android:name=".activities.GalleryActivity" />
+        <activity android:name=".activities.FullScreenImageActivity"></activity>
     </application>
 
 </manifest>
