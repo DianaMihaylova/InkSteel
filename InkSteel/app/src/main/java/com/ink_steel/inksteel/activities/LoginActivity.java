@@ -1,4 +1,4 @@
-package com.ink_steel.inksteel;
+package com.ink_steel.inksteel.activities;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -15,15 +15,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.fragments.IOnFragmentButtonListener;
 import com.ink_steel.inksteel.fragments.LoginFragment;
-
+import com.ink_steel.inksteel.helpers.ConstantUtils;
 
 public class LoginActivity extends AppCompatActivity implements IOnFragmentButtonListener {
-
-    public static final int LOGIN_BUTTON = 1;
-    public static final int REGISTER_BUTTON = 2;
-    public static final String LOGIN_EMAIL = "login_email";
 
     private FirebaseAuth mAuth;
 
@@ -44,12 +41,12 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
             Toast.makeText(this, "Already SIGNED-IN\n" + currentUser.getEmail(),
                     Toast.LENGTH_SHORT).show();
             Bundle bundle = new Bundle();
-            bundle.putString(LOGIN_EMAIL, currentUser.getEmail());
+            bundle.putString(ConstantUtils.LOGIN_EMAIL, currentUser.getEmail());
             fragment.setArguments(bundle);
+            goToFeed(currentUser);
         }
 
         fragmentTransaction.commit();
-        goToFeed(currentUser);
     }
 
     private void goToFeed(FirebaseUser user) {
@@ -60,10 +57,10 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
     @Override
     public void onFragmentButtonListener(int which, String email, String password) {
         switch (which) {
-            case LOGIN_BUTTON:
+            case ConstantUtils.LOGIN_BUTTON:
                 loginUser(email, password);
                 break;
-            case REGISTER_BUTTON:
+            case ConstantUtils.REGISTER_BUTTON:
                 registerUser(email, password);
                 break;
         }

@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.ink_steel.inksteel.LoginActivity;
+
+import com.ink_steel.inksteel.activities.LoginActivity;
 import com.ink_steel.inksteel.R;
+import com.ink_steel.inksteel.helpers.ConstantUtils;
 
 public class LoginFragment extends Fragment {
 
@@ -39,7 +41,7 @@ public class LoginFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            email.setText(bundle.getString(LoginActivity.LOGIN_EMAIL));
+            email.setText(bundle.getString(ConstantUtils.LOGIN_EMAIL));
             pass.setText("1234567");
         }
 
@@ -58,7 +60,7 @@ public class LoginFragment extends Fragment {
                     valid = false;
                 }
                 if (valid) {
-                    mLoginActivity.onFragmentButtonListener(LoginActivity.LOGIN_BUTTON, userEmail, password);
+                    mLoginActivity.onFragmentButtonListener(ConstantUtils.LOGIN_BUTTON, userEmail, password);
                 }
             }
         });

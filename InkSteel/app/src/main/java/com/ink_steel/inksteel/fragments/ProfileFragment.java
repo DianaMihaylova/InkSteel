@@ -10,17 +10,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.ink_steel.inksteel.ChatActivity;
-import com.ink_steel.inksteel.ConstantUtils;
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.UserInfoActivity;
+import com.ink_steel.inksteel.activities.ChatActivity;
+import com.ink_steel.inksteel.activities.UserInfoActivity;
+import com.ink_steel.inksteel.helpers.ConstantUtils;
 import com.squareup.picasso.Picasso;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
@@ -30,7 +30,6 @@ public class ProfileFragment extends Fragment {
     private ImageView imageView;
     private TextView username, email, age, city;
     private Button galeryBtn, messageBtn, editProfileBtn;
-
     private DocumentReference saveInfo = FirebaseFirestore.getInstance().collection("users").
             document(ConstantUtils.EMAIL);
 
@@ -78,10 +77,14 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()) {
-                    email.setText("Email: " + ConstantUtils.EMAIL);
-                    username.setText("Username: " + documentSnapshot.getString(ConstantUtils.USER_NAME));
-                    city.setText("City: " + documentSnapshot.getString(ConstantUtils.USER_CITY));
-                    age.setText("Age: " + documentSnapshot.getString(ConstantUtils.USER_AGE));
+                    String emailStr = "Email: " + ConstantUtils.EMAIL;
+                    String usernameStr = "Username: " + documentSnapshot.getString(ConstantUtils.USER_NAME);
+                    String cityStr = "City: " + documentSnapshot.getString(ConstantUtils.USER_CITY);
+                    String ageStr = "Age: " + documentSnapshot.getString(ConstantUtils.USER_AGE);
+                    email.setText(emailStr);
+                    username.setText(usernameStr);
+                    city.setText(cityStr);
+                    age.setText(ageStr);
 
                     Uri imageDownloadUrl = Uri.parse(documentSnapshot
                             .getString(ConstantUtils.USER_PROFILE_IMG));
@@ -90,6 +93,8 @@ public class ProfileFragment extends Fragment {
                             .load(imageDownloadUrl)
                             .transform(new CropCircleTransformation())
                             .into(imageView);
+                } else {
+                    Toast.makeText(getActivity(), "Nothing", Toast.LENGTH_SHORT).show();
                 }
             }
         });

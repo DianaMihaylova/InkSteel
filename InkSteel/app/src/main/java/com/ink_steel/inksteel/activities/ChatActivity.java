@@ -1,19 +1,30 @@
-package com.ink_steel.inksteel;
+package com.ink_steel.inksteel.activities;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.ink_steel.inksteel.R;
+import com.ink_steel.inksteel.helpers.ConstantUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.ink_steel.inksteel.ConstantUtils.FIRESTORE_FRIENDS_REFERNENCE;
-
 public class ChatActivity extends AppCompatActivity {
+
+    private static final DocumentReference FIRESTORE_FRIENDS_REFERNENCE = FirebaseFirestore.getInstance()
+            .document("users/" + ConstantUtils.EMAIL + "/friends/user1@gmail.com");
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
