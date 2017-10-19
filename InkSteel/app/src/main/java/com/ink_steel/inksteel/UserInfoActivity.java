@@ -120,8 +120,6 @@ public class UserInfoActivity extends AppCompatActivity {
                         loadImage();
                     }
                 }
-                Intent i = new Intent(UserInfoActivity.this, HomeActivity.class);
-                startActivity(i);
             }
         });
     }
