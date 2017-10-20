@@ -15,10 +15,10 @@ import java.util.ArrayList;
 
 public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecyclerViewAdapter.GalleryViewHolders> {
 
-    private ArrayList image;
+    private ArrayList<Integer> image;
     private Context context;
 
-    public GalleryRecyclerViewAdapter(Context context, ArrayList image) {
+    public GalleryRecyclerViewAdapter(Context context, ArrayList<Integer> image) {
         this.context = context;
         this.image = image;
     }
@@ -26,13 +26,12 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
     @Override
     public void onBindViewHolder(GalleryViewHolders holder, int pos) {
         final int position = pos;
-        holder.image.setImageResource((Integer) image.get(position));
-        // setOnClickListener event on item view not working!!!
+        holder.image.setImageResource(image.get(position));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, FullScreenImageActivity.class);
-                intent.putExtra("image", (Integer) image.get(position)); // put image data in Intent
+                intent.putExtra("image", position); // put image data in Intent
                 context.startActivity(intent);
             }
         });

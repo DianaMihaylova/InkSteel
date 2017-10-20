@@ -35,7 +35,7 @@ public class FullScreenViewAdapter extends PagerAdapter {
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.single_image_list, container, false);
         ImageView imageView = (ImageView) view.findViewById(R.id.selectedImage);
-        imageView.setImageResource((Integer) GalleryActivity.images.get(position));
+        imageView.setImageResource(GalleryActivity.images.get(position));
 
         container.addView(view);
         return view;

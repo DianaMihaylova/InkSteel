@@ -13,23 +13,20 @@ import java.util.Arrays;
 
 public class GalleryActivity extends AppCompatActivity {
 
-    public static final ArrayList images = new ArrayList<>(Arrays.asList(R.drawable.tatto1, R.drawable.tatto2,
-            R.drawable.pierce1, R.drawable.pierce2));
-
-    private RecyclerView recyclerView;
-    private StaggeredGridLayoutManager staggeredGridLayoutManager;
-    private GalleryRecyclerViewAdapter customAdapter;
+    public static final ArrayList<Integer> images = new ArrayList<>(Arrays.asList(R.drawable.tatto1,
+            R.drawable.tatto2, R.drawable.pierce1, R.drawable.pierce2));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,
+                StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
-        customAdapter = new GalleryRecyclerViewAdapter(GalleryActivity.this, images);
+        GalleryRecyclerViewAdapter customAdapter = new GalleryRecyclerViewAdapter(GalleryActivity.this, images);
         recyclerView.setAdapter(customAdapter);
     }
 }
