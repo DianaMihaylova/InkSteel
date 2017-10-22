@@ -22,4 +22,5 @@ public class ConstantUtils {
     private static final FirebaseFirestore FIRESTORE_REFERENCE = FirebaseFirestore.getInstance();
     public static final DocumentReference FIREBASE_USER_DOCUMENT_REFERENCE = FIRESTORE_REFERENCE
             .collection("users").document(EMAIL);
+
 }

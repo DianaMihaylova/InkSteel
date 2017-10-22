@@ -29,7 +29,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class UserInfoActivity extends AppCompatActivity {
 
-    private static final String DEFAULT_IMG_URL = "https://firebasestorage.googleapis.com/v0/b/inksteel-" +
+    public static final String DEFAULT_IMG_URL = "https://firebasestorage.googleapis.com/v0/b/inksteel-" +
             "7911e.appspot.com/o/default.jpg?alt=media&token=2a0f4edc-81e5-40a2-9558-015e18b8b1ff";
 
     private EditText userName, age, city;

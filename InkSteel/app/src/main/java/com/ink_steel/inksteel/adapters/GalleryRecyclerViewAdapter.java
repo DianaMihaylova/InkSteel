@@ -2,6 +2,7 @@ package com.ink_steel.inksteel.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,28 +11,36 @@ import android.widget.ImageView;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.FullScreenImageActivity;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+
 public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecyclerViewAdapter.GalleryViewHolders> {
 
-    private ArrayList<Integer> image;
+    private ArrayList<Uri> images;
     private Context context;
 
-    public GalleryRecyclerViewAdapter(Context context, ArrayList<Integer> image) {
+    public GalleryRecyclerViewAdapter(Context context, ArrayList<Uri> images) {
         this.context = context;
-        this.image = image;
+        this.images = images;
     }
 
     @Override
     public void onBindViewHolder(GalleryViewHolders holder, int pos) {
         final int position = pos;
-        holder.image.setImageResource(image.get(position));
+        Picasso.with(context)
+                .load(images.get(position))
+                .transform(new CropCircleTransformation())
+                .resize(600, 690)
+                .into(holder.image);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, FullScreenImageActivity.class);
-                intent.putExtra("image", position); // put image data in Intent
+                intent.putExtra("image", position);
                 context.startActivity(intent);
             }
         });
@@ -46,7 +55,7 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
 
     @Override
     public int getItemCount() {
-        return this.image.size();
+        return this.images.size();
     }
 
     public class GalleryViewHolders extends RecyclerView.ViewHolder {
