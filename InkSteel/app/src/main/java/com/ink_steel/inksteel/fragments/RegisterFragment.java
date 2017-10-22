@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import com.ink_steel.inksteel.LoginActivity;
+
+import com.ink_steel.inksteel.activities.LoginActivity;
 import com.ink_steel.inksteel.R;
+import com.ink_steel.inksteel.helpers.ConstantUtils;
 
 public class RegisterFragment extends Fragment {
 
@@ -52,7 +54,7 @@ public class RegisterFragment extends Fragment {
                     valid = false;
                 }
                 if (valid) {
-                    mLoginActivity.onFragmentButtonListener(LoginActivity.REGISTER_BUTTON,
+                    mLoginActivity.onFragmentButtonListener(ConstantUtils.REGISTER_BUTTON,
                             userEmail, password);
                 }
             }
