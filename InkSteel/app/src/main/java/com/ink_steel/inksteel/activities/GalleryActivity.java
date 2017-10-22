@@ -32,8 +32,6 @@ import java.util.Map;
 public class GalleryActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE = 1;
-    private static final CollectionReference FIRESTORE_GALLERY_REFERNENCE = FirebaseFirestore.getInstance()
-            .collection("users").document(ConstantUtils.EMAIL).collection("gallery");
 
     public static ArrayList<Uri> images;
 
@@ -113,13 +111,13 @@ public class GalleryActivity extends AppCompatActivity {
         mImgDownload = taskSnapshot.getDownloadUrl();
         String userPictureUrl = mImgDownload.toString();
         galleryData.put("picture", userPictureUrl);
-        FIRESTORE_GALLERY_REFERNENCE.add(galleryData);
+        ConstantUtils.FIRESTORE_GALLERY_REFERNENCE.add(galleryData);
         images.add(Uri.parse(userPictureUrl));
         loadImagesArray();
     }
 
-    private void loadImagesArray() {
-        FIRESTORE_GALLERY_REFERNENCE
+    public void loadImagesArray() {
+        ConstantUtils.FIRESTORE_GALLERY_REFERNENCE
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

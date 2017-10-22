@@ -1,6 +1,7 @@
 package com.ink_steel.inksteel.helpers;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -22,5 +23,7 @@ public class ConstantUtils {
     private static final FirebaseFirestore FIRESTORE_REFERENCE = FirebaseFirestore.getInstance();
     public static final DocumentReference FIREBASE_USER_DOCUMENT_REFERENCE = FIRESTORE_REFERENCE
             .collection("users").document(EMAIL);
+    public static final CollectionReference FIRESTORE_GALLERY_REFERNENCE = FirebaseFirestore.getInstance()
+            .collection("users").document(ConstantUtils.EMAIL).collection("gallery");
 
 }
