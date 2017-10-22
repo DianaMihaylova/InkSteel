@@ -2,8 +2,8 @@ package com.ink_steel.inksteel.activities;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,18 +53,7 @@ public class UserInfoActivity extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = userName.getText().toString();
-                String userCity = city.getText().toString();
-                String userAge = age.getText().toString();
-                String userProfilePictureUrl = mImgDownload.toString();
-
-                Map<String, Object> data = new HashMap<>();
-                data.put(ConstantUtils.USER_NAME, username);
-                data.put(ConstantUtils.USER_CITY, userCity);
-                data.put(ConstantUtils.USER_AGE, userAge);
-                data.put(ConstantUtils.USER_PROFILE_IMG, userProfilePictureUrl);
-
-                ConstantUtils.FIREBASE_USER_DOCUMENT_REFERENCE.set(data);
+                saveUserInfoData();
                 Intent i = new Intent(UserInfoActivity.this, HomeActivity.class);
                 startActivity(i);
             }
@@ -88,6 +77,21 @@ public class UserInfoActivity extends AppCompatActivity {
                         .start(UserInfoActivity.this);
             }
         });
+    }
+
+    private void saveUserInfoData() {
+        String username = userName.getText().toString();
+        String userCity = city.getText().toString();
+        String userAge = age.getText().toString();
+        String userProfilePictureUrl = mImgDownload.toString();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put(ConstantUtils.USER_NAME, username);
+        data.put(ConstantUtils.USER_CITY, userCity);
+        data.put(ConstantUtils.USER_AGE, userAge);
+        data.put(ConstantUtils.USER_PROFILE_IMG, userProfilePictureUrl);
+
+        ConstantUtils.FIREBASE_USER_DOCUMENT_REFERENCE.set(data);
     }
 
     @Override

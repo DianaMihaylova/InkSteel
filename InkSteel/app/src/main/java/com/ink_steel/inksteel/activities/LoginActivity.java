@@ -4,10 +4,10 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,13 +43,13 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
             Bundle bundle = new Bundle();
             bundle.putString(ConstantUtils.LOGIN_EMAIL, currentUser.getEmail());
             fragment.setArguments(bundle);
-            goToFeed(currentUser);
+            goToFeed();
         }
 
         fragmentTransaction.commit();
     }
 
-    private void goToFeed(FirebaseUser user) {
+    private void goToFeed() {
         Intent i = new Intent(LoginActivity.this, HomeActivity.class);
         startActivity(i);
     }
@@ -71,8 +71,8 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Sign in " + mAuth.getCurrentUser()
-                            .getEmail(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Sign in " + ConstantUtils.EMAIL,
+                            Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(LoginActivity.this, UserInfoActivity.class);
                     startActivity(i);
                 } else {
@@ -101,9 +101,8 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser currentUser = mAuth.getCurrentUser();
                             Toast.makeText(LoginActivity.this, "User registered!\n" +
-                                            currentUser.getEmail(),
+                                            ConstantUtils.EMAIL,
                                     Toast.LENGTH_SHORT).show();
                             loginUser(email, password);
                         } else {
