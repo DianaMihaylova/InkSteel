@@ -3,12 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ink_steel.inksteel.activities.GalleryActivity">
+    android:background="#000000"
+    tools:context="com.ink_steel.inksteel.activities.FullScreenImageActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:background="#000000" />
+        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
+
 </RelativeLayout>
+

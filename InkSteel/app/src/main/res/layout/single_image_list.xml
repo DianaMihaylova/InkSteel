@@ -3,12 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ink_steel.inksteel.activities.GalleryActivity">
+    android:background="#000000">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <ImageView
+        android:id="@+id/selectedImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:background="#000000" />
+        android:layout_centerInParent="true"
+        android:background="#000000"
+        android:padding="2dp" />
+
 </RelativeLayout>

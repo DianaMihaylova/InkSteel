@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -19,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.ChatActivity;
+import com.ink_steel.inksteel.activities.GalleryActivity;
 import com.ink_steel.inksteel.activities.UserInfoActivity;
 import com.ink_steel.inksteel.helpers.ConstantUtils;
 import com.squareup.picasso.Picasso;
@@ -29,7 +29,7 @@ public class ProfileFragment extends Fragment {
 
     private ImageView imageView;
     private TextView username, email, age, city;
-    private Button galeryBtn, messageBtn, editProfileBtn;
+    private Button galleryBtn, messageBtn, editProfileBtn;
     private DocumentReference saveInfo = FirebaseFirestore.getInstance().collection("users").
             document(ConstantUtils.EMAIL);
 
@@ -47,7 +47,7 @@ public class ProfileFragment extends Fragment {
         email = (TextView) view.findViewById(R.id.user_email);
         age = (TextView) view.findViewById(R.id.user_age);
         city = (TextView) view.findViewById(R.id.user_city);
-        galeryBtn = (Button) view.findViewById(R.id.btn_gallery);
+        galleryBtn = (Button) view.findViewById(R.id.btn_gallery);
         messageBtn = (Button) view.findViewById(R.id.btn_msg);
         editProfileBtn = (Button) view.findViewById(R.id.btn_edit_profile);
 
@@ -55,6 +55,14 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        galleryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), GalleryActivity.class);
                 startActivity(intent);
             }
         });
@@ -93,8 +101,6 @@ public class ProfileFragment extends Fragment {
                             .load(imageDownloadUrl)
                             .transform(new CropCircleTransformation())
                             .into(imageView);
-                } else {
-                    Toast.makeText(getActivity(), "Nothing", Toast.LENGTH_SHORT).show();
                 }
             }
         });
