@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.GalleryActivity;
+import com.squareup.picasso.Picasso;
 
 public class FullScreenViewAdapter extends PagerAdapter {
 
@@ -35,7 +36,9 @@ public class FullScreenViewAdapter extends PagerAdapter {
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.single_image_list, container, false);
         ImageView imageView = (ImageView) view.findViewById(R.id.selectedImage);
-        imageView.setImageResource(GalleryActivity.images.get(position));
+        Picasso.with(context)
+                .load(GalleryActivity.images.get(position))
+                .into(imageView);
 
         container.addView(view);
         return view;

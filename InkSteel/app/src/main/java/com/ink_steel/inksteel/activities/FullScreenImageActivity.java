@@ -2,9 +2,9 @@ package com.ink_steel.inksteel.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.adapters.FullScreenViewAdapter;
 
@@ -21,7 +21,8 @@ public class FullScreenImageActivity extends AppCompatActivity {
             position = intent.getIntExtra("image", 0);
         }
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+        HorizontalInfiniteCycleViewPager viewPager = (HorizontalInfiniteCycleViewPager)
+                findViewById(R.id.view_pager_horizontal_cycle);
         FullScreenViewAdapter fullScreenViewAdapter = new FullScreenViewAdapter(this);
         viewPager.setAdapter(fullScreenViewAdapter);
         viewPager.setCurrentItem(position);
