@@ -34,10 +34,9 @@ import java.util.Map;
 public class GalleryActivity extends AppCompatActivity implements IOnGalleryImageLongClickListener {
 
     private static final int PICK_IMAGE = 1;
-
     public static ArrayList<Uri> images;
 
-    private Uri mImgDownload;
+    private Uri mImgUrl;
     private GalleryRecyclerViewAdapter mAdapter;
 
     @Override
@@ -87,15 +86,15 @@ public class GalleryActivity extends AppCompatActivity implements IOnGalleryImag
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
-            mImgDownload = data.getData();
+            mImgUrl = data.getData();
             uploadImageToStorage();
         }
     }
 
     private void uploadImageToStorage() {
-        StorageReference spaceRef = ConstantUtils.FIREBASE_STORAGE_REFERENCE.child(ConstantUtils.EMAIL
-                + "/pics/" + new Date() + ".jpg");
-        UploadTask uploadTask = spaceRef.putFile(mImgDownload);
+        StorageReference spaceRef = ConstantUtils.FIREBASE_STORAGE_REFERENCE
+                .child(ConstantUtils.EMAIL + "/pics/" + new Date() + ".jpg");
+        UploadTask uploadTask = spaceRef.putFile(mImgUrl);
 
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -108,8 +107,8 @@ public class GalleryActivity extends AppCompatActivity implements IOnGalleryImag
 
     private void saveImageToDatabase(UploadTask.TaskSnapshot taskSnapshot) {
         Map<String, Object> galleryData = new HashMap<>();
-        mImgDownload = taskSnapshot.getDownloadUrl();
-        String userPictureUrl = mImgDownload.toString();
+        mImgUrl = taskSnapshot.getDownloadUrl();
+        String userPictureUrl = mImgUrl.toString();
         galleryData.put("picture", userPictureUrl);
         ConstantUtils.FIRESTORE_GALLERY_REFERNENCE.add(galleryData);
         images.add(Uri.parse(userPictureUrl));
@@ -145,18 +144,17 @@ public class GalleryActivity extends AppCompatActivity implements IOnGalleryImag
 
     }
 
-    private void equalPosition(int pos) {
-        final int position = pos;
+    private void equalPosition(final int position) {
         ConstantUtils.FIRESTORE_GALLERY_REFERNENCE.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (DocumentSnapshot document : task.getResult()) {
-                                if (("{picture=" + String.valueOf(images.get(position)) + "}").equals
-                                        (document.getData().toString())) {
-                                    final DocumentReference docRef = ConstantUtils.FIRESTORE_GALLERY_REFERNENCE
-                                            .document(document.getId());
+                                if (("{picture=" + String.valueOf(images.get(position)) + "}")
+                                        .equals(document.getData().toString())) {
+                                    final DocumentReference docRef = ConstantUtils
+                                            .FIRESTORE_GALLERY_REFERNENCE.document(document.getId());
                                     setAlert(docRef);
                                     break;
                                 }
@@ -166,8 +164,7 @@ public class GalleryActivity extends AppCompatActivity implements IOnGalleryImag
                 });
     }
 
-    private void setAlert(DocumentReference doc) {
-        final DocumentReference docRef = doc;
+    private void setAlert(final DocumentReference docRef) {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setMessage("Do you want to delete the image?")
                 .setCancelable(true)

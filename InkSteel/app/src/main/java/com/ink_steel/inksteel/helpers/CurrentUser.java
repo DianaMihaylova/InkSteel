@@ -1,6 +1,11 @@
 package com.ink_steel.inksteel.helpers;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class CurrentUser {
 
@@ -15,6 +20,7 @@ public class CurrentUser {
 
     private CurrentUser() {
         this.userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        addInfoUserData();
     }
 
     public static CurrentUser getInstance() {
@@ -69,4 +75,17 @@ public class CurrentUser {
         this.userProfilePicture = userProfilePicture;
     }
 
+    private void addInfoUserData() {
+        DocumentReference userInfo = FirebaseFirestore.getInstance().collection("users").
+                document(ConstantUtils.EMAIL);
+        userInfo.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                userName = documentSnapshot.getString(ConstantUtils.USER_NAME);
+                userAge = documentSnapshot.getString(ConstantUtils.USER_AGE);
+                userCity = documentSnapshot.getString(ConstantUtils.USER_CITY);
+                userProfilePicture = documentSnapshot.getString(ConstantUtils.USER_PROFILE_IMG);
+            }
+        });
+    }
 }

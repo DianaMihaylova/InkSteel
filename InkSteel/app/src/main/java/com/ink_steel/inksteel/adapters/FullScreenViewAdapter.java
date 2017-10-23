@@ -15,7 +15,6 @@ import com.squareup.picasso.Picasso;
 public class FullScreenViewAdapter extends PagerAdapter {
 
     private Context context;
-    private LayoutInflater layoutInflater;
 
     public FullScreenViewAdapter(Context context) {
         this.context = context;
@@ -33,9 +32,10 @@ public class FullScreenViewAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService
+                (Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.single_image_list, container, false);
-        ImageView imageView = (ImageView) view.findViewById(R.id.selectedImage);
+        ImageView imageView = (ImageView) view.findViewById(R.id.selected_image);
         Picasso.with(context)
                 .load(GalleryActivity.images.get(position))
                 .into(imageView);

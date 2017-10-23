@@ -1,6 +1,5 @@
 package com.ink_steel.inksteel.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -15,11 +14,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_screen_image);
 
-        int position = 0;
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("image")) {
-            position = intent.getIntExtra("image", 0);
-        }
+        int position = getIntent().getIntExtra("image", 0);
 
         HorizontalInfiniteCycleViewPager viewPager = (HorizontalInfiniteCycleViewPager)
                 findViewById(R.id.view_pager_horizontal_cycle);

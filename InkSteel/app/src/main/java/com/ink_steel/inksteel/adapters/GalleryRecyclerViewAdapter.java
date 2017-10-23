@@ -29,7 +29,7 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
     }
 
     @Override
-    public void onBindViewHolder(final GalleryViewHolders holder, final int position) {
+    public void onBindViewHolder(GalleryViewHolders holder, int position) {
         holder.bind(images.get(position), position);
     }
 
@@ -47,14 +47,14 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
 
     public class GalleryViewHolders extends RecyclerView.ViewHolder {
 
-        public ImageView image;
+        private ImageView image;
 
-        public GalleryViewHolders(View itemView) {
+        private GalleryViewHolders(View itemView) {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.image);
         }
 
-        public void bind(Uri u, final int pos) {
+        private void bind(Uri u, final int pos) {
             Picasso.with(itemView.getContext())
                     .load(u)
                     .transform(new CropCircleTransformation())
