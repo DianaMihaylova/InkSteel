@@ -11,15 +11,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.ink_steel.inksteel.activities.LoginActivity;
 import com.ink_steel.inksteel.R;
+import com.ink_steel.inksteel.activities.LoginActivity;
 import com.ink_steel.inksteel.helpers.ConstantUtils;
 
 public class LoginFragment extends Fragment {
 
     private EditText email, pass;
-    private Button logBtn, regBtn;
-    private TextView regTv;
     private LoginActivity mLoginActivity;
 
     public LoginFragment() {
@@ -35,9 +33,8 @@ public class LoginFragment extends Fragment {
 
         email = (EditText) view.findViewById(R.id.login_email);
         pass = (EditText) view.findViewById(R.id.login_pass);
-        logBtn = (Button) view.findViewById(R.id.login_login_btn);
-        regBtn = (Button) view.findViewById(R.id.login_register_btn);
-        regTv = (TextView) view.findViewById(R.id.login_reg_tv);
+        Button logBtn = (Button) view.findViewById(R.id.login_login_btn);
+        Button regBtn = (Button) view.findViewById(R.id.login_register_btn);
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {

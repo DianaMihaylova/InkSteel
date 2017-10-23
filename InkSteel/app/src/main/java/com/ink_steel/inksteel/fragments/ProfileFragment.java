@@ -96,7 +96,7 @@ public class ProfileFragment extends Fragment {
 
                     Uri imageDownloadUrl = Uri.parse(documentSnapshot
                             .getString(ConstantUtils.USER_PROFILE_IMG));
-
+                    ConstantUtils.PROFILE_IMAGE_URI = imageDownloadUrl;
                     Picasso.with(getActivity())
                             .load(imageDownloadUrl)
                             .transform(new CropCircleTransformation())

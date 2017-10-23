@@ -8,15 +8,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.ink_steel.inksteel.activities.LoginActivity;
 import com.ink_steel.inksteel.R;
+import com.ink_steel.inksteel.activities.LoginActivity;
 import com.ink_steel.inksteel.helpers.ConstantUtils;
 
 public class RegisterFragment extends Fragment {
 
     private EditText email, pass, confirmPass;
-    private Button regBtn;
     private LoginActivity mLoginActivity;
+    private String mUserEmail;
+    private String mPassword;
+    private String mConfirmPassword;
 
     public RegisterFragment() {
     }
@@ -32,33 +34,37 @@ public class RegisterFragment extends Fragment {
         email = (EditText) view.findViewById(R.id.login_email);
         pass = (EditText) view.findViewById(R.id.login_pass);
         confirmPass = (EditText) view.findViewById(R.id.login_conf_pass);
-        regBtn = (Button) view.findViewById(R.id.login_register_btn);
+        Button regBtn = (Button) view.findViewById(R.id.login_register_btn);
 
         regBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userEmail = email.getText().toString();
-                String password = pass.getText().toString();
-                String confirmPassword = confirmPass.getText().toString();
-                boolean valid = true;
-                if (userEmail.isEmpty()) {
-                    email.setError("Invalid email!");
-                    valid = false;
-                }
-                if (password.isEmpty()) {
-                    pass.setError("Invalid pass!");
-                    valid = false;
-                }
-                if (!password.equals(confirmPassword)) {
-                    confirmPass.setError("Passwords don't match!");
-                    valid = false;
-                }
-                if (valid) {
-                    mLoginActivity.onFragmentButtonListener(ConstantUtils.REGISTER_BUTTON,
-                            userEmail, password);
+                mUserEmail = email.getText().toString();
+                mPassword = pass.getText().toString();
+                mConfirmPassword = confirmPass.getText().toString();
+                if (isValidFields()) {
+                    mLoginActivity.onFragmentButtonListener(
+                            ConstantUtils.REGISTER_BUTTON, mUserEmail, mPassword);
                 }
             }
         });
+
         return view;
+    }
+
+    private boolean isValidFields() {
+        if (mUserEmail.isEmpty()) {
+            email.setError("Invalid email!");
+            return false;
+        }
+        if (mPassword.isEmpty()) {
+            pass.setError("Invalid pass!");
+            return false;
+        }
+        if (!mPassword.equals(mConfirmPassword)) {
+            confirmPass.setError("Passwords don't match!");
+            return false;
+        }
+        return true;
     }
 }

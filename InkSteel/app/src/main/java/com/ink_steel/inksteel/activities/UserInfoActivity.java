@@ -2,8 +2,8 @@ package com.ink_steel.inksteel.activities;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,18 +53,7 @@ public class UserInfoActivity extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = userName.getText().toString();
-                String userCity = city.getText().toString();
-                String userAge = age.getText().toString();
-                String userProfilePictureUrl = mImgDownload.toString();
-
-                Map<String, Object> data = new HashMap<>();
-                data.put(ConstantUtils.USER_NAME, username);
-                data.put(ConstantUtils.USER_CITY, userCity);
-                data.put(ConstantUtils.USER_AGE, userAge);
-                data.put(ConstantUtils.USER_PROFILE_IMG, userProfilePictureUrl);
-
-                ConstantUtils.FIREBASE_USER_DOCUMENT_REFERENCE.set(data);
+                saveUserInfoData();
                 Intent i = new Intent(UserInfoActivity.this, HomeActivity.class);
                 startActivity(i);
             }
@@ -73,6 +62,18 @@ public class UserInfoActivity extends AppCompatActivity {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // TODO clean this
+                ConstantUtils.FIREBASE_USER_DOCUMENT_REFERENCE
+                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(DocumentSnapshot documentSnapshot,
+                                                FirebaseFirestoreException e) {
+                                if (!documentSnapshot.contains(ConstantUtils.USER_NAME)) {
+                                    saveUserInfoData();
+                                }
+                            }
+                        });
                 Intent i = new Intent(UserInfoActivity.this, HomeActivity.class);
                 startActivity(i);
             }
@@ -90,10 +91,26 @@ public class UserInfoActivity extends AppCompatActivity {
         });
     }
 
+    private void saveUserInfoData() {
+        String username = userName.getText().toString();
+        String userCity = city.getText().toString();
+        String userAge = age.getText().toString();
+        String userProfilePictureUrl = mImgDownload.toString();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put(ConstantUtils.USER_NAME, username);
+        data.put(ConstantUtils.USER_CITY, userCity);
+        data.put(ConstantUtils.USER_AGE, userAge);
+        data.put(ConstantUtils.USER_PROFILE_IMG, userProfilePictureUrl);
+
+        ConstantUtils.FIREBASE_USER_DOCUMENT_REFERENCE.set(data);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
-        ConstantUtils.FIREBASE_USER_DOCUMENT_REFERENCE.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+        ConstantUtils.FIREBASE_USER_DOCUMENT_REFERENCE.addSnapshotListener(this,
+                new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()) {
@@ -102,7 +119,8 @@ public class UserInfoActivity extends AppCompatActivity {
                     age.setText(documentSnapshot.getString(ConstantUtils.USER_AGE));
 
                     if (documentSnapshot.contains(ConstantUtils.USER_PROFILE_IMG)) {
-                        mImgDownload = Uri.parse(documentSnapshot.getString(ConstantUtils.USER_PROFILE_IMG));
+                        mImgDownload = Uri.parse(documentSnapshot
+                                .getString(ConstantUtils.USER_PROFILE_IMG));
                         loadImage();
                     }
                 }
