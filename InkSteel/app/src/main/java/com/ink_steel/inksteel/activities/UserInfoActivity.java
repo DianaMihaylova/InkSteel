@@ -18,6 +18,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.helpers.ConstantUtils;
+import com.ink_steel.inksteel.helpers.CurrentUser;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -29,12 +30,9 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class UserInfoActivity extends AppCompatActivity {
 
-    private static final String DEFAULT_IMG_URL = "https://firebasestorage.googleapis.com/v0/b/inksteel-" +
-            "7911e.appspot.com/o/default.jpg?alt=media&token=2a0f4edc-81e5-40a2-9558-015e18b8b1ff";
-
     private EditText userName, age, city;
     private ImageView imageView;
-    private Uri mImgDownload;
+    private CurrentUser mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +46,13 @@ public class UserInfoActivity extends AppCompatActivity {
         Button cancelBtn = (Button) findViewById(R.id.button_cancel);
         Button saveBtn = (Button) findViewById(R.id.button_save);
 
-        mImgDownload = Uri.parse(DEFAULT_IMG_URL);
+        mCurrentUser = CurrentUser.getInstance();
+
+        Intent intent = getIntent();
+        if (intent.hasExtra("isNewUser")) {
+            if (intent.getBooleanExtra("isNewUser", false))
+                cancelBtn.setVisibility(View.INVISIBLE);
+        }
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,18 +66,6 @@ public class UserInfoActivity extends AppCompatActivity {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                // TODO clean this
-                ConstantUtils.FIREBASE_USER_DOCUMENT_REFERENCE
-                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                            @Override
-                            public void onEvent(DocumentSnapshot documentSnapshot,
-                                                FirebaseFirestoreException e) {
-                                if (!documentSnapshot.contains(ConstantUtils.USER_NAME)) {
-                                    saveUserInfoData();
-                                }
-                            }
-                        });
                 Intent i = new Intent(UserInfoActivity.this, HomeActivity.class);
                 startActivity(i);
             }
@@ -92,16 +84,16 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     private void saveUserInfoData() {
-        String username = userName.getText().toString();
-        String userCity = city.getText().toString();
-        String userAge = age.getText().toString();
-        String userProfilePictureUrl = mImgDownload.toString();
+
+        mCurrentUser.setUserName(userName.getText().toString());
+        mCurrentUser.setUserCity(city.getText().toString());
+        mCurrentUser.setUserAge(age.getText().toString());
 
         Map<String, Object> data = new HashMap<>();
-        data.put(ConstantUtils.USER_NAME, username);
-        data.put(ConstantUtils.USER_CITY, userCity);
-        data.put(ConstantUtils.USER_AGE, userAge);
-        data.put(ConstantUtils.USER_PROFILE_IMG, userProfilePictureUrl);
+        data.put(ConstantUtils.USER_NAME, mCurrentUser.getUserName());
+        data.put(ConstantUtils.USER_CITY, mCurrentUser.getUserCity());
+        data.put(ConstantUtils.USER_AGE, mCurrentUser.getUserAge());
+        data.put(ConstantUtils.USER_PROFILE_IMG, mCurrentUser.getUserProfilePicture());
 
         ConstantUtils.FIREBASE_USER_DOCUMENT_REFERENCE.set(data);
     }
@@ -119,7 +111,7 @@ public class UserInfoActivity extends AppCompatActivity {
                     age.setText(documentSnapshot.getString(ConstantUtils.USER_AGE));
 
                     if (documentSnapshot.contains(ConstantUtils.USER_PROFILE_IMG)) {
-                        mImgDownload = Uri.parse(documentSnapshot
+                        mCurrentUser.setUserProfilePicture(documentSnapshot
                                 .getString(ConstantUtils.USER_PROFILE_IMG));
                         loadImage();
                     }
@@ -130,7 +122,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
     private void loadImage() {
         Picasso.with(UserInfoActivity.this)
-                .load(mImgDownload)
+                .load(mCurrentUser.getUserProfilePicture())
                 .transform(new CropCircleTransformation())
                 .into(imageView);
     }
@@ -140,20 +132,21 @@ public class UserInfoActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE
                 && resultCode == RESULT_OK) {
-            mImgDownload = CropImage.getActivityResult(data).getUri();
+            mCurrentUser.setUserProfilePicture(CropImage.getActivityResult(data).getUri().toString());
             uploadImage();
         }
     }
 
     private void uploadImage() {
-        StorageReference spaceRef = ConstantUtils.FIREBASE_STORAGE_REFERENCE.child(ConstantUtils.EMAIL + "/profile.jpg");
-        UploadTask uploadTask = spaceRef.putFile(mImgDownload);
+        StorageReference spaceRef = ConstantUtils.FIREBASE_STORAGE_REFERENCE
+                .child(ConstantUtils.EMAIL + "/profile.jpg");
+        UploadTask uploadTask = spaceRef.putFile(Uri.parse(mCurrentUser.getUserProfilePicture()));
 
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Toast.makeText(UserInfoActivity.this, "Ready!", Toast.LENGTH_SHORT).show();
-                mImgDownload = taskSnapshot.getDownloadUrl();
+                mCurrentUser.setUserProfilePicture(taskSnapshot.getDownloadUrl().toString());
                 loadImage();
             }
         });

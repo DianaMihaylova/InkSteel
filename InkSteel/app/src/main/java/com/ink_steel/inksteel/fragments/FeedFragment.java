@@ -3,7 +3,6 @@ package com.ink_steel.inksteel.fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,9 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,10 +22,7 @@ import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.AddPostActivity;
 import com.ink_steel.inksteel.model.Post;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedList;
-import java.util.Locale;
 
 public class FeedFragment extends Fragment {
 
@@ -69,11 +62,12 @@ public class FeedFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
+        
         FirebaseFirestore.getInstance().collection("posts")
                 .addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                    public void onEvent(QuerySnapshot documentSnapshots,
+                                        FirebaseFirestoreException e) {
 
                         for (DocumentSnapshot snapshot : documentSnapshots.getDocuments()) {
                             Post post = new Post(snapshot.getString("user"),
@@ -82,7 +76,7 @@ public class FeedFragment extends Fragment {
                                     Uri.parse(snapshot.getString("postPic")));
                             if (!mPosts.contains(post)) {
                                 mPosts.add(0, post);
-                    }
+                            }
                         }
                         mAdapter.notifyDataSetChanged();
                     }
@@ -90,3 +84,4 @@ public class FeedFragment extends Fragment {
     }
 
 }
+

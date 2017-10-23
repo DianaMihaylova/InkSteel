@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_placeholder, fragment);
+        fragmentTransaction.commit();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
@@ -47,7 +48,6 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
             goToFeed();
         }
 
-        fragmentTransaction.commit();
     }
 
     private void goToFeed() {
@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
     public void onFragmentButtonListener(int which, String email, String password) {
         switch (which) {
             case ConstantUtils.LOGIN_BUTTON:
-                loginUser(email, password);
+                loginUser(email, password, false);
                 break;
             case ConstantUtils.REGISTER_BUTTON:
                 registerUser(email, password);
@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
         }
     }
 
-    private void loginUser(String email, String password) {
+    private void loginUser(String email, String password, final boolean isNewUser) {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -75,6 +75,7 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
                     Toast.makeText(LoginActivity.this, "Sign in " + ConstantUtils.EMAIL,
                             Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(LoginActivity.this, UserInfoActivity.class);
+                    i.putExtra("isNewUser", isNewUser);
                     startActivity(i);
                 } else {
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(LoginActivity.this);
@@ -105,7 +106,7 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
                             Toast.makeText(LoginActivity.this, "User registered!\n" +
                                             ConstantUtils.EMAIL,
                                     Toast.LENGTH_SHORT).show();
-                            loginUser(email, password);
+                            loginUser(email, password, true);
                         } else {
                             Toast.makeText(LoginActivity.this, "User NOT registered!",
                                     Toast.LENGTH_SHORT).show();

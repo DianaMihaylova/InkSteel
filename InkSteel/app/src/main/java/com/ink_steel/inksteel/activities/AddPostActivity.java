@@ -127,22 +127,21 @@ public class AddPostActivity extends AppCompatActivity {
 
             final Map<String, Object> data = new HashMap<>();
 
-            FirebaseFirestore.getInstance()
-                    .collection("users")
-                    .document(ConstantUtils.EMAIL)
-                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                        @Override
-                        public void onEvent(DocumentSnapshot documentSnapshot,
-                                            FirebaseFirestoreException e) {
-                            if (documentSnapshot.exists()) {
+//            FirebaseFirestore.getInstance()
+//                    .collection("users")
+//                    .document(ConstantUtils.EMAIL)
+//                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//                        @Override
+//                        public void onEvent(DocumentSnapshot documentSnapshot,
+//                                            FirebaseFirestoreException e) {
+//                            if (documentSnapshot.exists()) {
                                 data.put("time", new Date());
                                 data.put("user", ConstantUtils.EMAIL);
                                 data.put("postPic", taskSnapshot.getDownloadUrl().toString());
-                                data.put("userProfileImage",
-                                        Uri.parse(documentSnapshot.getString(USER_PROFILE_IMG)));
-                            }
-                        }
-                    });
+            data.put("userProfileImage", ConstantUtils.PROFILE_IMAGE_URI.toString());
+//                            }
+//                        }
+//                    });
             postReference.set(data);
         }
     }
