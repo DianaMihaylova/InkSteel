@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/view_pager"
-        android:name="com.ink_steel.inksteel.fragments.ScreenSlidePageFragment"
+        class="com.ink_steel.inksteel.fragments.ScreenSlidePageFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

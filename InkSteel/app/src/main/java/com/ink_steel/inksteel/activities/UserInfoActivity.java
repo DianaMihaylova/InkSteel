@@ -62,6 +62,18 @@ public class UserInfoActivity extends AppCompatActivity {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // TODO clean this
+                ConstantUtils.FIREBASE_USER_DOCUMENT_REFERENCE
+                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(DocumentSnapshot documentSnapshot,
+                                                FirebaseFirestoreException e) {
+                                if (!documentSnapshot.contains(ConstantUtils.USER_NAME)) {
+                                    saveUserInfoData();
+                                }
+                            }
+                        });
                 Intent i = new Intent(UserInfoActivity.this, HomeActivity.class);
                 startActivity(i);
             }
@@ -97,7 +109,8 @@ public class UserInfoActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        ConstantUtils.FIREBASE_USER_DOCUMENT_REFERENCE.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+        ConstantUtils.FIREBASE_USER_DOCUMENT_REFERENCE.addSnapshotListener(this,
+                new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()) {
@@ -106,7 +119,8 @@ public class UserInfoActivity extends AppCompatActivity {
                     age.setText(documentSnapshot.getString(ConstantUtils.USER_AGE));
 
                     if (documentSnapshot.contains(ConstantUtils.USER_PROFILE_IMG)) {
-                        mImgDownload = Uri.parse(documentSnapshot.getString(ConstantUtils.USER_PROFILE_IMG));
+                        mImgDownload = Uri.parse(documentSnapshot
+                                .getString(ConstantUtils.USER_PROFILE_IMG));
                         loadImage();
                     }
                 }

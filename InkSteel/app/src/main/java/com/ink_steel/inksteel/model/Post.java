@@ -33,4 +33,25 @@ public class Post {
     public Uri getProfileUri() {
         return profileUri;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (!(obj instanceof Post))
+            return false;
+
+        Post other = (Post) obj;
+
+        if (!user.equals(other.user))
+            return false;
+
+        if (!date.equals(other.date))
+            return false;
+
+        if (!profileUri.equals(other.profileUri))
+            return false;
+
+        return profileUri.equals(other.profileUri);
+
+    }
 }

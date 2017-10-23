@@ -15,8 +15,11 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ink_steel.inksteel.PostsAdapter;
 import com.ink_steel.inksteel.R;
@@ -66,34 +69,24 @@ public class FeedFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        updatePosts();
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        updatePosts();
-    }
-
-    private void updatePosts() {
         FirebaseFirestore.getInstance().collection("posts")
-                .document(new SimpleDateFormat("yyyy-MM-dd", Locale.UK).format(new Date()))
-                .collection("posts")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            mPosts.clear();
-                            for (DocumentSnapshot document : task.getResult()) {
-                                mPosts.add(0, new Post(document.getString("user"),
-                                        document.getDate("time"),
-                                        Uri.parse(document.getString("userProfileImage")),
-                                        Uri.parse(document.getString("postPic"))));
-                            }
-                            mAdapter.notifyDataSetChanged();
+                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+
+                        for (DocumentSnapshot snapshot : documentSnapshots.getDocuments()) {
+                            Post post = new Post(snapshot.getString("user"),
+                                    snapshot.getDate("time"),
+                                    Uri.parse(snapshot.getString("userProfileImage")),
+                                    Uri.parse(snapshot.getString("postPic")));
+                            if (!mPosts.contains(post)) {
+                                mPosts.add(0, post);
+                    }
                         }
+                        mAdapter.notifyDataSetChanged();
                     }
                 });
     }
+
 }

@@ -28,15 +28,4 @@ public class ConstantUtils {
     private static FirebaseStorage FIREBASE_STORAGE = FirebaseStorage.getInstance();
     public static StorageReference FIREBASE_STORAGE_REFERENCE = FIREBASE_STORAGE.getReference();
 
-    static {
-        FirebaseFirestore.getInstance()
-                .collection("users")
-                .document(ConstantUtils.EMAIL)
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                        PROFILE_IMAGE_URI = Uri.parse(documentSnapshot.getString(USER_PROFILE_IMG));
-                    }
-                });
-    }
 }
