@@ -3,6 +3,8 @@ package com.ink_steel.inksteel.adapters;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -23,8 +25,12 @@ import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.FullScreenImageActivity;
 import com.ink_steel.inksteel.activities.GalleryActivity;
 import com.ink_steel.inksteel.helpers.ConstantUtils;
+import com.ink_steel.inksteel.helpers.IOnGalleryImageLongClickListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
@@ -33,88 +39,23 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
 
     private ArrayList<Uri> images;
     private Context context;
+    private IOnGalleryImageLongClickListener listener;
 
-    public GalleryRecyclerViewAdapter(Context context, ArrayList<Uri> images) {
+    public GalleryRecyclerViewAdapter(Context context, ArrayList<Uri> images, IOnGalleryImageLongClickListener listener) {
         this.context = context;
         this.images = images;
+        this.listener = listener;
     }
 
     @Override
-    public void onBindViewHolder(final GalleryViewHolders holder, int pos) {
-        final int position = pos;
-        Picasso.with(context)
-                .load(images.get(position))
-                .transform(new CropCircleTransformation())
-                .resize(600, 690)
-                .into(holder.image);
+    public void onBindViewHolder(final GalleryViewHolders holder, final int position) {
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (v.isLongClickable()) {
-                    equalPosition(position);
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, FullScreenImageActivity.class);
-                intent.putExtra("image", position);
-                context.startActivity(intent);
-            }
-        });
-    }
-
-    private void equalPosition(int pos) {
-        final int position = pos;
-        ConstantUtils.FIRESTORE_GALLERY_REFERNENCE.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot document : task.getResult()) {
-                                if (("{picture=" + String.valueOf(images.get(position)) + "}").equals(document.getData().toString())) {
-                                    final DocumentReference docRef = ConstantUtils.FIRESTORE_GALLERY_REFERNENCE.document(document.getId());
-                                    setAlert(docRef);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                });
-    }
-
-    private void setAlert(DocumentReference doc) {
-        final DocumentReference docRef = doc;
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
-        alertBuilder.setMessage("Do you want to delete the image?")
-                .setCancelable(true)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        docRef.delete()
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Toast.makeText(context, "Image successfully deleted!", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    }
-                });
-        AlertDialog ad = alertBuilder.create();
-        ad.setTitle("WARNING MESSAGE");
-        ad.setIcon(R.drawable.warning_msg);
-        ad.show();
+//        Picasso.with(context)
+//                .load(images.get(position))
+//                .transform(new CropCircleTransformation())
+//                .resize(600, 690)
+//                .into(holder.image);
+        holder.bind(images.get(position), listener, position);
     }
 
     @Override
@@ -136,6 +77,25 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
         public GalleryViewHolders(View itemView) {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.image);
+        }
+
+        public void bind(Uri u, IOnGalleryImageLongClickListener l, final int pos) {
+            Picasso.with(itemView.getContext())
+                    .load(u)
+                    .into(image);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onGalleryImageLongClickListener(pos, false);
+                }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    listener.onGalleryImageLongClickListener(pos, true);
+                    return true;
+                }
+            });
         }
     }
 }

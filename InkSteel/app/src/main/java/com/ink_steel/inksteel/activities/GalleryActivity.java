@@ -1,11 +1,14 @@
 package com.ink_steel.inksteel.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
@@ -15,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -23,13 +27,14 @@ import com.google.firebase.storage.UploadTask;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.adapters.GalleryRecyclerViewAdapter;
 import com.ink_steel.inksteel.helpers.ConstantUtils;
+import com.ink_steel.inksteel.helpers.IOnGalleryImageLongClickListener;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GalleryActivity extends AppCompatActivity {
+public class GalleryActivity extends AppCompatActivity implements IOnGalleryImageLongClickListener {
 
     private static final int PICK_IMAGE = 1;
 
@@ -52,7 +57,7 @@ public class GalleryActivity extends AppCompatActivity {
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
-        mAdapter = new GalleryRecyclerViewAdapter(GalleryActivity.this, images);
+        mAdapter = new GalleryRecyclerViewAdapter(GalleryActivity.this, images, this);
         mRecyclerView.setAdapter(mAdapter);
 
 
@@ -131,5 +136,69 @@ public class GalleryActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onGalleryImageLongClickListener(int position, boolean isLongClick) {
+        if (isLongClick) {
+            equalPosition(position);
+        } else {
+            Intent i = new Intent(GalleryActivity.this, FullScreenImageActivity.class);
+            i.putExtra("image", position);
+            startActivity(i);
+        }
+
+    }
+
+    private void equalPosition(int pos) {
+        final int position = pos;
+        ConstantUtils.FIRESTORE_GALLERY_REFERNENCE.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                if (("{picture=" + String.valueOf(images.get(position)) + "}").equals
+                                        (document.getData().toString())) {
+                                    final DocumentReference docRef = ConstantUtils.FIRESTORE_GALLERY_REFERNENCE
+                                            .document(document.getId());
+                                    setAlert(docRef);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void setAlert(DocumentReference doc) {
+        final DocumentReference docRef = doc;
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setMessage("Do you want to delete the image?")
+                .setCancelable(true)
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        docRef.delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(GalleryActivity.this, "Image successfully " +
+                                                "deleted!", Toast.LENGTH_SHORT).show();
+                                        loadImagesArray();
+                                    }
+                                });
+                    }
+                });
+        AlertDialog ad = alertBuilder.create();
+        ad.setTitle("WARNING MESSAGE");
+        ad.setIcon(R.drawable.warning_msg);
+        ad.show();
     }
 }

@@ -10,8 +10,8 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:background="#000000" />
+        android:background="#000000"
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btn_fab"
@@ -22,5 +22,5 @@
         android:layout_alignParentRight="true"
         android:clickable="true"
         android:src="@drawable/ic_add_a_photo_black"/>
-
+    <!--android:scrollbars="vertical"-->
 </RelativeLayout>
