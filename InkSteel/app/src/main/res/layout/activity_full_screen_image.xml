@@ -17,7 +17,7 @@
         app:icvp_min_page_scale_offset="5dp"
         app:icvp_max_page_scale="0.9"
         app:icvp_min_page_scale="0.55"
-        app:icvp_medium_scaled="false"></com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager>
+        app:icvp_medium_scaled="false"/>
 
 </RelativeLayout>
 

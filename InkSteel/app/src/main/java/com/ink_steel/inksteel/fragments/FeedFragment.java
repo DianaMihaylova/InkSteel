@@ -82,11 +82,10 @@ public class FeedFragment extends Fragment {
                                     Uri.parse(snapshot.getString("postPic")));
                             if (!mPosts.contains(post)) {
                                 mPosts.add(0, post);
-                    }
+                            }
                         }
                         mAdapter.notifyDataSetChanged();
                     }
                 });
     }
-
 }
