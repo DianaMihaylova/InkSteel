@@ -2,6 +2,7 @@ package com.ink_steel.inksteel.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,7 @@ import com.ink_steel.inksteel.helpers.ConstantUtils;
 
 public class RegisterFragment extends Fragment {
 
-    private EditText email, pass, confirmPass;
+    private EditText mUserEmailEt, mUserPasswordEt, mConfirmPasswordEt;
     private LoginActivity mLoginActivity;
     private String mUserEmail;
     private String mPassword;
@@ -31,18 +32,18 @@ public class RegisterFragment extends Fragment {
 
         mLoginActivity = (LoginActivity) getActivity();
 
-        email = (EditText) view.findViewById(R.id.login_email);
-        pass = (EditText) view.findViewById(R.id.login_pass);
-        confirmPass = (EditText) view.findViewById(R.id.login_conf_pass);
+        mUserEmailEt = (EditText) view.findViewById(R.id.login_email);
+        mUserPasswordEt = (EditText) view.findViewById(R.id.login_pass);
+        mConfirmPasswordEt = (EditText) view.findViewById(R.id.login_conf_pass);
         Button regBtn = (Button) view.findViewById(R.id.login_register_btn);
 
         regBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mUserEmail = email.getText().toString();
-                mPassword = pass.getText().toString();
-                mConfirmPassword = confirmPass.getText().toString();
-                if (isValidFields()) {
+                mUserEmail = mUserEmailEt.getText().toString();
+                mPassword = mUserPasswordEt.getText().toString();
+                mConfirmPassword = mConfirmPasswordEt.getText().toString();
+                if (areFieldsValid()) {
                     mLoginActivity.onFragmentButtonListener(
                             ConstantUtils.REGISTER_BUTTON, mUserEmail, mPassword);
                 }
@@ -52,17 +53,17 @@ public class RegisterFragment extends Fragment {
         return view;
     }
 
-    private boolean isValidFields() {
-        if (mUserEmail.isEmpty()) {
-            email.setError("Invalid email!");
+    private boolean areFieldsValid() {
+        if (mUserEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(mUserEmail).matches()) {
+            mUserEmailEt.setError("Invalid email!");
             return false;
         }
-        if (mPassword.isEmpty()) {
-            pass.setError("Invalid pass!");
+        if (mPassword.length() < 6) {
+            mUserPasswordEt.setError("Password too short! Minimum length - 6 characters.");
             return false;
         }
         if (!mPassword.equals(mConfirmPassword)) {
-            confirmPass.setError("Passwords don't match!");
+            mConfirmPasswordEt.setError("Passwords don't match!");
             return false;
         }
         return true;

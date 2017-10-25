@@ -26,11 +26,6 @@ public class FullScreenViewAdapter extends PagerAdapter {
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return (view == object);
-    }
-
-    @Override
     public Object instantiateItem(ViewGroup container, int position) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
@@ -49,5 +44,10 @@ public class FullScreenViewAdapter extends PagerAdapter {
         ViewPager viewPager = (ViewPager) container;
         View view = (View) object;
         viewPager.removeView(view);
+    }
+
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return (view == object);
     }
 }

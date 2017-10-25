@@ -35,40 +35,27 @@ public class LoginFragment extends Fragment {
         Button logBtn = (Button) view.findViewById(R.id.login_login_btn);
         Button regBtn = (Button) view.findViewById(R.id.login_register_btn);
 
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            email.setText(bundle.getString(ConstantUtils.LOGIN_EMAIL));
-            pass.setText("1234567");
-        }
-
         logBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String userEmail = email.getText().toString();
                 String password = pass.getText().toString();
-                boolean valid = true;
-                if (userEmail.isEmpty()) {
-                    email.setError("Invalid email!");
-                    valid = false;
-                }
-                if (password.isEmpty()) {
-                    pass.setError("Invalid pass!");
-                    valid = false;
-                }
-                if (valid) {
-                    mLoginActivity.onFragmentButtonListener(ConstantUtils.LOGIN_BUTTON, userEmail, password);
-                }
+                mLoginActivity.onFragmentButtonListener(ConstantUtils.LOGIN_BUTTON,
+                        userEmail, password);
             }
         });
 
         regBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager manager = getFragmentManager();
+
                 RegisterFragment fragment = new RegisterFragment();
-                FragmentTransaction fragmentTransaction = manager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_placeholder, fragment);
-                fragmentTransaction.commit();
+
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_placeholder, fragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 

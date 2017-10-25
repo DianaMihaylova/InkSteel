@@ -1,7 +1,5 @@
 package com.ink_steel.inksteel.activities;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +17,7 @@ import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.fragments.IOnFragmentButtonListener;
 import com.ink_steel.inksteel.fragments.LoginFragment;
 import com.ink_steel.inksteel.helpers.ConstantUtils;
+import com.ink_steel.inksteel.model.CurrentUser;
 
 public class LoginActivity extends AppCompatActivity implements IOnFragmentButtonListener {
 
@@ -32,21 +31,15 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
         mAuth = FirebaseAuth.getInstance();
 
         LoginFragment fragment = new LoginFragment();
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_placeholder, fragment);
-        fragmentTransaction.commit();
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_placeholder, fragment)
+                .addToBackStack(null)
+                .commit();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            Toast.makeText(this, "Already SIGNED-IN\n" + currentUser.getEmail(),
-                    Toast.LENGTH_SHORT).show();
-            Bundle bundle = new Bundle();
-            bundle.putString(ConstantUtils.LOGIN_EMAIL, currentUser.getEmail());
-            fragment.setArguments(bundle);
+        if (CurrentUser.getInstance() != null) {
             goToFeed();
         }
-
     }
 
     private void goToFeed() {
@@ -73,6 +66,7 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
                 if (task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, "Sign in " + ConstantUtils.EMAIL,
                             Toast.LENGTH_SHORT).show();
+                    CurrentUser.getInstance();
                     Intent i = new Intent(LoginActivity.this, UserInfoActivity.class);
                     i.putExtra("isNewUser", isNewUser);
                     startActivity(i);

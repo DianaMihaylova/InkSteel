@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.Toast;
 
@@ -44,6 +45,9 @@ public class GalleryActivity extends AppCompatActivity implements IOnGalleryImag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         images = new ArrayList<>();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.btn_fab);
@@ -64,15 +68,32 @@ public class GalleryActivity extends AppCompatActivity implements IOnGalleryImag
     }
 
     @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        loadImagesArray();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         loadImagesArray();
     }
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        loadImagesArray();
+    public void loadImagesArray() {
+        ConstantUtils.FIRESTORE_GALLERY_REFERNENCE
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            images.clear();
+                            for (DocumentSnapshot document : task.getResult()) {
+                                images.add(Uri.parse(document.getString("picture")));
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
     }
 
     private void selectImage() {
@@ -113,23 +134,6 @@ public class GalleryActivity extends AppCompatActivity implements IOnGalleryImag
         ConstantUtils.FIRESTORE_GALLERY_REFERNENCE.add(galleryData);
         images.add(Uri.parse(userPictureUrl));
         loadImagesArray();
-    }
-
-    public void loadImagesArray() {
-        ConstantUtils.FIRESTORE_GALLERY_REFERNENCE
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            images.clear();
-                            for (DocumentSnapshot document : task.getResult()) {
-                                images.add(Uri.parse(document.getString("picture")));
-                            }
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    }
-                });
     }
 
     @Override
