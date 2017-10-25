@@ -1,7 +1,6 @@
 package com.ink_steel.inksteel.fragments;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -21,7 +20,7 @@ import com.ink_steel.inksteel.activities.ChatActivity;
 import com.ink_steel.inksteel.activities.GalleryActivity;
 import com.ink_steel.inksteel.activities.UserInfoActivity;
 import com.ink_steel.inksteel.helpers.ConstantUtils;
-import com.ink_steel.inksteel.helpers.CurrentUser;
+import com.ink_steel.inksteel.model.CurrentUser;
 import com.squareup.picasso.Picasso;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
@@ -31,8 +30,6 @@ public class ProfileFragment extends Fragment {
     private ImageView imageView;
     private TextView username, email, age, city;
     private CurrentUser mCurrentUser;
-//    private DocumentReference saveInfo = FirebaseFirestore.getInstance().collection("users").
-//            document(mCurrentUser);
 
     public ProfileFragment() {
     }
@@ -85,7 +82,7 @@ public class ProfileFragment extends Fragment {
     public void onStart() {
         super.onStart();
         DocumentReference saveInfo = FirebaseFirestore.getInstance().collection("users").
-                document(mCurrentUser.getUserEmail());
+                document(ConstantUtils.USER_EMAIL);
         saveInfo.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
@@ -99,10 +96,8 @@ public class ProfileFragment extends Fragment {
                     city.setText(cityStr);
                     age.setText(ageStr);
 
-                    Uri imageDownloadUrl = Uri.parse(documentSnapshot.getString(ConstantUtils.USER_PROFILE_IMG));
-                    mCurrentUser.setUserProfilePicture(imageDownloadUrl.toString());
                     Picasso.with(getActivity())
-                            .load(imageDownloadUrl)
+                            .load(mCurrentUser.getUserProfilePicture())
                             .transform(new CropCircleTransformation())
                             .into(imageView);
                 }

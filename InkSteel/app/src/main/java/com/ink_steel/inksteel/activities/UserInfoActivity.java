@@ -32,6 +32,9 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class UserInfoActivity extends AppCompatActivity {
 
+//        private static final String DEFAULT_IMG_URL = "https://firebasestorage.googleapis.com/v0/b/inksteel-" +
+//            "7911e.appspot.com/o/default.jpg?alt=media&token=2a0f4edc-81e5-40a2-9558-015e18b8b1ff";
+
     private EditText userName, age, city;
     private ImageView imageView;
     private CurrentUser mCurrentUser;
@@ -107,25 +110,18 @@ public class UserInfoActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-//        ConstantUtils.FIREBASE_USER_DOCUMENT_REFERENCE.addSnapshotListener(this,
-//                new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-//                if (documentSnapshot.exists()) {
-//                    userName.setText(documentSnapshot.getString(ConstantUtils.USER_NAME));
-//                    city.setText(documentSnapshot.getString(ConstantUtils.USER_CITY));
-//                    age.setText(documentSnapshot.get(ConstantUtils.USER_AGE).toString());
-//
-//                    if (documentSnapshot.contains(ConstantUtils.USER_PROFILE_IMG)) {
-//
-//                        loadImage();
-//                    }
-//                }
-//            }
-//        });
-        userName.setText(mCurrentUser.getUserName());
-        city.setText(mCurrentUser.getUserCity());
-        age.setText(mCurrentUser.getUserAge());
+        ConstantUtils.FIREBASE_USER_DOCUMENT_REFERENCE.addSnapshotListener(this,
+                new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                        if (documentSnapshot.exists()) {
+                            userName.setText(mCurrentUser.getUserName());
+                            city.setText(mCurrentUser.getUserCity());
+                            age.setText(mCurrentUser.getUserAge());
+                            loadImage();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -139,7 +135,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
     private void uploadImage() {
         StorageReference spaceRef = ConstantUtils.FIREBASE_STORAGE_REFERENCE
-                .child(ConstantUtils.EMAIL + "/profile.jpg");
+                .child(ConstantUtils.USER_EMAIL + "/profile.jpg");
         UploadTask uploadTask = spaceRef.putFile(Uri.parse(mCurrentUser.getUserProfilePicture()));
 
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

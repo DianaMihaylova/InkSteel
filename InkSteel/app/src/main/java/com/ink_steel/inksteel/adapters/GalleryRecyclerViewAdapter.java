@@ -12,17 +12,17 @@ import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.helpers.IOnGalleryImageLongClickListener;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecyclerViewAdapter.GalleryViewHolders> {
 
     private Context context;
-    private ArrayList<Uri> images;
+    private List<Uri> images;
     private IOnGalleryImageLongClickListener listener;
 
-    public GalleryRecyclerViewAdapter(Context context, ArrayList<Uri> images, IOnGalleryImageLongClickListener listener) {
+    public GalleryRecyclerViewAdapter(Context context, List<Uri> images, IOnGalleryImageLongClickListener listener) {
         this.context = context;
         this.images = images;
         this.listener = listener;
@@ -38,11 +38,6 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_list, parent, false);
         GalleryViewHolders vh = new GalleryViewHolders(v);
         return vh;
-    }
-
-    @Override
-    public void onBindViewHolder(final GalleryViewHolders holder, final int position) {
-        holder.bind(images.get(position), position);
     }
 
     @Override

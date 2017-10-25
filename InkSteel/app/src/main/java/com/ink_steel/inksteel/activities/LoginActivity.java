@@ -12,7 +12,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.fragments.IOnFragmentButtonListener;
 import com.ink_steel.inksteel.fragments.LoginFragment;
@@ -64,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Sign in " + ConstantUtils.EMAIL,
+                    Toast.makeText(LoginActivity.this, "Sign in " + ConstantUtils.USER_EMAIL,
                             Toast.LENGTH_SHORT).show();
                     CurrentUser.getInstance();
                     Intent i = new Intent(LoginActivity.this, UserInfoActivity.class);
@@ -96,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "User registered!\n" +
-                                    ConstantUtils.EMAIL, Toast.LENGTH_SHORT).show();
+                                    ConstantUtils.USER_EMAIL, Toast.LENGTH_SHORT).show();
                             loginUser(email, password, true);
                         } else {
                             Toast.makeText(LoginActivity.this, "User NOT registered!",
