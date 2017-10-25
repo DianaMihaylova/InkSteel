@@ -29,15 +29,15 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
     }
 
     @Override
-    public void onBindViewHolder(final GalleryViewHolders holder, final int position) {
-        holder.bind(images.get(position), position);
-    }
-
-    @Override
     public GalleryViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_list, parent, false);
         GalleryViewHolders vh = new GalleryViewHolders(v);
         return vh;
+    }
+
+    @Override
+    public void onBindViewHolder(final GalleryViewHolders holder, final int position) {
+        holder.bind(images.get(position), position);
     }
 
     @Override

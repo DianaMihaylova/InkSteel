@@ -15,6 +15,9 @@ public class FullScreenImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_screen_image);
 
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         int position = 0;
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("image")) {

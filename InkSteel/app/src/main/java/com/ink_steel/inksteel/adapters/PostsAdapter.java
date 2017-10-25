@@ -5,21 +5,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.model.Post;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHolder> {
 
     private Context context;
     private List<Post> posts;
@@ -42,25 +41,18 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(PostsViewHolder holder, int position) {
+
         Post post = posts.get(position);
-
-        if (holder instanceof PostsViewHolder) {
-            PostsViewHolder holder2 = (PostsViewHolder) holder;
-            holder2.summary.setText(post.getUser());
-
-            holder2.postText.setText(dateFormatter(post.getDate()));
-
-            Picasso.with(context)
-                    .load(post.getProfileUri())
-                    .transform(new CropCircleTransformation())
-                    .into(holder2.profilePic);
-
-            if (post.getProfileUri() != null)
-                Picasso.with(context)
-                        .load(post.getImageUrl())
-                        .into(holder2.postPic);
-        }
+        holder.summary.setText(post.getUser());
+        holder.postText.setText(post.getDate());
+        Picasso.with(context)
+                .load(post.getProfileUri())
+                .transform(new CropCircleTransformation())
+                .into(holder.profilePic);
+        Picasso.with(context)
+                .load(post.getImageUrl())
+                .into(holder.postPic);
     }
 
     @Override
@@ -73,30 +65,35 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return posts.size();
     }
 
-    private String dateFormatter(Date date) {
-        String today = new SimpleDateFormat("dd MMMM",
-                Locale.US).format(new Date());
-        if (today.equals(new SimpleDateFormat("dd MMMM",
-                Locale.US).format(date)))
-            return new SimpleDateFormat("h:mm",
-                    Locale.US).format(date) + ", Today";
-
-        return new SimpleDateFormat("h:mm, dd MMMM", Locale.US).format(date);
-    }
-
-    private class PostsViewHolder extends RecyclerView.ViewHolder {
+    class PostsViewHolder extends RecyclerView.ViewHolder {
 
         ImageView profilePic, postPic;
         TextView summary, postText;
+        ImageButton expand;
+        LinearLayout linearLayout;
 
-        PostsViewHolder(View itemView) {
+        PostsViewHolder(final View itemView) {
             super(itemView);
 
             profilePic = (ImageView) itemView.findViewById(R.id.profile_pic);
             postPic = (ImageView) itemView.findViewById(R.id.post_pic);
             summary = (TextView) itemView.findViewById(R.id.user_tv);
             postText = (TextView) itemView.findViewById(R.id.date_tv);
-        }
+            expand = (ImageButton) itemView.findViewById(R.id.expand);
+            linearLayout = (LinearLayout) itemView.findViewById(R.id.reactions);
 
+            expand.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (linearLayout.getVisibility() == View.GONE) {
+                        linearLayout.setVisibility(View.VISIBLE);
+                        expand.setImageResource(R.drawable.ic_expand_less);
+                    } else {
+                        linearLayout.setVisibility(View.GONE);
+                        expand.setImageResource(R.drawable.ic_expand_more);
+                    }
+                }
+            });
+        }
     }
 }

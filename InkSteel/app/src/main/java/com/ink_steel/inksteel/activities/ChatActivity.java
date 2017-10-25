@@ -31,6 +31,9 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Map<String, Object> friendData = new HashMap<>();
         friendData.put("text", "Hello world!");
         friendData.put("time", System.currentTimeMillis());

@@ -28,6 +28,7 @@ import com.google.firebase.storage.UploadTask;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.helpers.ConstantUtils;
 import com.ink_steel.inksteel.helpers.ImageDownloader;
+import com.ink_steel.inksteel.model.CurrentUser;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -48,7 +49,6 @@ public class AddPostActivity extends AppCompatActivity {
 
     private CropImageView mCropImageView;
     private View rootView;
-    private Button mImageFromGalleryBtn;
     private Uri mImageUri;
     private Button mPostImageBtn;
 
@@ -57,9 +57,12 @@ public class AddPostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_post);
 
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         final EditText imageUrl = (EditText) findViewById(R.id.post_image_url_et);
         Button imageUrlButton = (Button) findViewById(R.id.post_download_image_btn);
-        mImageFromGalleryBtn = (Button) findViewById(R.id.post_add_from_gallery_btn);
+        Button imageFromGalleryBtn = (Button) findViewById(R.id.post_add_from_gallery_btn);
         mCropImageView = (CropImageView) findViewById(R.id.post_crop_iv);
         mPostImageBtn = (Button) findViewById(R.id.post_post_btn);
         rootView = findViewById(R.id.add_post_root);
@@ -88,7 +91,7 @@ public class AddPostActivity extends AppCompatActivity {
             }
         });
 
-        mImageFromGalleryBtn.setOnClickListener(new View.OnClickListener() {
+        imageFromGalleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -114,17 +117,18 @@ public class AddPostActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        savePostToDatabase(taskSnapshot, date);
+                        savePostToDatabase(taskSnapshot);
                     }
                 });
     }
 
-    private void savePostToDatabase(final UploadTask.TaskSnapshot taskSnapshot, String date) {
+    private void savePostToDatabase(final UploadTask.TaskSnapshot taskSnapshot) {
         if (taskSnapshot.getDownloadUrl() != null) {
+//            DocumentReference postReference = FirebaseFirestore.getInstance()
+//                    .collection("posts")
+//                    .document(DOCUMENT_POST_DATE);
             DocumentReference postReference = FirebaseFirestore.getInstance()
-                    .collection("posts")
-                    .document(DOCUMENT_POST_DATE);
-
+                    .collection("posts").document();
             final Map<String, Object> data = new HashMap<>();
 
 //            FirebaseFirestore.getInstance()
@@ -136,7 +140,7 @@ public class AddPostActivity extends AppCompatActivity {
 //                                            FirebaseFirestoreException e) {
 //                            if (documentSnapshot.exists()) {
                                 data.put("time", new Date());
-                                data.put("user", ConstantUtils.EMAIL);
+            data.put("user", CurrentUser.getInstance().getUserName());
                                 data.put("postPic", taskSnapshot.getDownloadUrl().toString());
             data.put("userProfileImage", ConstantUtils.PROFILE_IMAGE_URI.toString());
 //                            }
@@ -160,7 +164,6 @@ public class AddPostActivity extends AppCompatActivity {
     }
 
     private void displayImage() {
-        Log.d("ImageChooser", mImageUri.toString());
         Picasso.with(AddPostActivity.this)
                 .load(mImageUri)
                 .into(new ImageDownloader("postPic", mCropImageView));

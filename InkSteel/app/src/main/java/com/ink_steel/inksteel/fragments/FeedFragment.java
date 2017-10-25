@@ -17,7 +17,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.ink_steel.inksteel.PostsAdapter;
+import com.ink_steel.inksteel.adapters.PostsAdapter;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.AddPostActivity;
 import com.ink_steel.inksteel.model.Post;
@@ -62,13 +62,11 @@ public class FeedFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        
         FirebaseFirestore.getInstance().collection("posts")
                 .addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots,
                                         FirebaseFirestoreException e) {
-
                         for (DocumentSnapshot snapshot : documentSnapshots.getDocuments()) {
                             Post post = new Post(snapshot.getString("user"),
                                     snapshot.getDate("time"),

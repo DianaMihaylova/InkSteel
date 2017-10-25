@@ -2,7 +2,9 @@ package com.ink_steel.inksteel.model;
 
 import android.net.Uri;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Post {
 
@@ -22,8 +24,15 @@ public class Post {
         return user;
     }
 
-    public Date getDate() {
-        return date;
+    public String getDate() {
+        String today = new SimpleDateFormat("dd MMMM",
+                Locale.US).format(new Date());
+        if (today.equals(new SimpleDateFormat("dd MMMM",
+                Locale.US).format(date)))
+            return new SimpleDateFormat("h:mm",
+                    Locale.US).format(date) + ", Today";
+
+        return new SimpleDateFormat("h:mm, dd MMMM", Locale.US).format(date);
     }
 
     public Uri getImageUrl() {
