@@ -39,6 +39,10 @@ dependencies {
     compile 'jp.wasabeef:picasso-transformations:2.1.2'
     compile 'com.theartofdev.edmodo:android-image-cropper:2.4.7'
     compile 'com.github.devlight:infinitecycleviewpager:1.0.2'
+    compile 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar'
+    compile('com.alibaba.android:ultraviewpager:1.0.6.1@aar') {
+        transitive = true
+    }
     testCompile 'junit:junit:4.12'
 
 }
