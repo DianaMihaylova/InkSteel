@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -34,11 +35,13 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.ink_steel.inksteel.helpers.ConstantUtils.USER_PROFILE_IMG;
 
@@ -51,6 +54,8 @@ public class AddPostActivity extends AppCompatActivity {
     private View rootView;
     private Uri mImageUri;
     private Button mPostImageBtn;
+    private UUID mUUID;
+    private String postThumbnailUrl, postImageUril;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,7 @@ public class AddPostActivity extends AppCompatActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mUUID = UUID.randomUUID();
         final EditText imageUrl = (EditText) findViewById(R.id.post_image_url_et);
         Button imageUrlButton = (Button) findViewById(R.id.post_download_image_btn);
         Button imageFromGalleryBtn = (Button) findViewById(R.id.post_add_from_gallery_btn);
@@ -84,7 +90,7 @@ public class AddPostActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 byte[] data = getCroppedImage();
-                saveImageToStorage(data);
+                saveImageToStorage(data, true);
 
                 Intent intent = new Intent(AddPostActivity.this, HomeActivity.class);
                 startActivity(intent);
@@ -96,7 +102,7 @@ public class AddPostActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 int permissionCheck = ContextCompat.checkSelfPermission(AddPostActivity.this,
-                        Manifest.permission.READ_EXTERNAL_STORAGE);
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                     requestStoragePermission();
                 } else {
@@ -109,44 +115,29 @@ public class AddPostActivity extends AppCompatActivity {
         });
     }
 
-    private void saveImageToStorage(byte[] data) {
+    private void saveImageToStorage(byte[] data, boolean isThumbnail) {
         final String date = new SimpleDateFormat("yyyy-MM-dd", Locale.UK).format(new Date());
-        final StorageReference spaceRef = ConstantUtils.FIREBASE_STORAGE_REFERENCE
-                .child("posts/" + date + "/" + new Date() + ".jpeg");
-        spaceRef.putBytes(data)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        savePostToDatabase(taskSnapshot);
-                    }
-                });
-    }
-
-    private void savePostToDatabase(final UploadTask.TaskSnapshot taskSnapshot) {
-        if (taskSnapshot.getDownloadUrl() != null) {
-//            DocumentReference postReference = FirebaseFirestore.getInstance()
-//                    .collection("posts")
-//                    .document(DOCUMENT_POST_DATE);
-            DocumentReference postReference = FirebaseFirestore.getInstance()
-                    .collection("posts").document();
-            final Map<String, Object> data = new HashMap<>();
-
-//            FirebaseFirestore.getInstance()
-//                    .collection("users")
-//                    .document(ConstantUtils.EMAIL)
-//                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-//                        @Override
-//                        public void onEvent(DocumentSnapshot documentSnapshot,
-//                                            FirebaseFirestoreException e) {
-//                            if (documentSnapshot.exists()) {
-                                data.put("time", new Date());
-            data.put("user", CurrentUser.getInstance().getUserName());
-                                data.put("postPic", taskSnapshot.getDownloadUrl().toString());
-            data.put("userProfileImage", ConstantUtils.PROFILE_IMAGE_URI.toString());
-//                            }
-//                        }
-//                    });
-            postReference.set(data);
+        if (isThumbnail) {
+            final StorageReference spaceRef = ConstantUtils.FIREBASE_STORAGE_REFERENCE
+                    .child("posts/" + date + "/" + mUUID + "thumbnail.jpeg");
+            spaceRef.putBytes(data)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            postThumbnailUrl = taskSnapshot.getDownloadUrl().toString();
+//                        savePostToDatabase(taskSnapshot);
+                        }
+                    });
+        } else {
+            StorageReference spaceRef = ConstantUtils.FIREBASE_STORAGE_REFERENCE
+                    .child("posts" + date + "/" + mUUID + "full.jpeg");
+            spaceRef.putBytes(data)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            postImageUril = taskSnapshot.getDownloadUrl().toString();
+                        }
+                    });
         }
     }
 
@@ -159,7 +150,7 @@ public class AddPostActivity extends AppCompatActivity {
 
     private void requestStoragePermission() {
         ActivityCompat.requestPermissions(AddPostActivity.this,
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 PERMISSION_REQUEST_CODE);
     }
 
@@ -173,6 +164,25 @@ public class AddPostActivity extends AppCompatActivity {
         mPostImageBtn.setVisibility(View.VISIBLE);
     }
 
+    private void savePostToDatabase(final UploadTask.TaskSnapshot taskSnapshot) {
+        if (taskSnapshot.getDownloadUrl() != null) {
+            DocumentReference postReference = FirebaseFirestore.getInstance()
+                    .collection("posts").document();
+            final Map<String, Object> data = new HashMap<>();
+            data.put("time", new Date());
+            data.put("user", CurrentUser.getInstance().getUserName());
+            data.put("postPicThumbnail", postThumbnailUrl);
+            data.put("postPic", postImageUril);
+            data.put("userProfileImage", ConstantUtils.PROFILE_IMAGE_URI.toString());
+            data.put("postId", postReference.getId());
+            data.put("like", 0);
+            data.put("devil", 0);
+            data.put("blush", 0);
+            data.put("dazed", 0);
+            postReference.set(data);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -180,6 +190,14 @@ public class AddPostActivity extends AppCompatActivity {
                 && resultCode == RESULT_OK) {
             Log.d("ImageChooser", "Image chosen: " + CropImage.getPickImageResultUri(this, data));
             mImageUri = CropImage.getPickImageResultUri(this, data);
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mImageUri);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                saveImageToStorage(baos.toByteArray(), false);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             displayImage();
         }
     }

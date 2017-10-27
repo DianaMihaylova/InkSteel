@@ -1,9 +1,9 @@
 package com.ink_steel.inksteel.fragments;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,13 +22,8 @@ public class ScreenSlidePageFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_screen_slide_page, container, false);
 
-        ProfileFragment profileFragment = new ProfileFragment();
-        FeedFragment feedFragment = new FeedFragment();
-        ExploreFragment exploreFragment = new ExploreFragment();
-        ContactStudioFragment contactStudioFragment = new ContactStudioFragment();
-
-        final Fragment[] fragments = {profileFragment, feedFragment, exploreFragment,
-                contactStudioFragment};
+        final Fragment[] fragments = {new ProfileFragment(), new FeedFragment(),
+                new ExploreFragment(), new ContactStudioFragment()};
         final String[] tabTitle = {"", "Feed", "Explore", "Studios Contacts"};
 
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewPager);

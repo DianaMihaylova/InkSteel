@@ -7,7 +7,7 @@
                 tools:context="com.ink_steel.inksteel.activities.GalleryActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/commentsRv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#000000"

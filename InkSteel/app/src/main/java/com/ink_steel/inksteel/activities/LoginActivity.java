@@ -12,9 +12,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.fragments.IOnFragmentButtonListener;
+import com.ink_steel.inksteel.helpers.IOnFragmentButtonListener;
 import com.ink_steel.inksteel.fragments.LoginFragment;
 import com.ink_steel.inksteel.helpers.ConstantUtils;
 import com.ink_steel.inksteel.model.CurrentUser;
@@ -45,6 +44,12 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
     private void goToFeed() {
         Intent i = new Intent(LoginActivity.this, HomeActivity.class);
         startActivity(i);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
     }
 
     @Override

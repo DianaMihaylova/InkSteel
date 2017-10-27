@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <fragment
-        android:id="@+id/view_pager"
-        class="com.ink_steel.inksteel.fragments.ScreenSlidePageFragment"
+    <FrameLayout
+        android:id="@+id/home_activity_fragments_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

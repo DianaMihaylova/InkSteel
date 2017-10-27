@@ -2,65 +2,66 @@ package com.ink_steel.inksteel.model;
 
 import android.net.Uri;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 
 public class Post {
 
     private String user;
-    private Date date;
-    private Uri profileUri;
-    private Uri imageUrl;
+    private long date;
+    private String profileUri;
+    private String imageUrl;
+    private String postId;
+    private String thumbnailUrl;
 
-    public Post(String user, Date date, Uri profileUri, Uri imageUrl) {
+    public Post(String postId, String user, long date, String profilePictureUri,
+                String postImageUri, String thumbnailUrl) {
+        this.postId = postId;
         this.user = user;
         this.date = date;
-        this.imageUrl = imageUrl;
-        this.profileUri = profileUri;
+        this.profileUri = profilePictureUri;
+        this.imageUrl = postImageUri;
+        this.thumbnailUrl = thumbnailUrl;
     }
 
     public String getUser() {
         return user;
     }
 
+    public String getPostId() {
+        return postId;
+    }
+
     public String getDate() {
-        String today = new SimpleDateFormat("dd MMMM",
-                Locale.US).format(new Date());
-        if (today.equals(new SimpleDateFormat("dd MMMM",
-                Locale.US).format(date)))
-            return new SimpleDateFormat("h:mm",
-                    Locale.US).format(date) + ", Today";
 
         return new SimpleDateFormat("h:mm, dd MMMM", Locale.US).format(date);
     }
 
-    public Uri getImageUrl() {
+    public String getImageUrl() {
         return imageUrl;
     }
 
-    public Uri getProfileUri() {
+    public String getProfileUri() {
         return profileUri;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
     }
 
     @Override
     public boolean equals(Object obj) {
 
-        if (!(obj instanceof Post))
-            return false;
-
-        Post other = (Post) obj;
-
-        if (!user.equals(other.user))
-            return false;
-
-        if (!date.equals(other.date))
-            return false;
-
-        if (!profileUri.equals(other.profileUri))
-            return false;
-
-        return profileUri.equals(other.profileUri);
+        return obj instanceof Post && postId.equals(((Post) obj).postId);
 
     }
 }
