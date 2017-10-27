@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ToxicBakery.viewpager.transforms.ZoomInTransformer;
 import com.ink_steel.inksteel.R;
 
 public class ScreenSlidePageFragment extends Fragment {
@@ -38,7 +39,6 @@ public class ScreenSlidePageFragment extends Fragment {
                 return fragments.length;
             }
 
-
             @Override
             public CharSequence getPageTitle(int position) {
                 return tabTitle[position];
@@ -46,6 +46,7 @@ public class ScreenSlidePageFragment extends Fragment {
         });
 
         viewPager.setCurrentItem(1);
+        viewPager.setPageTransformer(true, new ZoomInTransformer());
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);

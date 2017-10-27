@@ -7,35 +7,45 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.model.CurrentUser;
+import com.ink_steel.inksteel.model.User;
 import com.squareup.picasso.Picasso;
 
-public class FullScreenViewAdapter extends PagerAdapter {
+import java.util.ArrayList;
+
+public class ExploreAdapter extends PagerAdapter {
 
     private Context context;
-    private CurrentUser mCurrentUser;
+    private ArrayList<User> users;
 
-    public FullScreenViewAdapter(Context context) {
+    public ExploreAdapter(Context context, ArrayList<User> users) {
         this.context = context;
-        this.mCurrentUser = CurrentUser.getInstance();
+        this.users = users;
     }
 
     @Override
     public int getCount() {
-        return mCurrentUser.getImages().size();
+        return users.size();
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(R.layout.single_image_list, container, false);
-        ImageView imageView = (ImageView) view.findViewById(R.id.selected_image);
+        View view = layoutInflater.inflate(R.layout.list_explore_item, container, false);
+
+        ImageView imageView = (ImageView) view.findViewById(R.id.profile_pic);
+        TextView userName = (TextView) view.findViewById(R.id.user_name);
+        TextView userCity = (TextView) view.findViewById(R.id.user_city);
+
         Picasso.with(context)
-                .load(mCurrentUser.getImages().get(position))
+                .load(users.get(position).getProfileImg())
                 .into(imageView);
+
+        userName.setText(users.get(position).getUserName());
+        userCity.setText(users.get(position).getUserCity());
 
         container.addView(view);
         return view;

@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Sign in " + ConstantUtils.EMAIL,
+                    Toast.makeText(LoginActivity.this, "Sign in " + ConstantUtils.USER_EMAIL,
                             Toast.LENGTH_SHORT).show();
                     CurrentUser.getInstance();
                     Intent i = new Intent(LoginActivity.this, UserInfoActivity.class);
@@ -95,15 +95,13 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
     }
 
     private void registerUser(final String email, final String password) {
-        Toast.makeText(this, "REGISTER", Toast.LENGTH_SHORT).show();
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "User registered!\n" +
-                                            ConstantUtils.EMAIL,
-                                    Toast.LENGTH_SHORT).show();
+                                    ConstantUtils.USER_EMAIL, Toast.LENGTH_SHORT).show();
                             loginUser(email, password, true);
                         } else {
                             Toast.makeText(LoginActivity.this, "User NOT registered!",

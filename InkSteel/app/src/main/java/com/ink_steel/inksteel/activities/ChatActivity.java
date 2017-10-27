@@ -19,7 +19,7 @@ import java.util.Map;
 public class ChatActivity extends AppCompatActivity {
 
     private static final DocumentReference FIRESTORE_FRIENDS_REFERNENCE = FirebaseFirestore.getInstance()
-            .document("users/" + ConstantUtils.EMAIL + "/friends/user1@gmail.com");
+            .document("users/" + ConstantUtils.USER_EMAIL + "/friends/user1@gmail.com");
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
