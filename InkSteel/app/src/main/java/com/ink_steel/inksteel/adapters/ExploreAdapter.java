@@ -11,19 +11,24 @@ import android.widget.TextView;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.fragments.ExploreFragment;
+import com.ink_steel.inksteel.model.User;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 public class ExploreAdapter extends PagerAdapter {
 
     private Context context;
+    private ArrayList<User> users;
 
-    public ExploreAdapter(Context context) {
+    public ExploreAdapter(Context context, ArrayList<User> users) {
         this.context = context;
+        this.users = users;
     }
 
     @Override
     public int getCount() {
-        return ExploreFragment.users.size();
+        return users.size();
     }
 
     @Override
@@ -34,7 +39,7 @@ public class ExploreAdapter extends PagerAdapter {
         if (position % 2 == 0) {
             view = layoutInflater.inflate(R.layout.item_explore, container, false);
         } else {
-            view = layoutInflater.inflate(R.layout.list_explore_item_reverse, container, false);
+            view = layoutInflater.inflate(R.layout.item_explore_reverse, container, false);
         }
 
         ImageView imageView = view.findViewById(R.id.profile_pic);
@@ -42,11 +47,11 @@ public class ExploreAdapter extends PagerAdapter {
         TextView userCity = view.findViewById(R.id.user_city);
 
         Picasso.with(context)
-                .load(ExploreFragment.users.get(position).getProfileImg())
+                .load(users.get(position).getProfileImage())
                 .into(imageView);
 
-        String uName = "User: " + ExploreFragment.users.get(position).getUserName();
-        String uCity = "City: " + ExploreFragment.users.get(position).getUserCity();
+        String uName = "User: " + users.get(position).getName();
+        String uCity = "City: " + users.get(position).getCity();
         userName.setText(uName);
         userCity.setText(uCity);
 

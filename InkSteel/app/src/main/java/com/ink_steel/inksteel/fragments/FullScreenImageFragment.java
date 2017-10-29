@@ -19,13 +19,15 @@ public class FullScreenImageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_full_screen_image, container, false);
+        View view = inflater.inflate(R.layout.fragment_full_screen_image, container,
+                false);
 
         int position = getArguments().getInt("image");
 
-        HorizontalInfiniteCycleViewPager viewPager = (HorizontalInfiniteCycleViewPager)
+        HorizontalInfiniteCycleViewPager viewPager =
                 view.findViewById(R.id.view_pager_horizontal_cycle);
-        FullScreenViewAdapter fullScreenViewAdapter = new FullScreenViewAdapter(getActivity().getApplicationContext());
+        FullScreenViewAdapter fullScreenViewAdapter =
+                new FullScreenViewAdapter(getActivity().getApplicationContext());
         viewPager.setAdapter(fullScreenViewAdapter);
         viewPager.setCurrentItem(position);
 

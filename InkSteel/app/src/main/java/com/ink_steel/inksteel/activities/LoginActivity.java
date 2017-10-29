@@ -13,14 +13,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ink_steel.inksteel.R;
+import com.ink_steel.inksteel.data.FirebaseManager;
 import com.ink_steel.inksteel.helpers.IOnFragmentButtonListener;
 import com.ink_steel.inksteel.fragments.LoginFragment;
 import com.ink_steel.inksteel.helpers.ConstantUtils;
-import com.ink_steel.inksteel.model.CurrentUser;
 
-public class LoginActivity extends AppCompatActivity implements IOnFragmentButtonListener {
+public class LoginActivity extends AppCompatActivity implements IOnFragmentButtonListener,
+        FirebaseManager.CurrentUserInfoListener {
 
+    public static final String IS_NEW_USER = "isNewUser";
     private FirebaseAuth mAuth;
+    private FirebaseManager.UserManager mManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +39,9 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
                 .addToBackStack(null)
                 .commit();
 
-        if (CurrentUser.getInstance() != null) {
+        mManager = FirebaseManager.getInstance().getUserManager();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             goToFeed();
         }
     }
@@ -64,34 +69,36 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
         }
     }
 
-    private void loginUser(String email, String password, final boolean isNewUser) {
+    private void loginUser(final String email, String password, final boolean isNewUser) {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    mManager.loadUserInfo(LoginActivity.this, email, isNewUser);
                     Toast.makeText(LoginActivity.this, "Sign in " + ConstantUtils.USER_EMAIL,
                             Toast.LENGTH_SHORT).show();
-                    CurrentUser.getInstance();
-                    Intent i = new Intent(LoginActivity.this, UserInfoActivity.class);
-                    i.putExtra("isNewUser", isNewUser);
-                    startActivity(i);
+
                 } else {
-                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(LoginActivity.this);
-                    alertBuilder.setMessage("Wrong e-mail or password! Try again.")
-                            .setCancelable(false)
-                            .setPositiveButton("BACK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });
-                    AlertDialog ad = alertBuilder.create();
-                    ad.setTitle("WARNING MESSAGE");
-                    ad.setIcon(R.drawable.warning_msg);
-                    ad.show();
+                    showAlert();
                 }
             }
         });
+    }
+
+    private void showAlert() {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(LoginActivity.this);
+        alertBuilder.setMessage("Wrong e-mail or password! Try again.")
+                .setCancelable(false)
+                .setPositiveButton("BACK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog ad = alertBuilder.create();
+        ad.setTitle("WARNING MESSAGE");
+        ad.setIcon(R.drawable.warning_msg);
+        ad.show();
     }
 
     private void registerUser(final String email, final String password) {
@@ -109,5 +116,12 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onInfoLoaded(boolean isNewUser) {
+        Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+        i.putExtra(IS_NEW_USER, isNewUser);
+        startActivity(i);
     }
 }

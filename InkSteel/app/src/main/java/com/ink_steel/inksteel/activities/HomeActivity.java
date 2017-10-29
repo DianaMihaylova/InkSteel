@@ -6,28 +6,27 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.data.FirebaseManager;
 import com.ink_steel.inksteel.fragments.ScreenSlidePageFragment;
+import com.ink_steel.inksteel.fragments.UserInfoFragment;
 import com.ink_steel.inksteel.helpers.OnReplaceFragment;
-import com.ink_steel.inksteel.model.CurrentUser;
 
-public class HomeActivity extends Activity implements OnReplaceFragment, FirebaseManager.UserListener {
+public class HomeActivity extends Activity implements OnReplaceFragment {
 
-    public static String userEmail, userName, userImageUrl;
+    public static String userEmail, userImageUrl;
     private FragmentManager mManager;
-    private FirebaseManager.UserManager mUserManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        CurrentUser.getInstance();
         mManager = getFragmentManager();
-        displayFragment(new ScreenSlidePageFragment());
+        if (getIntent().getBooleanExtra(LoginActivity.IS_NEW_USER, false)) {
+            displayFragment(new UserInfoFragment());
+        } else {
+            displayFragment(new ScreenSlidePageFragment());
+        }
 
-        mUserManager = FirebaseManager.getInstance()
-                .getUserManager(this);
     }
 
     private void displayFragment(Fragment fragment) {
@@ -42,10 +41,4 @@ public class HomeActivity extends Activity implements OnReplaceFragment, Firebas
         displayFragment(fragment);
     }
 
-    @Override
-    public void onUserLoaded() {
-        userEmail = mUserManager.getUserEmail();
-        userName = mUserManager.getUserName();
-        userImageUrl = mUserManager.getUserProfilePicture();
-    }
 }
