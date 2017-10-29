@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/post_cl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_editor_absoluteY="25dp">
+
+    <include
+        android:id="@+id/user_info"
+        layout="@layout/partial_post_user_info"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/post_info_post_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/post_info_post_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@+id/reactions_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_info"
+        app:layout_constraintVertical_weight="2"
+        app:srcCompat="@drawable/logo"/>
+
+    <View
+        android:id="@+id/previous"
+        android:layout_width="70dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toTopOf="@+id/reactions_layout"
+        app:layout_constraintTop_toTopOf="@+id/post_info_post_image"/>
+
+    <View
+        android:id="@+id/next"
+        android:layout_width="70dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toTopOf="@+id/reactions_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/post_info_post_image"/>
+
+    <include
+        android:id="@+id/reactions_layout"
+        layout="@layout/partial_reactions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/post_info_recycler_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/post_info_post_image"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/post_info_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/reactions_layout"
+        app:layout_constraintStart_toStartOf="@+id/reactions_layout"
+        app:layout_constraintTop_toBottomOf="@+id/reactions_layout"
+        app:layout_constraintVertical_weight="0"
+        tools:listitem="@layout/item_user_reaction"/>
+
+</android.support.constraint.ConstraintLayout>

@@ -30,10 +30,10 @@ public class LoginFragment extends Fragment {
 
         mLoginActivity = (LoginActivity) getActivity();
 
-        mEmail = (EditText) view.findViewById(R.id.login_email);
-        mPass = (EditText) view.findViewById(R.id.login_pass);
-        Button logBtn = (Button) view.findViewById(R.id.login_login_btn);
-        Button regBtn = (Button) view.findViewById(R.id.login_register_btn);
+        mEmail = view.findViewById(R.id.login_email);
+        mPass = view.findViewById(R.id.login_pass);
+        Button logBtn = view.findViewById(R.id.login_login_btn);
+        Button regBtn = view.findViewById(R.id.login_register_btn);
 
         logBtn.setOnClickListener(new View.OnClickListener() {
             @Override

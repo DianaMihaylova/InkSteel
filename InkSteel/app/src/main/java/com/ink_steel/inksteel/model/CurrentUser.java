@@ -36,40 +36,6 @@ public class CurrentUser {
         addUserImages();
     }
 
-    public static CurrentUser getInstance() {
-        if (currentUser == null) {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            if (user != null) {
-                currentUser = new CurrentUser(user.getEmail());
-            }
-        }
-        return currentUser;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getUserAge() {
-        return userAge;
-    }
-
-    public String getUserCity() {
-        return userCity;
-    }
-
-    public String getUserProfilePicture() {
-        return userProfilePicture;
-    }
-
-    public List<Uri> getImages() {
-        return Collections.unmodifiableList(images);
-    }
-
     private void addInfoUserData(DocumentReference userInfo) {
         userInfo.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -97,6 +63,43 @@ public class CurrentUser {
                         }
                     }
                 });
+    }
+
+    public static CurrentUser getInstance() {
+        if (currentUser == null) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                currentUser = new CurrentUser(user.getEmail());
+            }
+        }
+        return currentUser;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getUserAge() {
+        return userAge;
+    }
+
+    public String getUserCity() {
+        return userCity;
+    }
+
+    public String getUserProfilePicture() {
+        if (userProfilePicture == null)
+            userProfilePicture =
+                    "https://firebasestorage.googleapis.com/v0/b/inksteel-7911e.appspot.com/o/default.jpg?alt=media&token=2a0f4edc-81e5-40a2-9558-015e18b8b1ff";
+        return userProfilePicture;
+    }
+
+    public List<Uri> getImages() {
+        return Collections.unmodifiableList(images);
     }
 
     public void refreshUserImages(final GalleryRecyclerViewAdapter mAdapter) {

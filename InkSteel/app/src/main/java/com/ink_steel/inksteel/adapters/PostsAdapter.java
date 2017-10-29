@@ -13,7 +13,10 @@ import com.ink_steel.inksteel.helpers.OnPostClickListener;
 import com.ink_steel.inksteel.model.Post;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -43,7 +46,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
 
     @Override
     public int getItemViewType(int position) {
-        return position % 2 == 0 ? R.layout.post_item_reverse : R.layout.post_item;
+        return position % 2 == 0 ? R.layout.item_post_reversed : R.layout.item_post;
     }
 
     @Override
@@ -59,10 +62,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
         PostsViewHolder(final View itemView) {
             super(itemView);
 
-            profilePic = (ImageView) itemView.findViewById(R.id.profile_pic);
-            postPic = (ImageView) itemView.findViewById(R.id.post_pic);
-            summary = (TextView) itemView.findViewById(R.id.user_tv);
-            postText = (TextView) itemView.findViewById(R.id.date_tv);
+            profilePic = itemView.findViewById(R.id.profile_pic);
+            postPic = itemView.findViewById(R.id.post_pic);
+            summary = itemView.findViewById(R.id.user_tv);
+            postText = itemView.findViewById(R.id.date_tv);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -73,14 +76,19 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
         }
 
         void bind(Post post) {
-            summary.setText(post.getUser());
-            postText.setText(post.getDate());
+            summary.setText(post.getUserEmail());
+
+            SimpleDateFormat format = new SimpleDateFormat("hh:mm, dd MMM",
+                    Locale.getDefault());
+            Date date = new Date(post.getCreatedAt());
+
+            postText.setText(format.format(date));
             Picasso.with(context)
-                    .load(post.getProfileUri())
+                    .load(post.getUrlProfileImage())
                     .transform(new CropCircleTransformation())
                     .into(profilePic);
             Picasso.with(context)
-                    .load(post.getThumbnailUrl())
+                    .load(post.getUrlThumbnailImage())
                     .into(postPic);
         }
     }

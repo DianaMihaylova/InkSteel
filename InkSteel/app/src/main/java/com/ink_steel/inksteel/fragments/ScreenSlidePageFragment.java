@@ -21,13 +21,14 @@ public class ScreenSlidePageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_screen_slide_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_screen_slide_page,
+                container, false);
 
         final Fragment[] fragments = {new ProfileFragment(), new FeedFragment(),
                 new ExploreFragment(), new ContactStudioFragment()};
         final String[] tabTitle = {"", "Feed", "Explore", "Studios Contacts"};
 
-        final ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        final ViewPager viewPager = view.findViewById(R.id.viewPager);
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -48,7 +49,7 @@ public class ScreenSlidePageFragment extends Fragment {
         viewPager.setCurrentItem(1);
         viewPager.setPageTransformer(true, new ZoomInTransformer());
 
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
+        TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setIcon(R.drawable.profile);
 

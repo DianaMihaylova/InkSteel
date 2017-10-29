@@ -4,29 +4,38 @@ import com.ink_steel.inksteel.R;
 
 public class Reaction {
 
-    boolean isInitial;
-    private String user;
+    private boolean initial;
+    private String userEmail;
     private String reactionType;
+    private long time;
 
-    public Reaction(String user, String reactionType, boolean isInitial) {
-        this.user = user;
-        this.reactionType = reactionType;
-        this.isInitial = isInitial;
+    public Reaction() {
     }
 
-    public String getUser() {
-        return user;
+    public Reaction(String user, String reactionType, boolean isInitial, long time) {
+        this.userEmail = user;
+        this.reactionType = reactionType;
+        this.initial = isInitial;
+        this.time = time;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
     }
 
     public String getReactionType() {
         return reactionType;
     }
 
-    public boolean isInitial() {
-        return isInitial;
+    public long getTime() {
+        return time;
     }
 
-    public int getReactionImage() {
+    public boolean getInitial() {
+        return initial;
+    }
+
+    public int getReactionIcon() {
         switch (reactionType) {
             case "like":
                 return R.drawable.like;
@@ -34,22 +43,12 @@ public class Reaction {
                 return R.drawable.blush;
             case "devil":
                 return R.drawable.devil;
-            case "dazed":
-                return R.drawable.dazed;
             default:
-                return 0;
+                return R.drawable.dazed;
         }
     }
 
     public String getMessage() {
-        return isInitial ? "reacted" : "updated reaction";
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Reaction))
-            return false;
-        Reaction other = (Reaction) obj;
-        return user.equals(other.user) && reactionType.equals(other.reactionType);
+        return initial ? "reacted" : "updated reaction";
     }
 }

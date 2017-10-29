@@ -2,7 +2,6 @@ package com.ink_steel.inksteel.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,29 +35,29 @@ public class ExploreFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_explore, container, false);
 
-        Button likeBtn = (Button) view.findViewById(R.id.btn_like);
-        Button unlikeBtn = (Button) view.findViewById(R.id.btn_unlike);
+        Button likeBtn = view.findViewById(R.id.btn_like);
+        Button unlikeBtn = view.findViewById(R.id.btn_unlike);
 
-        UltraViewPager ultraViewPager = (UltraViewPager) view.findViewById(R.id.ultra_viewpager);
+        UltraViewPager ultraViewPager = view.findViewById(R.id.ultra_viewpager);
         ultraViewPager.setScrollMode(UltraViewPager.ScrollMode.VERTICAL);
         ultraViewPager.setPageTransformer(true, new FlipHorizontalTransformer());
         ultraViewPager.setInfiniteLoop(true);
         ultraViewPager.setAutoScroll(5000);
 
-        ExploreAdapter adapter = new ExploreAdapter((getContext()), users);
+        ExploreAdapter adapter = new ExploreAdapter((getActivity()), users);
         ultraViewPager.setAdapter(adapter);
 
         likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "You like it!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "You like it!", Toast.LENGTH_SHORT).show();
             }
         });
 
         unlikeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "You not like it!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "You not like it!", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -39,8 +39,8 @@ public class ChatActivity extends AppCompatActivity {
         friendData.put("time", System.currentTimeMillis());
         FIRESTORE_FRIENDS_REFERNENCE.set(friendData);
 
-        final TextView message1 = (TextView) findViewById(R.id.message1);
-        final TextView message2 = (TextView) findViewById(R.id.message2);
+        final TextView message1 = findViewById(R.id.message1);
+        final TextView message2 = findViewById(R.id.message2);
         FIRESTORE_FRIENDS_REFERNENCE.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {

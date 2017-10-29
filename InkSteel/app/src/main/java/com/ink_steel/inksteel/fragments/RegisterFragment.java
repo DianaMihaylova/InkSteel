@@ -32,10 +32,10 @@ public class RegisterFragment extends Fragment {
 
         mLoginActivity = (LoginActivity) getActivity();
 
-        mUserEmailEt = (EditText) view.findViewById(R.id.login_email);
-        mUserPasswordEt = (EditText) view.findViewById(R.id.login_pass);
-        mConfirmPasswordEt = (EditText) view.findViewById(R.id.login_conf_pass);
-        Button regBtn = (Button) view.findViewById(R.id.login_register_btn);
+        mUserEmailEt = view.findViewById(R.id.login_email);
+        mUserPasswordEt = view.findViewById(R.id.login_pass);
+        mConfirmPasswordEt = view.findViewById(R.id.login_conf_pass);
+        Button regBtn = view.findViewById(R.id.login_register_btn);
 
         regBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,6 +1,5 @@
 package com.ink_steel.inksteel.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,7 @@ public class ReactionsAdapter extends RecyclerView.Adapter<ReactionsAdapter.Reac
     @Override
     public ReactionsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ReactionsViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.post_comment_item, parent, false));
+                .inflate(R.layout.item_user_reaction, parent, false));
     }
 
     @Override
@@ -46,14 +45,14 @@ public class ReactionsAdapter extends RecyclerView.Adapter<ReactionsAdapter.Reac
         ReactionsViewHolder(View itemView) {
             super(itemView);
 
-            reactionIcon = (ImageView) itemView.findViewById(R.id.post_reaction_icon);
-            reactionUser = (TextView) itemView.findViewById(R.id.post_reaction_user);
-            reactionMessage = (TextView) itemView.findViewById(R.id.post_reaction_text);
+            reactionIcon = itemView.findViewById(R.id.post_reaction_icon);
+            reactionUser = itemView.findViewById(R.id.post_reaction_user);
+            reactionMessage = itemView.findViewById(R.id.post_reaction_text);
         }
 
         void bind(Reaction reaction) {
-            reactionIcon.setImageResource(reaction.getReactionImage());
-            reactionUser.setText(reaction.getUser());
+            reactionIcon.setImageResource(reaction.getReactionIcon());
+            reactionUser.setText(reaction.getUserEmail());
             reactionMessage.setText(reaction.getMessage());
         }
     }

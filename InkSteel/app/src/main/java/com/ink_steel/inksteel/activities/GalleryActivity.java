@@ -50,9 +50,9 @@ public class GalleryActivity extends AppCompatActivity implements IOnGalleryImag
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.btn_fab);
+        FloatingActionButton fab = findViewById(R.id.btn_fab);
 
-        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.commentsRv);
+        RecyclerView mRecyclerView = findViewById(R.id.commentsRv);
         mRecyclerView.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);

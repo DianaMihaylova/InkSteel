@@ -32,9 +32,6 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class UserInfoActivity extends AppCompatActivity {
 
-//        private static final String DEFAULT_IMG_URL = "https://firebasestorage.googleapis.com/v0/b/inksteel-" +
-//            "7911e.appspot.com/o/default.jpg?alt=media&token=2a0f4edc-81e5-40a2-9558-015e18b8b1ff";
-
     private EditText userName, age, city;
     private ImageView imageView;
     private CurrentUser mCurrentUser;
@@ -44,12 +41,12 @@ public class UserInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
 
-        userName = (EditText) findViewById(R.id.user_name);
-        age = (EditText) findViewById(R.id.user_age);
-        city = (EditText) findViewById(R.id.user_city);
-        imageView = (ImageView) findViewById(R.id.profile_picture);
-        Button cancelBtn = (Button) findViewById(R.id.button_cancel);
-        Button saveBtn = (Button) findViewById(R.id.button_save);
+        userName = findViewById(R.id.user_name);
+        age = findViewById(R.id.user_age);
+        city = findViewById(R.id.user_city);
+        imageView = findViewById(R.id.profile_picture);
+        Button cancelBtn = findViewById(R.id.button_cancel);
+        Button saveBtn = findViewById(R.id.button_save);
 
         mCurrentUser = CurrentUser.getInstance();
 
@@ -124,6 +121,13 @@ public class UserInfoActivity extends AppCompatActivity {
                 });
     }
 
+    private void loadImage() {
+        Picasso.with(UserInfoActivity.this)
+                .load(mCurrentUser.getUserProfilePicture())
+                .transform(new CropCircleTransformation())
+                .into(imageView);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -145,12 +149,5 @@ public class UserInfoActivity extends AppCompatActivity {
                 loadImage();
             }
         });
-    }
-
-    private void loadImage() {
-        Picasso.with(UserInfoActivity.this)
-                .load(mCurrentUser.getUserProfilePicture())
-                .transform(new CropCircleTransformation())
-                .into(imageView);
     }
 }

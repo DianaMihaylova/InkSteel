@@ -9,25 +9,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.adapters.PostsAdapter;
-import com.ink_steel.inksteel.R;
+import com.ink_steel.inksteel.data.FirebaseManager;
 import com.ink_steel.inksteel.helpers.OnPostClickListener;
 import com.ink_steel.inksteel.model.Post;
 
 import java.util.LinkedList;
+import java.util.List;
 
-public class FeedFragment extends Fragment implements OnPostClickListener {
+public class FeedFragment extends Fragment implements OnPostClickListener, FirebaseManager.PostsListener {
 
-    private LinkedList<Post> mPosts;
+    private List<Post> mPosts;
     private PostsAdapter mAdapter;
+    private FirebaseManager.PostsManager mManager;
 
     public FeedFragment() {
     }
@@ -37,20 +34,21 @@ public class FeedFragment extends Fragment implements OnPostClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.feed_rv);
+        RecyclerView recyclerView = view.findViewById(R.id.feed_rv);
 
         mPosts = new LinkedList<>();
         mAdapter = new PostsAdapter(getActivity().getApplicationContext(), mPosts, this);
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(getActivity(), AddPostActivity.class);
-//                startActivity(intent);
                 ((HomeActivity) getActivity()).replaceFragment(new AddPostFragment());
             }
         });
+
+        FirebaseManager firebaseManager = FirebaseManager.getInstance();
+        mManager = firebaseManager.getPostsManager(this);
 
         RecyclerView.LayoutManager mLayoutManager =
                 new LinearLayoutManager(getActivity().getApplicationContext());
@@ -61,53 +59,33 @@ public class FeedFragment extends Fragment implements OnPostClickListener {
         return view;
     }
 
-    /*
-    data.put("user", currEmail);
-                    data.put("userProfileImage", ConstantUtils.PROFILE_IMAGE_URI.toString());
-                    data.put("postImage", downloadUrl);
-                    data.put("postImageThumbnail", "");
-                    data.put("time", new Date().getTime());
-                    data.put("like", 0);
-                    data.put("blush", 0);
-                    data.put("devil", 0);
-                    data.put("dazed", 0);
-     */
-
     @Override
     public void onStart() {
         super.onStart();
+        mManager.registerPostsListener();
+    }
 
-        FirebaseFirestore.getInstance().collection("posts")
-                .addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(QuerySnapshot documentSnapshots,
-                                        FirebaseFirestoreException e) {
-                        for (DocumentSnapshot snapshot : documentSnapshots.getDocuments()) {
-                            if (snapshot.exists()) {
-                                Post post = new Post(
-                                        snapshot.getId(),
-                                        snapshot.getString("user"),
-                                        snapshot.getLong("time"),
-                                        snapshot.getString("userProfileImage"),
-                                        snapshot.getString("postPic"),
-                                        snapshot.getString("postImageThumbnail"));
-
-                                if (!mPosts.contains(post)) {
-                                    mPosts.add(0, post);
-                                }
-                            }
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    }
-                });
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mManager.unregisterPostsListener();
     }
 
     @Override
     public void onPostClickListener(int position) {
-
-        Toast.makeText(getActivity(), "From FeedFragment", Toast.LENGTH_SHORT).show();
         ((HomeActivity) getActivity())
                 .replaceFragment(PostFullFragment.newInstance(mPosts.get(position).getPostId()));
+    }
+
+    @Override
+    public void onPostsAdded(Post post) {
+        if (!mPosts.contains(post)) {
+            if (mPosts.size() != 0)
+                mPosts.add(0, post);
+            else
+                mPosts.add(post);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }
 

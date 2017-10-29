@@ -22,16 +22,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.UserInfoActivity"/>
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"/>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"/>
         <activity android:name=".activities.HomeActivity"/>
         <activity
             android:name=".activities.ChatActivity"
             android:parentActivityName=".activities.HomeActivity"/>
         <activity
             android:name=".activities.GalleryActivity"
-            android:parentActivityName=".activities.HomeActivity"/>
-        <activity
-            android:name=".activities.AddPostActivity"
             android:parentActivityName=".activities.HomeActivity"/>
         <activity
             android:name=".activities.FullScreenImageActivity"

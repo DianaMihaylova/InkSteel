@@ -34,11 +34,11 @@ public class ExploreAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(R.layout.list_explore_item, container, false);
+        View view = layoutInflater.inflate(R.layout.item_explore, container, false);
 
-        ImageView imageView = (ImageView) view.findViewById(R.id.profile_pic);
-        TextView userName = (TextView) view.findViewById(R.id.user_name);
-        TextView userCity = (TextView) view.findViewById(R.id.user_city);
+        ImageView imageView = view.findViewById(R.id.profile_pic);
+        TextView userName = view.findViewById(R.id.user_name);
+        TextView userCity = view.findViewById(R.id.user_city);
 
         Picasso.with(context)
                 .load(users.get(position).getProfileImg())

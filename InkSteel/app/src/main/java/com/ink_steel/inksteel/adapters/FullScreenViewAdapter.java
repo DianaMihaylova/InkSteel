@@ -31,8 +31,8 @@ public class FullScreenViewAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(R.layout.single_image_list, container, false);
-        ImageView imageView = (ImageView) view.findViewById(R.id.selected_image);
+        View view = layoutInflater.inflate(R.layout.item_image_fullscreen, container, false);
+        ImageView imageView = view.findViewById(R.id.selected_image);
         Picasso.with(context)
                 .load(mCurrentUser.getImages().get(position))
                 .into(imageView);

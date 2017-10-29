@@ -18,8 +18,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        HorizontalInfiniteCycleViewPager viewPager = (HorizontalInfiniteCycleViewPager)
-                findViewById(R.id.view_pager_horizontal_cycle);
+        HorizontalInfiniteCycleViewPager viewPager = findViewById(R.id.view_pager_horizontal_cycle);
         FullScreenViewAdapter fullScreenViewAdapter = new FullScreenViewAdapter(this);
         viewPager.setAdapter(fullScreenViewAdapter);
         viewPager.setCurrentItem(position);

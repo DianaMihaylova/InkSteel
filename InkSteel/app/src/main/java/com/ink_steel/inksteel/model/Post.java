@@ -1,67 +1,103 @@
 package com.ink_steel.inksteel.model;
 
-import android.net.Uri;
-
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Map;
-
 public class Post {
 
-    private String user;
-    private long date;
-    private String profileUri;
-    private String imageUrl;
     private String postId;
-    private String thumbnailUrl;
+    private String userEmail;
+    private long createdAt;
+    private String urlProfileImage;
+    private String urlImage;
+    private String urlThumbnailImage;
+    private String description;
+    private int reactionLike;
+    private int reactionBlush;
+    private int reactionDevil;
+    private int reactionDazed;
 
-    public Post(String postId, String user, long date, String profilePictureUri,
-                String postImageUri, String thumbnailUrl) {
-        this.postId = postId;
-        this.user = user;
-        this.date = date;
-        this.profileUri = profilePictureUri;
-        this.imageUrl = postImageUri;
-        this.thumbnailUrl = thumbnailUrl;
+    public Post() {
     }
 
-    public String getUser() {
-        return user;
+    public Post(String postId, String userEmail, long createdAt, String urlProfileImage,
+                String urlImage, String urlThumbnailImage, String description,
+                int reactionLike, int reactionBlush, int reactionDevil, int reactionDazed) {
+        this(postId, userEmail, createdAt, urlProfileImage, urlImage, urlThumbnailImage, description);
+        this.reactionLike = reactionLike;
+        this.reactionBlush = reactionBlush;
+        this.reactionDevil = reactionDevil;
+        this.reactionDazed = reactionDazed;
+    }
+
+    public Post(String postId, String userEmail, long createdAt, String urlProfileImage,
+                String urlImage, String urlThumbnailImage, String description) {
+        this.postId = postId;
+        this.userEmail = userEmail;
+        this.createdAt = createdAt;
+        this.urlProfileImage = urlProfileImage;
+        this.urlImage = urlImage;
+        this.urlThumbnailImage = urlThumbnailImage;
+        this.description = description;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getUrlProfileImage() {
+        return urlProfileImage;
+    }
+
+    public String getUrlImage() {
+        return urlImage;
     }
 
     public String getPostId() {
         return postId;
     }
 
-    public String getDate() {
-
-        return new SimpleDateFormat("h:mm, dd MMMM", Locale.US).format(date);
+    public String getUrlThumbnailImage() {
+        return urlThumbnailImage;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getDescription() {
+        return description;
     }
 
-    public String getProfileUri() {
-        return profileUri;
+    public int getReactionLike() {
+        return reactionLike;
     }
 
-    public String getThumbnailUrl() {
-        return thumbnailUrl;
+    public int getReactionBlush() {
+        return reactionBlush;
+    }
+
+    public int getReactionDevil() {
+        return reactionDevil;
+    }
+
+    public int getReactionDazed() {
+        return reactionDazed;
+    }
+
+    public int getReactionCount(String type) {
+        switch (type) {
+            case "like":
+                return reactionLike;
+            case "blush":
+                return reactionBlush;
+            case "devil":
+                return reactionDevil;
+            case "dazed":
+                return reactionDazed;
+        }
+        return 0;
     }
 
     @Override
     public boolean equals(Object obj) {
-
         return obj instanceof Post && postId.equals(((Post) obj).postId);
-
     }
 }

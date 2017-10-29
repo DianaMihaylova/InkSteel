@@ -4,8 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimaryDark"
-    android:descendantFocusability="beforeDescendants">
+    android:background="@color/colorPrimaryDark">
+
+    <ImageButton
+        android:id="@+id/collapse_btn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@id/reaction_blush"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/reaction_like"
+        app:srcCompat="@drawable/ic_expand_more"/>
 
     <ImageButton
         android:id="@+id/reaction_like"
@@ -15,7 +25,7 @@
         android:scaleType="fitCenter"
         android:src="@drawable/like"
         app:layout_constraintBottom_toBottomOf="@+id/reaction_blush"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/collapse_btn"
         app:layout_constraintRight_toLeftOf="@+id/reaction_blush"/>
 
     <ImageButton
@@ -32,7 +42,7 @@
     <ImageButton
         android:id="@+id/reaction_devil"
         android:layout_width="45dp"
-        android:layout_height="47dp"
+        android:layout_height="45dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/transparent"

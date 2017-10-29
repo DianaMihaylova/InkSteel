@@ -42,14 +42,14 @@ public class ProfileFragment extends Fragment {
 
         mCurrentUser = CurrentUser.getInstance();
 
-        imageView = (ImageView) view.findViewById(R.id.profile);
-        username = (TextView) view.findViewById(R.id.user_name);
-        email = (TextView) view.findViewById(R.id.user_email);
-        age = (TextView) view.findViewById(R.id.user_age);
-        city = (TextView) view.findViewById(R.id.user_city);
-        Button galleryBtn = (Button) view.findViewById(R.id.btn_gallery);
-        Button messageBtn = (Button) view.findViewById(R.id.btn_msg);
-        Button editProfileBtn = (Button) view.findViewById(R.id.btn_edit_profile);
+        imageView = view.findViewById(R.id.profile);
+        username = view.findViewById(R.id.user_name);
+        email = view.findViewById(R.id.user_email);
+        age = view.findViewById(R.id.user_age);
+        city = view.findViewById(R.id.user_city);
+        Button galleryBtn = view.findViewById(R.id.btn_gallery);
+        Button messageBtn = view.findViewById(R.id.btn_msg);
+        Button editProfileBtn = view.findViewById(R.id.btn_edit_profile);
 
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
