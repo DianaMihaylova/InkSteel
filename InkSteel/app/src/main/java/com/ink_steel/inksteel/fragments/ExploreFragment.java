@@ -30,7 +30,7 @@ import java.util.ArrayList;
 public class ExploreFragment extends Fragment {
 
     public static ArrayList<User> users = new ArrayList<>();
-    ExploreAdapter mAdapter;
+    private ExploreAdapter mAdapter;
 
 
     public ExploreFragment() {

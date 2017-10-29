@@ -16,7 +16,6 @@ import com.squareup.picasso.Picasso;
 public class ExploreAdapter extends PagerAdapter {
 
     private Context context;
-    private ImageView imageView;
 
     public ExploreAdapter(Context context) {
         this.context = context;
@@ -39,7 +38,7 @@ public class ExploreAdapter extends PagerAdapter {
             view = layoutInflater.inflate(R.layout.list_explore_item_reverse, container, false);
         }
 
-        imageView = (ImageView) view.findViewById(R.id.profile_pic);
+        ImageView imageView = (ImageView) view.findViewById(R.id.profile_pic);
         TextView userName = (TextView) view.findViewById(R.id.user_name);
         TextView userCity = (TextView) view.findViewById(R.id.user_city);
 

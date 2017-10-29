@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion '26.0.2'
     defaultConfig {
+        vectorDrawables.useSupportLibrary = true
         applicationId "com.ink_steel.inksteel"
-        minSdkVersion 17
-        targetSdkVersion 25
+        minSdkVersion 16
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -25,40 +26,27 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.google.firebase:firebase-auth:11.4.2'
-    compile 'com.google.firebase:firebase-firestore:11.4.2'
-    compile 'com.google.firebase:firebase-storage:11.4.2'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'jp.wasabeef:picasso-transformations:2.1.2'
-    compile 'com.theartofdev.edmodo:android-image-cropper:2.4.7'
-    compile 'com.github.devlight:infinitecycleviewpager:1.0.2'
-    compile 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar'
-    compile 'info.hoang8f:fbutton:1.0.5'
-    compile('com.alibaba.android:ultraviewpager:1.0.6.1@aar') {
+    testCompile 'junit:junit:4.12'
+    implementation  'com.android.support:appcompat-v7:26.1.0'
+    implementation  'com.android.support:design:26.1.0'
+    implementation  'com.android.support:support-v13:26.1.0'
+    implementation  'com.android.support:cardview-v7:26.1.0'
+    implementation  'com.android.support:recyclerview-v7:26.1.0'
+    implementation  'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation  'com.android.support:support-v4:26.1.0'
+    implementation  'com.google.firebase:firebase-auth:11.4.2'
+    implementation  'com.google.firebase:firebase-firestore:11.4.2'
+    implementation  'com.google.firebase:firebase-storage:11.4.2'
+    implementation  'com.squareup.picasso:picasso:2.5.2'
+    implementation  'jp.wasabeef:picasso-transformations:2.1.2'
+    implementation  'com.theartofdev.edmodo:android-image-cropper:2.5.1'
+    implementation  'com.github.devlight:infinitecycleviewpager:1.0.2'
+    implementation 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar'
+    implementation 'info.hoang8f:fbutton:1.0.5'
+    implementation('com.alibaba.android:ultraviewpager:1.0.6.1@aar') {
         transitive = true
     }
-    testCompile 'junit:junit:4.12'
-    implementation 'com.android.support:appcompat-v7:25.4.0'
-    implementation 'com.android.support:design:25.4.0'
-    implementation 'com.android.support:support-v13:25.4.0'
-    implementation 'com.android.support:cardview-v7:25.4.0'
-    implementation 'com.android.support:recyclerview-v7:25.4.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.android.support:support-v4:25.4.0'
-    implementation 'com.google.firebase:firebase-auth:11.4.2'
-    implementation 'com.google.firebase:firebase-firestore:11.4.2'
-    implementation 'com.google.firebase:firebase-storage:11.4.2'
-    implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'jp.wasabeef:picasso-transformations:2.1.2'
-    implementation 'com.theartofdev.edmodo:android-image-cropper:2.4.7'
-    implementation 'com.github.devlight:infinitecycleviewpager:1.0.2'
-    testImplementation 'junit:junit:4.12'
+    testImplementation  'junit:junit:4.12'
 
 }
 apply plugin: 'com.google.gms.google-services'
