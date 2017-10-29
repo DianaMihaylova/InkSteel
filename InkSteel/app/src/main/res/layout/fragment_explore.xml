@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#000000"
+    android:orientation="vertical"
     tools:context="com.ink_steel.inksteel.fragments.ExploreFragment">
 
     <Switch
@@ -14,17 +14,17 @@
         android:layout_height="wrap_content"
         android:background="#fff"
         android:checked="false"
-        android:textColor="@color/colorPrimaryDark"
         android:text="Auto scroll explore in 5 sec"
+        android:textColor="@color/colorPrimaryDark"
         android:textStyle="italic"/>
 
     <com.tmall.ultraviewpager.UltraViewPager
         android:id="@+id/ultra_viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="8dp"
+        android:layout_weight="4"
         android:background="#000000">
     </com.tmall.ultraviewpager.UltraViewPager>
 
@@ -46,9 +46,9 @@
             android:id="@+id/btn_like"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="90dp"
             android:layout_marginStart="90dp"
-            android:background="@drawable/btn_like"
-            android:layout_marginLeft="90dp"/>
+            android:background="@drawable/btn_like"/>
     </LinearLayout>
 
 </LinearLayout>

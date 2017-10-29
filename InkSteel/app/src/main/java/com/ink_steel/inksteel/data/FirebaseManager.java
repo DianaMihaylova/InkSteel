@@ -19,10 +19,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.model.Post;
 import com.ink_steel.inksteel.model.Reaction;
+import com.ink_steel.inksteel.model.User;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 public class FirebaseManager {
 
@@ -302,7 +304,8 @@ public class FirebaseManager {
     }
 
     public class UserManager {
-
+        private User currentUser;
+        private List<User> users;
         private String userEmail;
         private String userName;
         private String userProfilePicture;

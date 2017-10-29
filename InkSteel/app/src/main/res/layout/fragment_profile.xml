@@ -3,8 +3,8 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
               android:background="#000"
+              android:orientation="vertical"
               tools:context="com.ink_steel.inksteel.fragments.ProfileFragment">
 
     <TextView
@@ -85,10 +85,10 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
             android:layout_weight="1"
-            android:text="Gallery"
+            android:background="@drawable/btn_custom"
             android:fontFamily="casual"
-            android:textStyle="bold"
-            android:background="@drawable/btn_custom"/>
+            android:text="Gallery"
+            android:textStyle="bold"/>
 
         <Button
             android:id="@+id/btn_msg"
@@ -97,10 +97,10 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
             android:layout_weight="1"
-            android:text="Message"
+            android:background="@drawable/btn_custom"
             android:fontFamily="casual"
-            android:textStyle="bold"
-            android:background="@drawable/btn_custom"/>
+            android:text="Message"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 
@@ -109,10 +109,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:background="@drawable/btn_custom"
         android:fontFamily="casual"
         android:text="@string/edit_profile"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:background="@drawable/btn_custom"/>
+        android:textStyle="bold"/>
 
 </LinearLayout>

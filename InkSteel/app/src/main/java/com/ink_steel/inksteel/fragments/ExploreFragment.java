@@ -42,17 +42,17 @@ public class ExploreFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_explore, container, false);
 
-        Switch autoScroll = (Switch) view.findViewById(R.id.switch_auto_scroll);
+        Switch autoScroll = view.findViewById(R.id.switch_auto_scroll);
         Button likeBtn = view.findViewById(R.id.btn_like);
         Button unlikeBtn = view.findViewById(R.id.btn_unlike);
 
-        UltraViewPager ultraViewPager = view.findViewById(R.id.ultra_viewpager);
+        final UltraViewPager ultraViewPager = view.findViewById(R.id.ultra_viewpager);
         ultraViewPager.setScrollMode(UltraViewPager.ScrollMode.VERTICAL);
         ultraViewPager.setPageTransformer(true, new FlipHorizontalTransformer());
         ultraViewPager.setInfiniteLoop(true);
         ultraViewPager.setAutoScroll(5000);
 
-        ExploreAdapter adapter = new ExploreAdapter((getActivity()), users);
+        ExploreAdapter adapter = new ExploreAdapter(getActivity());
         ultraViewPager.setAdapter(adapter);
 
         mAdapter = new ExploreAdapter(getActivity().getApplicationContext());

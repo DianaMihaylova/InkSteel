@@ -34,7 +34,7 @@ public class ExploreAdapter extends PagerAdapter {
         if (position % 2 == 0) {
             view = layoutInflater.inflate(R.layout.item_explore, container, false);
         } else {
-            view = layoutInflater.inflate(R.layout.list_explore_item_reverse, container, false);
+            view = layoutInflater.inflate(R.layout.item_explore_reverse, container, false);
         }
 
         ImageView imageView = view.findViewById(R.id.profile_pic);

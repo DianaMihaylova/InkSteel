@@ -49,6 +49,15 @@ public class GalleryFragment extends Fragment implements IOnGalleryImageLongClic
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK) {
+            mImgUrl = data.getData();
+            uploadImageToStorage();
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -59,7 +68,7 @@ public class GalleryFragment extends Fragment implements IOnGalleryImageLongClic
 
         FloatingActionButton fab = view.findViewById(R.id.btn_fab);
 
-        RecyclerView mRecyclerView = view.findViewById(R.id.commentsRv);
+        RecyclerView mRecyclerView = view.findViewById(R.id.image_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
@@ -76,30 +85,11 @@ public class GalleryFragment extends Fragment implements IOnGalleryImageLongClic
         return view;
     }
 
-    public void loadImagesArray() {
-        if (isAddOrRemovePicture) {
-            mCurrentUser.refreshUserImages(mAdapter);
-            mCurrentUser.getImages();
-            isAddOrRemovePicture = false;
-        } else {
-            mCurrentUser.getImages();
-        }
-    }
-
     private void selectImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), CHOOSE_IMAGE);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK) {
-            mImgUrl = data.getData();
-            uploadImageToStorage();
-        }
     }
 
     private void uploadImageToStorage() {
@@ -124,6 +114,16 @@ public class GalleryFragment extends Fragment implements IOnGalleryImageLongClic
         ConstantUtils.FIRESTORE_GALLERY_REFERNENCE.add(galleryData);
         isAddOrRemovePicture = true;
         loadImagesArray();
+    }
+
+    public void loadImagesArray() {
+        if (isAddOrRemovePicture) {
+            mCurrentUser.refreshUserImages(mAdapter);
+            mCurrentUser.getImages();
+            isAddOrRemovePicture = false;
+        } else {
+            mCurrentUser.getImages();
+        }
     }
 
     @Override
