@@ -10,42 +10,47 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.model.User;
+import com.ink_steel.inksteel.fragments.ExploreFragment;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 public class ExploreAdapter extends PagerAdapter {
 
     private Context context;
-    private ArrayList<User> users;
+    private ImageView imageView;
 
-    public ExploreAdapter(Context context, ArrayList<User> users) {
+    public ExploreAdapter(Context context) {
         this.context = context;
-        this.users = users;
     }
 
     @Override
     public int getCount() {
-        return users.size();
+        return ExploreFragment.users.size();
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(R.layout.list_explore_item, container, false);
 
-        ImageView imageView = (ImageView) view.findViewById(R.id.profile_pic);
+        View view;
+        if (position % 2 == 0) {
+            view = layoutInflater.inflate(R.layout.list_explore_item, container, false);
+        } else {
+            view = layoutInflater.inflate(R.layout.list_explore_item_reverse, container, false);
+        }
+
+        imageView = (ImageView) view.findViewById(R.id.profile_pic);
         TextView userName = (TextView) view.findViewById(R.id.user_name);
         TextView userCity = (TextView) view.findViewById(R.id.user_city);
 
         Picasso.with(context)
-                .load(users.get(position).getProfileImg())
+                .load(ExploreFragment.users.get(position).getProfileImg())
                 .into(imageView);
 
-        userName.setText(users.get(position).getUserName());
-        userCity.setText(users.get(position).getUserCity());
+        String uName = "User: " + ExploreFragment.users.get(position).getUserName();
+        String uCity = "City: " + ExploreFragment.users.get(position).getUserCity();
+        userName.setText(uName);
+        userCity.setText(uCity);
 
         container.addView(view);
         return view;

@@ -1,6 +1,7 @@
 package com.ink_steel.inksteel.fragments;
 
 import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -8,10 +9,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.HomeActivity;
+import com.ink_steel.inksteel.helpers.ConstantUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
+
+import static com.ink_steel.inksteel.fragments.AddPost1Fragment.mId;
 
 public class AddPostFragment extends Fragment {
 
@@ -44,7 +58,6 @@ public class AddPostFragment extends Fragment {
                 }
             }
         });
-
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override

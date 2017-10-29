@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -27,15 +28,6 @@
         <activity
             android:name=".activities.ChatActivity"
             android:parentActivityName=".activities.HomeActivity"/>
-        <activity
-            android:name=".activities.GalleryActivity"
-            android:parentActivityName=".activities.HomeActivity"/>
-        <activity
-            android:name=".activities.AddPostActivity"
-            android:parentActivityName=".activities.HomeActivity"/>
-        <activity
-            android:name=".activities.FullScreenImageActivity"
-            android:parentActivityName=".activities.GalleryActivity"/>
     </application>
 
 </manifest>

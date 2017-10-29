@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.adapters.PostsAdapter;
@@ -46,8 +48,6 @@ public class FeedFragment extends Fragment implements OnPostClickListener {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(getActivity(), AddPostActivity.class);
-//                startActivity(intent);
                 ((HomeActivity) getActivity()).replaceFragment(new AddPostFragment());
             }
         });
@@ -61,42 +61,36 @@ public class FeedFragment extends Fragment implements OnPostClickListener {
         return view;
     }
 
-    /*
-    data.put("user", currEmail);
-                    data.put("userProfileImage", ConstantUtils.PROFILE_IMAGE_URI.toString());
-                    data.put("postImage", downloadUrl);
-                    data.put("postImageThumbnail", "");
-                    data.put("time", new Date().getTime());
-                    data.put("like", 0);
-                    data.put("blush", 0);
-                    data.put("devil", 0);
-                    data.put("dazed", 0);
-     */
-
     @Override
     public void onStart() {
         super.onStart();
 
-        FirebaseFirestore.getInstance().collection("posts")
-                .addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+        Query posts = FirebaseFirestore.getInstance()
+                .collection("posts").orderBy("time");
+
+        posts.addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots,
                                         FirebaseFirestoreException e) {
-                        for (DocumentSnapshot snapshot : documentSnapshots.getDocuments()) {
-                            if (snapshot.exists()) {
-                                Post post = new Post(
-                                        snapshot.getId(),
-                                        snapshot.getString("user"),
-                                        snapshot.getLong("time"),
-                                        snapshot.getString("userProfileImage"),
-                                        snapshot.getString("postPic"),
-                                        snapshot.getString("postImageThumbnail"));
-
-                                if (!mPosts.contains(post)) {
-                                    mPosts.add(0, post);
-                                }
+                        for (DocumentChange dc : documentSnapshots.getDocumentChanges()) {
+                            switch (dc.getType()) {
+                                case ADDED:
+                                    DocumentSnapshot snapshot = dc.getDocument();
+                                    if (snapshot.exists()) {
+                                        Post post = new Post(
+                                                snapshot.getId(),
+                                                snapshot.getString("user"),
+                                                snapshot.getLong("time"),
+                                                snapshot.getString("userProfileImage"),
+                                                snapshot.getString("postPic"),
+                                                snapshot.getString("postImageThumbnail"));
+                                        if (!mPosts.contains(post)) {
+                                            mPosts.add(0, post);
+                                        }
+                                        mAdapter.notifyDataSetChanged();
+                                    }
+                                    break;
                             }
-                            mAdapter.notifyDataSetChanged();
                         }
                     }
                 });
@@ -105,7 +99,6 @@ public class FeedFragment extends Fragment implements OnPostClickListener {
     @Override
     public void onPostClickListener(int position) {
 
-        Toast.makeText(getActivity(), "From FeedFragment", Toast.LENGTH_SHORT).show();
         ((HomeActivity) getActivity())
                 .replaceFragment(PostFullFragment.newInstance(mPosts.get(position).getPostId()));
     }

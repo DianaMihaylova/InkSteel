@@ -1,5 +1,6 @@
 package com.ink_steel.inksteel.helpers;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,5 +26,7 @@ public class ConstantUtils {
     public static Uri PROFILE_IMAGE_URI;
     private static FirebaseStorage FIREBASE_STORAGE = FirebaseStorage.getInstance();
     public static StorageReference FIREBASE_STORAGE_REFERENCE = FIREBASE_STORAGE.getReference();
+    public static Bitmap croppedImage;
+    public static final CollectionReference FIRESTORE_USERS_REFERENCE = FIRESTORE_REFERENCE.collection("users");
 
 }

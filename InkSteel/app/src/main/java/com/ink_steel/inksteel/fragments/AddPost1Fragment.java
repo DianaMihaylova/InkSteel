@@ -23,6 +23,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.helpers.ConstantUtils;
+import com.ink_steel.inksteel.model.CurrentUser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class AddPost1Fragment extends Fragment {
     private ImageView mImageView;
     private Button mAddImage;
     private EditText mEditText;
-    private String mId;
+    public static String mId;
     private boolean isInitialUpload;
 
     public AddPost1Fragment() {
@@ -136,7 +137,7 @@ public class AddPost1Fragment extends Fragment {
                         if (isInitialUpload) {
                             Map<String, Object> data = new HashMap<>();
                             data.put("user", currEmail);
-                            data.put("userProfileImage", ConstantUtils.PROFILE_IMAGE_URI.toString());
+                            data.put("userProfileImage", CurrentUser.getInstance().getUserProfilePicture());
                             data.put("postImage", downloadUrl);
                             data.put("postImageThumbnail", "");
                             data.put("time", new Date().getTime());

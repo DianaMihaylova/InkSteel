@@ -204,7 +204,6 @@ public class PostFullFragment extends Fragment {
     private void updateUserReaction(String reaction) {
 
         Map<String, Object> reactionData = new HashMap<>();
-        reactionData.put("reaction", currentReaction);
         reactionData.put("time", new Date().getTime());
         reactionData.put("isInitial", !hasReacted);
         reactionData.put("user", userEmail);
@@ -225,7 +224,10 @@ public class PostFullFragment extends Fragment {
             data.put("time", new Date().getTime());
             mThisPostRef.collection("reactions").document(userEmail).set(data);
             hasReacted = true;
+            currentReaction = reaction;
         }
+
+        reactionData.put("reaction", currentReaction);
 
         mThisPostRef.collection("reactions").document(userEmail)
                 .update("time", new Date().getTime());
