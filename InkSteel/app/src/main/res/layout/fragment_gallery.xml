@@ -4,10 +4,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#000000"
-                tools:context="com.ink_steel.inksteel.activities.GalleryActivity">
+                tools:context="com.ink_steel.inksteel.fragments.GalleryFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/commentsRv"
+        android:id="@+id/image_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#000000"/>

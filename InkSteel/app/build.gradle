@@ -42,6 +42,7 @@ dependencies {
     implementation  'com.theartofdev.edmodo:android-image-cropper:2.5.1'
     implementation  'com.github.devlight:infinitecycleviewpager:1.0.2'
     implementation 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar'
+    implementation 'info.hoang8f:fbutton:1.0.5'
     implementation('com.alibaba.android:ultraviewpager:1.0.6.1@aar') {
         transitive = true
     }

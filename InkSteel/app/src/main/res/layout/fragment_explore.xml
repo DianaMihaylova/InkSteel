@@ -1,51 +1,55 @@
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000"
     tools:context="com.ink_steel.inksteel.fragments.ExploreFragment">
+
+    <Switch
+        android:id="@+id/switch_auto_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:checked="false"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="Auto scroll explore in 5 sec"
+        android:textStyle="italic"/>
 
     <com.tmall.ultraviewpager.UltraViewPager
         android:id="@+id/ultra_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="8dp"
+        android:background="#000000">
+    </com.tmall.ultraviewpager.UltraViewPager>
+
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="32dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="32dp"
-        android:background="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="@+id/btn_like"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#000000"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btn_like"
-        android:layout_width="88dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="63dp"
-        android:layout_marginRight="62dp"
-        android:background="@drawable/btn_like"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        <Button
+            android:id="@+id/btn_unlike"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="36dp"
+            android:background="@drawable/btn_unlike"/>
 
-    <Button
-        android:id="@+id/btn_unlike"
-        android:layout_width="88dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@drawable/btn_unlike"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.295"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/btn_like"/>
+        <Button
+            android:id="@+id/btn_like"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="90dp"
+            android:background="@drawable/btn_like"
+            android:layout_marginLeft="90dp"/>
+    </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
 

@@ -29,6 +29,7 @@ public class CurrentUser {
     private String userCity;
     private String userProfilePicture;
     private ArrayList<Uri> images;
+    private ArrayList<User> likes;
 
     private CurrentUser(String email) {
         DocumentReference userInfo = FirebaseFirestore.getInstance().collection("users").document(email);

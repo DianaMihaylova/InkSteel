@@ -21,6 +21,7 @@ public class HomeActivity extends Activity implements OnReplaceFragment, Firebas
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         CurrentUser.getInstance();
         mManager = getFragmentManager();
         displayFragment(new ScreenSlidePageFragment());

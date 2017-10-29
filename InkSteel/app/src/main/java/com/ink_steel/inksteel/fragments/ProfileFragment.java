@@ -17,7 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.ChatActivity;
-import com.ink_steel.inksteel.activities.GalleryActivity;
+import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.activities.UserInfoActivity;
 import com.ink_steel.inksteel.helpers.ConstantUtils;
 import com.ink_steel.inksteel.model.CurrentUser;
@@ -62,8 +62,7 @@ public class ProfileFragment extends Fragment {
         galleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), GalleryActivity.class);
-                startActivity(intent);
+                ((HomeActivity) getActivity()).replaceFragment(new GalleryFragment());
             }
         });
 
