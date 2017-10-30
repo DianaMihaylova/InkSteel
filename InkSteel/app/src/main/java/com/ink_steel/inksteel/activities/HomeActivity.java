@@ -5,37 +5,28 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.data.FirebaseManager;
 import com.ink_steel.inksteel.fragments.ScreenSlidePageFragment;
+import com.ink_steel.inksteel.fragments.UserInfoFragment;
 import com.ink_steel.inksteel.helpers.OnReplaceFragment;
-import com.ink_steel.inksteel.model.CurrentUser;
-import com.ink_steel.inksteel.model.User;
 
-import java.util.ArrayList;
+public class HomeActivity extends Activity implements OnReplaceFragment {
 
-public class HomeActivity extends Activity implements OnReplaceFragment, FirebaseManager.UserListener {
-
-    public static String userEmail, userName, userImageUrl;
+    public static String userEmail, userImageUrl;
     private FragmentManager mManager;
-    private FirebaseManager.UserManager mUserManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        CurrentUser.getInstance();
         mManager = getFragmentManager();
-        displayFragment(new ScreenSlidePageFragment());
+        if (getIntent().getBooleanExtra(LoginActivity.IS_NEW_USER, false)) {
+            displayFragment(new UserInfoFragment());
+        } else {
+            displayFragment(new ScreenSlidePageFragment());
+        }
 
-        mUserManager = FirebaseManager.getInstance()
-                .getUserManager(this);
-
-        User user = new User("email", "name", "sofia", "https://firebasestorage.googleapis.com/v0/b/inksteel-7911e.appspot.com/o/default.jpg?alt=media&token=2a0f4edc-81e5-40a2-9558-015e18b8b1ff");
-
-        FirebaseFirestore.getInstance().collection("users").add(user);
     }
 
     private void displayFragment(Fragment fragment) {
@@ -50,10 +41,4 @@ public class HomeActivity extends Activity implements OnReplaceFragment, Firebas
         displayFragment(fragment);
     }
 
-    @Override
-    public void onUserLoaded() {
-        userEmail = mUserManager.getUserEmail();
-        userName = mUserManager.getUserName();
-        userImageUrl = mUserManager.getUserProfilePicture();
-    }
 }

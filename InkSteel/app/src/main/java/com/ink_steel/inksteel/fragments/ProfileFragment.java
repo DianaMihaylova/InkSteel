@@ -10,26 +10,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.ChatActivity;
 import com.ink_steel.inksteel.activities.HomeActivity;
-import com.ink_steel.inksteel.activities.UserInfoActivity;
-import com.ink_steel.inksteel.helpers.ConstantUtils;
-import com.ink_steel.inksteel.model.CurrentUser;
+import com.ink_steel.inksteel.data.FirebaseManager;
+import com.ink_steel.inksteel.model.User;
 import com.squareup.picasso.Picasso;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements FirebaseManager.CurrentUserInfoListener {
 
     private ImageView imageView;
     private TextView username, email, age, city;
-    private CurrentUser mCurrentUser;
+    private User currentUser;
+    private FirebaseManager.UserManager mManager;
 
     public ProfileFragment() {
     }
@@ -38,9 +33,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        mCurrentUser = CurrentUser.getInstance();
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         imageView = view.findViewById(R.id.profile);
         username = view.findViewById(R.id.user_name);
@@ -50,6 +43,9 @@ public class ProfileFragment extends Fragment {
         Button galleryBtn = view.findViewById(R.id.btn_gallery);
         Button messageBtn = view.findViewById(R.id.btn_msg);
         Button editProfileBtn = view.findViewById(R.id.btn_edit_profile);
+
+        mManager = FirebaseManager.getInstance().getUserManager();
+
 
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,38 +65,28 @@ public class ProfileFragment extends Fragment {
         editProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-                startActivity(intent);
+                ((HomeActivity) getActivity()).replaceFragment(new UserInfoFragment());
             }
         });
 
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        DocumentReference saveInfo = FirebaseFirestore.getInstance().collection("users").
-                document(ConstantUtils.USER_EMAIL);
-        saveInfo.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                if (documentSnapshot.exists()) {
-                    String emailStr = "Email: " + mCurrentUser.getUserEmail();
-                    String usernameStr = "Username: " + mCurrentUser.getUserName();
-                    String cityStr = "City: " + mCurrentUser.getUserCity();
-                    String ageStr = "Age: " + mCurrentUser.getUserAge();
-                    email.setText(emailStr);
-                    username.setText(usernameStr);
-                    city.setText(cityStr);
-                    age.setText(ageStr);
+    private void displayUserInfo() {
+        email.setText(currentUser.getEmail());
+        username.setText(currentUser.getName());
+        city.setText(currentUser.getCity());
+        age.setText(currentUser.getAge());
 
-                    Picasso.with(getActivity())
-                            .load(mCurrentUser.getUserProfilePicture())
-                            .transform(new CropCircleTransformation())
-                            .into(imageView);
-                }
-            }
-        });
+        Picasso.with(getActivity())
+                .load(currentUser.getProfileImage())
+                .transform(new CropCircleTransformation())
+                .into(imageView);
+    }
+
+    @Override
+    public void onInfoLoaded(boolean isNewUser) {
+        currentUser = mManager.getCurrentUser();
+        displayUserInfo();
     }
 }

@@ -9,22 +9,25 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.model.CurrentUser;
+import com.ink_steel.inksteel.data.FirebaseManager;
+import com.ink_steel.inksteel.model.User;
 import com.squareup.picasso.Picasso;
 
 public class FullScreenViewAdapter extends PagerAdapter {
 
     private Context context;
-    private CurrentUser mCurrentUser;
+    private User user;
 
     public FullScreenViewAdapter(Context context) {
         this.context = context;
-        this.mCurrentUser = CurrentUser.getInstance();
+        FirebaseManager.UserManager mManager = FirebaseManager.getInstance().getUserManager();
+        user = mManager.getCurrentUser();
+
     }
 
     @Override
     public int getCount() {
-        return mCurrentUser.getImages().size();
+        return user.getGallery().size();
     }
 
     @Override
@@ -34,7 +37,7 @@ public class FullScreenViewAdapter extends PagerAdapter {
         View view = layoutInflater.inflate(R.layout.item_image_fullscreen, container, false);
         ImageView imageView = view.findViewById(R.id.selected_image);
         Picasso.with(context)
-                .load(mCurrentUser.getImages().get(position))
+                .load(user.getGallery().get(position))
                 .into(imageView);
 
         container.addView(view);

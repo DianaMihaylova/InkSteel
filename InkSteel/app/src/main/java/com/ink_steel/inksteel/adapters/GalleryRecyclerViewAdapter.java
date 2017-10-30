@@ -1,7 +1,5 @@
 package com.ink_steel.inksteel.adapters;
 
-import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,18 +10,18 @@ import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.helpers.IOnGalleryImageLongClickListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecyclerViewAdapter.GalleryViewHolders> {
 
-    private Context context;
-    private List<Uri> images;
+    private List<String> images = new ArrayList<>();
     private IOnGalleryImageLongClickListener listener;
 
-    public GalleryRecyclerViewAdapter(Context context, List<Uri> images, IOnGalleryImageLongClickListener listener) {
-        this.context = context;
+    public GalleryRecyclerViewAdapter(List<String> images,
+                                      IOnGalleryImageLongClickListener listener) {
         this.images = images;
         this.listener = listener;
     }
@@ -42,7 +40,7 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
 
     @Override
     public int getItemCount() {
-        return this.images.size();
+        return images.size();
     }
 
     public class GalleryViewHolders extends RecyclerView.ViewHolder {
@@ -54,7 +52,7 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
             image = itemView.findViewById(R.id.image);
         }
 
-        private void bind(Uri u, final int pos) {
+        private void bind(String u, final int pos) {
             Picasso.with(itemView.getContext())
                     .load(u)
                     .transform(new CropCircleTransformation())

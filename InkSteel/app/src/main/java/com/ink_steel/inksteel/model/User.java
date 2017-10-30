@@ -1,43 +1,69 @@
 package com.ink_steel.inksteel.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User implements Serializable {
+public class User {
 
-    private String userEmail;
-    private String userName;
-    private String userCity;
-    private String profileImg;
+    private String email;
+    private String name;
+    private String age;
+    private String city;
+    private String profileImage;
+    private ArrayList<String> gallery;
+    private ArrayList<String> friends;
     private ArrayList<String> likes;
 
     public User() {
     }
 
-    public User(String userEmail, String userName, String userCity, String profileImg) {
-        this.userEmail = userEmail;
-        this.userName = userName;
-        this.userCity = userCity;
-        this.profileImg = profileImg;
-        likes = new ArrayList<>();
-        likes.add("like1");
-        likes.add("like2");
+    public User(String email, String name, String age, String city, String profileImage,
+                ArrayList<String> gallery, ArrayList<String> friends, ArrayList<String> likes) {
+        this.email = email;
+        this.name = name;
+        this.age = age;
+        this.city = city;
+        this.profileImage = profileImage;
+        this.gallery = gallery;
+        this.friends = friends;
+        this.likes = likes;
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public void updateUserInfo(String name, String age, String city) {
+        this.name = name;
+        this.age = age;
+        this.city = city;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getEmail() {
+        return email;
     }
 
-    public String getUserCity() {
-        return userCity;
+    public String getName() {
+        return name;
     }
 
-    public String getProfileImg() {
-        return profileImg;
+    public String getAge() {
+        return age;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public ArrayList<String> getGallery() {
+        return gallery;
+    }
+
+    public ArrayList<String> getFriends() {
+        return friends;
     }
 
     public ArrayList<String> getLikes() {
