@@ -19,14 +19,14 @@ public class ConstantUtils {
     public static final String USER_AGE = "userAge";
     public static final String USER_PROFILE_IMG = "userProfileImage";
     private static final FirebaseFirestore FIRESTORE_REFERENCE = FirebaseFirestore.getInstance();
+    public static final CollectionReference FIRESTORE_USERS_REFERENCE = FIRESTORE_REFERENCE.collection("users");
     public static String USER_EMAIL = FirebaseAuth.getInstance().getCurrentUser().getEmail();
     public static final DocumentReference FIREBASE_USER_DOCUMENT_REFERENCE = FIRESTORE_REFERENCE
             .collection("users").document(USER_EMAIL);
     public static final CollectionReference FIRESTORE_GALLERY_REFERNENCE = FIREBASE_USER_DOCUMENT_REFERENCE.collection("gallery");
     public static Uri PROFILE_IMAGE_URI;
+    public static Bitmap croppedImage;
     private static FirebaseStorage FIREBASE_STORAGE = FirebaseStorage.getInstance();
     public static StorageReference FIREBASE_STORAGE_REFERENCE = FIREBASE_STORAGE.getReference();
-    public static Bitmap croppedImage;
-    public static final CollectionReference FIRESTORE_USERS_REFERENCE = FIRESTORE_REFERENCE.collection("users");
 
 }
