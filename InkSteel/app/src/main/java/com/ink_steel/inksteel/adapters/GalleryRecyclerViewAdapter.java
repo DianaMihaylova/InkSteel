@@ -20,8 +20,7 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
     private List<String> images = new ArrayList<>();
     private IOnGalleryImageLongClickListener listener;
 
-    public GalleryRecyclerViewAdapter(List<String> images,
-                                      IOnGalleryImageLongClickListener listener) {
+    public GalleryRecyclerViewAdapter(List<String> images, IOnGalleryImageLongClickListener listener) {
         this.images = images;
         this.listener = listener;
     }

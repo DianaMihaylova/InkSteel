@@ -28,8 +28,8 @@ public class GalleryFragment extends Fragment implements IOnGalleryImageLongClic
     private static final int CHOOSE_IMAGE = 1;
     private GalleryRecyclerViewAdapter mAdapter;
     private User user;
-    private FirebaseManager.GalleryManager mManager;
-    private FirebaseManager.UserManager manager;
+    private FirebaseManager.GalleryManager mGalleryManager;
+    private FirebaseManager.UserManager mUserManager;
     private RecyclerView mRecyclerView;
     private FloatingActionButton fab;
 
@@ -42,10 +42,10 @@ public class GalleryFragment extends Fragment implements IOnGalleryImageLongClic
 
         View view = inflater.inflate(R.layout.fragment_gallery, container, false);
 
-        manager = FirebaseManager.getInstance().getUserManager();
-        manager.loadUserInfo(this, FirebaseAuth.getInstance().getCurrentUser().getEmail(),
+        mUserManager = FirebaseManager.getInstance().getUserManager();
+        mUserManager.loadUserInfo(this, FirebaseAuth.getInstance().getCurrentUser().getEmail(),
                 false);
-        mManager = FirebaseManager.getInstance().getGalleryManager();
+        mGalleryManager = FirebaseManager.getInstance().getGalleryManager();
         fab = view.findViewById(R.id.btn_fab);
 
         mRecyclerView = view.findViewById(R.id.image_recycler_view);
@@ -67,7 +67,7 @@ public class GalleryFragment extends Fragment implements IOnGalleryImageLongClic
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK) {
-            mManager.saveImage(data.getData());
+            mGalleryManager.saveImage(data.getData());
         }
     }
 
@@ -100,7 +100,7 @@ public class GalleryFragment extends Fragment implements IOnGalleryImageLongClic
                         String image = user.getGallery().get(position);
                         user.getGallery().remove(image);
                         mAdapter.notifyDataSetChanged();
-                        mManager.removeImage(image);
+                        mGalleryManager.removeImage(image);
                     }
                 });
         AlertDialog ad = alertBuilder.create();
@@ -111,7 +111,7 @@ public class GalleryFragment extends Fragment implements IOnGalleryImageLongClic
 
     @Override
     public void onInfoLoaded(boolean isNewUser) {
-        user = manager.getCurrentUser();
+        user = mUserManager.getCurrentUser();
         mAdapter = new GalleryRecyclerViewAdapter(user.getGallery(), this);
         mRecyclerView.setAdapter(mAdapter);
 
