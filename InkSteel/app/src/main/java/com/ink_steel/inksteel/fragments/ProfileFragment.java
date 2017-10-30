@@ -14,17 +14,17 @@ import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.ChatActivity;
 import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.data.FirebaseManager;
+import com.ink_steel.inksteel.data.UserManager;
 import com.ink_steel.inksteel.model.User;
 import com.squareup.picasso.Picasso;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class ProfileFragment extends Fragment implements FirebaseManager.CurrentUserInfoListener {
+public class ProfileFragment extends Fragment {
 
     private ImageView imageView;
     private TextView username, email, age, city;
     private User currentUser;
-    private FirebaseManager.UserManager mManager;
 
     public ProfileFragment() {
     }
@@ -44,8 +44,8 @@ public class ProfileFragment extends Fragment implements FirebaseManager.Current
         Button messageBtn = view.findViewById(R.id.btn_msg);
         Button editProfileBtn = view.findViewById(R.id.btn_edit_profile);
 
-        mManager = FirebaseManager.getInstance().getUserManager();
-
+        currentUser = UserManager.getInstance().getCurrentUser();
+        displayUserInfo();
 
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,9 +84,4 @@ public class ProfileFragment extends Fragment implements FirebaseManager.Current
                 .into(imageView);
     }
 
-    @Override
-    public void onInfoLoaded(boolean isNewUser) {
-        currentUser = mManager.getCurrentUser();
-        displayUserInfo();
-    }
 }

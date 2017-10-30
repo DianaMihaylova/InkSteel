@@ -16,7 +16,7 @@ import android.widget.ImageView;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.HomeActivity;
-import com.ink_steel.inksteel.data.FirebaseManager;
+import com.ink_steel.inksteel.data.UserManager;
 import com.ink_steel.inksteel.model.User;
 import com.squareup.picasso.Picasso;
 
@@ -27,15 +27,32 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import static android.app.Activity.RESULT_OK;
 
 
-public class UserInfoFragment extends Fragment implements FirebaseManager.OnSaveUserInfo {
+public class UserInfoFragment extends Fragment implements UserManager.UserInfoListener {
 
     private static final int CHOOSE_IMAGE = 1;
     private EditText name, age, city;
     private ImageView imageView;
-    private FirebaseManager.UserManager mManager;
     private User mUser;
-    private Bitmap mBitmap;
     private Bitmap imageBitmap;
+    private UserManager mManager;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK) {
+            Uri uri = data.getData();
+
+            try {
+                imageBitmap = MediaStore.Images.Media
+                        .getBitmap(getActivity().getContentResolver(), uri);
+                imageView.setImageBitmap(imageBitmap);
+
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        }
+    }
 
     @Nullable
     @Override
@@ -58,7 +75,7 @@ public class UserInfoFragment extends Fragment implements FirebaseManager.OnSave
             }
         });
 
-        mManager = FirebaseManager.getInstance().getUserManager();
+        mManager = UserManager.getInstance();
         mUser = mManager.getCurrentUser();
         displayUserInfo();
 
@@ -112,25 +129,7 @@ public class UserInfoFragment extends Fragment implements FirebaseManager.OnSave
                     .load(Uri.parse(uri))
                     .transform(new CropCircleTransformation())
                     .into(imageView);
-            mBitmap = imageView.getDrawingCache();
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK) {
-            Uri uri = data.getData();
-
-            try {
-                imageBitmap = MediaStore.Images.Media
-                        .getBitmap(getActivity().getContentResolver(), uri);
-                imageView.setImageBitmap(imageBitmap);
-
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
+//            mBitmap = imageView.getDrawingCache();
         }
     }
 

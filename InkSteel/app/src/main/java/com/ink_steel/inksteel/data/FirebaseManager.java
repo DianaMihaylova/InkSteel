@@ -40,6 +40,7 @@ public class FirebaseManager {
     private static GalleryManager mGalleryManager;
     private FirebaseFirestore mFirestore;
     private StorageReference mStorage;
+    private User currentUser;
 
     private FirebaseManager() {
         mFirestore = FirebaseFirestore.getInstance();
@@ -51,6 +52,10 @@ public class FirebaseManager {
         if (mFirebaseManager == null)
             mFirebaseManager = new FirebaseManager();
         return mFirebaseManager;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
     }
 
     public UserManager getUserManager() {
@@ -81,12 +86,6 @@ public class FirebaseManager {
         return mPostManager;
     }
 
-    public interface LoginListener {
-        void isUserSignIn(boolean hasUser);
-
-        void onUserLogIn(boolean isSuccessful, boolean isNewUser);
-    }
-
     public interface PostsListener {
         void onPostsAdded(Post post);
     }
@@ -99,6 +98,14 @@ public class FirebaseManager {
 
     public interface UsersListener {
         void onUsersLoaded();
+    }
+
+    public interface CurrentUserInfoListener {
+        void onInfoLoaded(boolean isNewUser);
+    }
+
+    public interface OnSaveUserInfo {
+        void onUserInfoSaved();
     }
 
     public class PostsManager {
@@ -325,7 +332,7 @@ public class FirebaseManager {
     public class GalleryManager {
 
         public void saveImage(Uri uri) {
-            mStorage.child(mUserManager.currentUser.getEmail() + "/pics/"
+            mStorage.child(currentUser.getEmail() + "/pics/"
                     + new Date().getTime() + ".jpeg")
                     .putFile(uri)
                     .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -333,10 +340,10 @@ public class FirebaseManager {
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                             Uri downloadUri = task.getResult().getDownloadUrl();
                             if (task.isSuccessful() && downloadUri != null) {
-                                mUserManager.currentUser.getGallery().add(downloadUri.toString());
+                                currentUser.getGallery().add(downloadUri.toString());
                                 mFirestore.collection("users")
-                                        .document(mUserManager.currentUser.getEmail())
-                                        .update("gallery", mUserManager.currentUser.getGallery());
+                                        .document(currentUser.getEmail())
+                                        .update("gallery", currentUser.getGallery());
                             }
                         }
                     });
@@ -358,7 +365,6 @@ public class FirebaseManager {
 
     public class UserManager {
 
-        private User currentUser;
         private ArrayList<User> users;
 
         private UserManager() {
@@ -422,8 +428,7 @@ public class FirebaseManager {
                                  final boolean isNewUser) {
             DocumentReference userReference = mFirestore.collection("users").document(userEmail);
             if (isNewUser) {
-                currentUser = new User(userEmail, "", "", "", "",
-                        null, null, null);
+                currentUser = new User(userEmail, "", "", "", "");
                 userReference.set(currentUser);
                 listener.onInfoLoaded(true);
             } else {
@@ -438,13 +443,5 @@ public class FirebaseManager {
                 });
             }
         }
-    }
-
-    public interface CurrentUserInfoListener {
-        void onInfoLoaded(boolean isNewUser);
-    }
-
-    public interface OnSaveUserInfo {
-        void onUserInfoSaved();
     }
 }
