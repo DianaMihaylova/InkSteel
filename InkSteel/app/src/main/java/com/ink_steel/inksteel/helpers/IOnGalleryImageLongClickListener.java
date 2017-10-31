@@ -4,3 +4,4 @@ public interface IOnGalleryImageLongClickListener {
 
     void onGalleryImageLongClickListener(int position, boolean isLongClick);
 }
+

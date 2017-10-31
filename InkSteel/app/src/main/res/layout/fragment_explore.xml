@@ -18,14 +18,14 @@
         android:textColor="@color/colorPrimaryDark"
         android:textStyle="italic"/>
 
+
     <com.tmall.ultraviewpager.UltraViewPager
         android:id="@+id/ultra_viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginLeft="30dp"
         android:layout_marginTop="8dp"
         android:layout_weight="4"
-        android:background="#000000">
+        android:background="#fff">
     </com.tmall.ultraviewpager.UltraViewPager>
 
     <LinearLayout

@@ -19,7 +19,7 @@ public class User {
 
     public User(String email, String name, String age, String city, String profileImage) {
         this(email, name, age, city, profileImage,
-                null, null, null, null);
+                new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>());
     }
 
     public User(String email, String name, String age, String city, String profileImage,

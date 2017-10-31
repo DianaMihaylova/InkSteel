@@ -25,8 +25,8 @@ public class ScreenSlidePageFragment extends Fragment {
                 container, false);
 
         final Fragment[] fragments = {new ProfileFragment(), new FeedFragment(),
-                new ExploreFragment(), new ContactStudioFragment()};
-        final String[] tabTitle = {"", "Feed", "Explore", "Studios Contacts"};
+                new ExploreFragment(), new FriendFragment(), new ContactStudioFragment()};
+        final String[] tabTitle = {"", "Feed", "Explore", "Friends", "Studios Contacts"};
 
         final ViewPager viewPager = view.findViewById(R.id.viewPager);
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {

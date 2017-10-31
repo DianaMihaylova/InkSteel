@@ -3,6 +3,7 @@ package com.ink_steel.inksteel.fragments;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -12,36 +13,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.adapters.GalleryRecyclerViewAdapter;
-import com.ink_steel.inksteel.data.FirebaseManager;
+import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.helpers.IOnGalleryImageLongClickListener;
 import com.ink_steel.inksteel.model.User;
 
 import static android.app.Activity.RESULT_OK;
 
-public class GalleryFragment extends Fragment implements IOnGalleryImageLongClickListener,
-        FirebaseManager.CurrentUserInfoListener {
+public class GalleryFragment extends Fragment implements IOnGalleryImageLongClickListener {
 
     private static final int CHOOSE_IMAGE = 1;
     private GalleryRecyclerViewAdapter mAdapter;
-    private User user;
-    private FirebaseManager.GalleryManager mManager;
-    private FirebaseManager.UserManager manager;
-    private RecyclerView mRecyclerView;
-    private FloatingActionButton fab;
+    private User mCurrentUser;
+    private DatabaseManager mUserManager;
 
     public GalleryFragment() {
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK) {
-            mManager.saveImage(data.getData());
-        }
     }
 
     @Override
@@ -50,18 +38,44 @@ public class GalleryFragment extends Fragment implements IOnGalleryImageLongClic
 
         View view = inflater.inflate(R.layout.fragment_gallery, container, false);
 
-        manager = FirebaseManager.getInstance().getUserManager();
-        manager.loadUserInfo(this, FirebaseAuth.getInstance().getCurrentUser().getEmail(),
-                false);
-        mManager = FirebaseManager.getInstance().getGalleryManager();
-        fab = view.findViewById(R.id.btn_fab);
+        mUserManager = DatabaseManager.getInstance();
+        mCurrentUser = mUserManager.getCurrentUser();
 
-        mRecyclerView = view.findViewById(R.id.image_recycler_view);
+        FloatingActionButton fab = view.findViewById(R.id.btn_fab);
+
+        RecyclerView mRecyclerView = view.findViewById(R.id.image_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
+        mAdapter = new GalleryRecyclerViewAdapter(mCurrentUser.getGallery(), this);
+
+        mRecyclerView.setAdapter(mAdapter);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImage();
+            }
+        });
+
         return view;
+    }
+
+    private void selectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), CHOOSE_IMAGE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK) {
+            Uri uri = data.getData();
+            mUserManager.saveImage(uri, mAdapter);
+        }
     }
 
     @Override
@@ -90,36 +104,15 @@ public class GalleryFragment extends Fragment implements IOnGalleryImageLongClic
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String image = user.getGallery().get(position);
-                        user.getGallery().remove(image);
+                        String image = mCurrentUser.getGallery().get(position);
+                        mCurrentUser.getGallery().remove(image);
                         mAdapter.notifyDataSetChanged();
-                        mManager.removeImage(image);
+                        mUserManager.removeImage(image);
                     }
                 });
         AlertDialog ad = alertBuilder.create();
         ad.setTitle("WARNING MESSAGE");
         ad.setIcon(R.drawable.warning_msg);
         ad.show();
-    }
-
-    @Override
-    public void onInfoLoaded(boolean isNewUser) {
-        user = manager.getCurrentUser();
-        mAdapter = new GalleryRecyclerViewAdapter(user.getGallery(), this);
-        mRecyclerView.setAdapter(mAdapter);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImage();
-            }
-        });
-    }
-
-    private void selectImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), CHOOSE_IMAGE);
     }
 }

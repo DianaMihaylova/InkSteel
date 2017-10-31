@@ -22,4 +22,5 @@
     <string name="password">Password</string>
     <string name="not_a_member_register">Not a member? Register</string>
     <string name="confirm_password">Confirm password</string>
+    <string name="send_a_message">Send a message</string>
 </resources>
