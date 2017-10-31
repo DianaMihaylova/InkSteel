@@ -50,7 +50,7 @@ public class ExploreAdapter extends PagerAdapter {
                 .into(imageView);
 
         String uName = "User: " + users.get(position).getName();
-        String uCity = "City: " + users.get(position).getCity();
+        String uCity = "Country: " + users.get(position).getCountry();
         userName.setText(uName);
         userCity.setText(uCity);
 

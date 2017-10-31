@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.adapters.ReactionsAdapter;
-import com.ink_steel.inksteel.data.PostsManager;
+import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.model.Post;
 import com.ink_steel.inksteel.model.Reaction;
 import com.squareup.picasso.Picasso;
@@ -24,8 +24,7 @@ import com.squareup.picasso.Picasso;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PostInfoFragment extends Fragment implements View.OnClickListener,
-        PostsManager.PostListener {
+public class PostInfoFragment extends Fragment implements View.OnClickListener, DatabaseManager.PostReactionsListener {
 
     boolean isCollapsed;
     private ReactionsAdapter mAdapter;
@@ -45,8 +44,8 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener,
     private ConstraintSet mCs;
     private ConstraintLayout mCl;
     private TextView mPostDescription;
-    private PostsManager mManager;
     private Post currentPost;
+    private DatabaseManager mManager;
 
     public PostInfoFragment() {
     }
@@ -92,7 +91,7 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener,
         mCs = new ConstraintSet();
         mCl = view.findViewById(R.id.post_cl);
 
-        mManager = PostsManager.getInstance();
+        mManager = DatabaseManager.getInstance();
         currentPost = mManager.getPost(this, postId);
         displayPost(true);
 
@@ -195,13 +194,21 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener,
             case R.id.collapse_btn:
                 toggleReactionsRecycler();
                 break;
-            case R.id.next:
-                currentPost = mManager.getNextPost(this);
-                displayPost(false);
+            case R.id.next: {
+                Post post = mManager.getNextPost(this);
+                if (post != null) {
+                    currentPost = mManager.getNextPost(this);
+                    displayPost(false);
+                }
+            }
                 break;
-            case R.id.previous:
-                currentPost = mManager.getPreviousPost(this);
-                displayPost(false);
+            case R.id.previous: {
+                Post post = mManager.getPreviousPost(this);
+                if (post != null) {
+                    currentPost = mManager.getPreviousPost(this);
+                    displayPost(false);
+                }
+            }
                 break;
         }
         if (!reaction.isEmpty())

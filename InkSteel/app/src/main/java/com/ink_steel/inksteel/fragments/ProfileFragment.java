@@ -85,7 +85,7 @@ public class ProfileFragment extends Fragment {
             final int position = bundle.getInt("position");
             emailTxt = "Email: " + FriendFragment.mUsers.get(position).getEmail();
             userNameTxt = "Username: " + FriendFragment.mUsers.get(position).getName();
-            cityTxt = "City: " + FriendFragment.mUsers.get(position).getCity();
+            cityTxt = "Country: " + FriendFragment.mUsers.get(position).getCountry();
             ageTxt = "Age: " + FriendFragment.mUsers.get(position).getAge();
             picture = FriendFragment.mUsers.get(position).getProfileImage();
             galleryFriendBtn.setVisibility(View.VISIBLE);
@@ -102,7 +102,7 @@ public class ProfileFragment extends Fragment {
         } else {
             emailTxt = "Email: " + mCurrentUser.getEmail();
             userNameTxt = "Username: " + mCurrentUser.getName();
-            cityTxt = "City: " + mCurrentUser.getCity();
+            cityTxt = "Country: " + mCurrentUser.getCountry();
             ageTxt = "Age: " + mCurrentUser.getAge();
             picture = mCurrentUser.getProfileImage();
             layoutGroupBtn.setVisibility(View.VISIBLE);

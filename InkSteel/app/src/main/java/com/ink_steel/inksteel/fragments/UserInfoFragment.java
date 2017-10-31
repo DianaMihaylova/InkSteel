@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,6 +25,9 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -31,11 +36,12 @@ import static android.app.Activity.RESULT_OK;
 public class UserInfoFragment extends Fragment implements DatabaseManager.UserInfoListener {
 
     private static final int CHOOSE_IMAGE = 1;
-    private EditText name, age, city;
+    private EditText name, age;
     private ImageView imageView;
     private User mCurrentUser;
     private Bitmap imageBitmap;
     private DatabaseManager mManager;
+    private AutoCompleteTextView mCountry;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -70,11 +76,22 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
 
         name = view.findViewById(R.id.user_name);
         age = view.findViewById(R.id.user_age);
-        city = view.findViewById(R.id.user_city);
         imageView = view.findViewById(R.id.profile_picture);
+        mCountry = view.findViewById(R.id.user_country);
         Button saveBtn = view.findViewById(R.id.button_save);
-
         imageView.setDrawingCacheEnabled(true);
+
+        List<String> countries = new ArrayList<>();
+        for (Locale locale : Locale.getAvailableLocales()) {
+            String country = locale.getDisplayCountry();
+            if (!country.trim().isEmpty() && !countries.contains(country)) {
+                countries.add(country);
+            }
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
+                android.R.layout.simple_dropdown_item_1line, countries);
+        mCountry.setAdapter(adapter);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,28 +118,10 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
         return view;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK) {
-            Uri uri = data.getData();
-
-            try {
-                imageBitmap = MediaStore.Images.Media
-                        .getBitmap(getActivity().getContentResolver(), uri);
-                imageView.setImageBitmap(imageBitmap);
-
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
-        }
-    }
-
     private void updateUserInfoFromFragment() {
         String userName = name.getText().toString();
         String userAge = age.getText().toString();
-        String userCity = city.getText().toString();
+        String country = mCountry.getText().toString();
 
         String errorMessage = "Field can't be empty";
 
@@ -134,26 +133,23 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
             age.setError(errorMessage);
             return;
         }
-        if (userCity.isEmpty()) {
-            city.setError(errorMessage);
+        if (country.isEmpty()) {
+            mCountry.setError(errorMessage);
             return;
         }
 
-        mCurrentUser.updateUserInfo(userName, userAge, userCity);
+        mCurrentUser.updateUserInfo(userName, userAge, country);
         mManager.updateUserInfo(this, imageBitmap);
     }
 
     private void displayUserInfo() {
         name.setText(mCurrentUser.getName());
-        city.setText(mCurrentUser.getCity());
+        mCountry.setText(mCurrentUser.getCountry());
+        if (mCountry.getText().toString().isEmpty()) {
+            mCountry.setText(Locale.getDefault().getDisplayCountry());
+        }
         age.setText(mCurrentUser.getAge());
         loadImage(mCurrentUser.getProfileImage());
-        if (mUser != null) {
-            name.setText(mUser.getName());
-            city.setText(mUser.getCity());
-            age.setText(mUser.getAge());
-            loadImage(mUser.getProfileImage());
-        }
     }
 
     private void loadImage(String uri) {

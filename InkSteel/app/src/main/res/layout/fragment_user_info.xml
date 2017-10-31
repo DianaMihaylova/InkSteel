@@ -3,8 +3,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context="com.ink_steel.inksteel.activities.UserInfoActivity">
+              android:orientation="vertical">
 
     <ImageView
         android:id="@+id/profile_picture"
@@ -26,27 +25,25 @@
         android:hint="@string/username"
         android:inputType="textPersonName"/>
 
+    <AutoCompleteTextView
+        android:id="@+id/user_country"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Country"
+        android:layout_marginLeft="64dp"
+        android:gravity="bottom|center"
+        android:layout_marginRight="64dp"/>
+
     <EditText
         android:id="@+id/user_age"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="64dp"
         android:layout_marginRight="64dp"
+        android:layout_marginBottom="16dp"
         android:gravity="bottom|center"
         android:hint="@string/age"
         android:inputType="textPersonName"/>
-
-    <EditText
-        android:id="@+id/user_city"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="64dp"
-        android:layout_marginRight="64dp"
-        android:gravity="bottom|center"
-        android:hint="@string/city"
-        android:inputType="textPersonName"/>
-
 
     <Button
         android:id="@+id/button_save"

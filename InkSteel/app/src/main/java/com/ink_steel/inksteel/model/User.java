@@ -7,7 +7,7 @@ public class User {
     private String email;
     private String name;
     private String age;
-    private String city;
+    private String country;
     private String profileImage;
     private ArrayList<String> gallery;
     private ArrayList<String> friends;
@@ -17,18 +17,18 @@ public class User {
     public User() {
     }
 
-    public User(String email, String name, String age, String city, String profileImage) {
-        this(email, name, age, city, profileImage,
+    public User(String email, String name, String age, String country, String profileImage) {
+        this(email, name, age, country, profileImage,
                 new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>());
     }
 
-    public User(String email, String name, String age, String city, String profileImage,
+    public User(String email, String name, String age, String country, String profileImage,
                 ArrayList<String> gallery, ArrayList<String> friends,
                 ArrayList<String> likes, ArrayList<String> likedBy) {
         this.email = email;
         this.name = name;
         this.age = age;
-        this.city = city;
+        this.country = country;
         this.profileImage = profileImage;
         this.gallery = gallery;
         this.friends = friends;
@@ -36,10 +36,10 @@ public class User {
         this.likedBy = likedBy;
     }
 
-    public void updateUserInfo(String name, String age, String city) {
+    public void updateUserInfo(String name, String age, String country) {
         this.name = name;
         this.age = age;
-        this.city = city;
+        this.country = country;
     }
 
     public String getEmail() {
@@ -54,8 +54,8 @@ public class User {
         return age;
     }
 
-    public String getCity() {
-        return city;
+    public String getCountry() {
+        return country;
     }
 
     public String getProfileImage() {

@@ -16,18 +16,17 @@ import android.view.ViewGroup;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.adapters.PostsAdapter;
-import com.ink_steel.inksteel.data.PostsManager;
+import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.helpers.OnPostClickListener;
 import com.ink_steel.inksteel.model.Post;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class FeedFragment extends Fragment implements OnPostClickListener, PostsManager.PostsManagerListener {
+public class FeedFragment extends Fragment implements OnPostClickListener, DatabaseManager.PostsListener {
 
     private List<Post> mPosts;
     private PostsAdapter mAdapter;
-    private PostsManager mManager;
 
     public FeedFragment() {
     }
@@ -37,15 +36,13 @@ public class FeedFragment extends Fragment implements OnPostClickListener, Posts
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onCreateView");
-
         RecyclerView recyclerView = view.findViewById(R.id.feed_rv);
 
         mPosts = new LinkedList<>();
         mAdapter = new PostsAdapter(getActivity().getApplicationContext(), mPosts, this);
 
-        mManager = PostsManager.getInstance();
-        mManager.registerPostsListener(this);
+        DatabaseManager manager = DatabaseManager.getInstance();
+        manager.registerPostsListener(this);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +64,6 @@ public class FeedFragment extends Fragment implements OnPostClickListener, Posts
     @Override
     public void onStart() {
 //        mPosts.addAll(mManager.getPosts());
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onStart");
         super.onStart();
     }
 
@@ -93,58 +89,5 @@ public class FeedFragment extends Fragment implements OnPostClickListener, Posts
         mAdapter.notifyItemChanged(mPosts.indexOf(post));
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onAttach");
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onCreate");
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onActivityCreated");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onResume");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onPause");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onStop");
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onDestroyView");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onDestroy");
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onDetach");
-    }
 }
 

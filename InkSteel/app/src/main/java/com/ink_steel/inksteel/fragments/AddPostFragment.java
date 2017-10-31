@@ -15,26 +15,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.HomeActivity;
-import com.ink_steel.inksteel.data.PostManager;
-import com.ink_steel.inksteel.model.Post;
+import com.ink_steel.inksteel.data.DatabaseManager;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Date;
-import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
-public class AddPostFragment extends Fragment implements PostManager.PostManagerListener {
+public class AddPostFragment extends Fragment implements DatabaseManager.PostSavedListener {
 
     public static final int REQUEST_CODE = 1;
     private CropImageView mCropImageView;
@@ -52,7 +42,6 @@ public class AddPostFragment extends Fragment implements PostManager.PostManager
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_post, container, false);
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onCreateView");
 
         mCropImageView = view.findViewById(R.id.crop_iv);
         mAddImageButton = view.findViewById(R.id.add_image_b);
@@ -60,7 +49,7 @@ public class AddPostFragment extends Fragment implements PostManager.PostManager
         mSaveButton = view.findViewById(R.id.save_b);
         mDescriptionEditText = view.findViewById(R.id.description_et);
 
-        final PostManager manager = PostManager.getInstance();
+        final DatabaseManager manager = DatabaseManager.getInstance();
 
         mAddImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,65 +106,5 @@ public class AddPostFragment extends Fragment implements PostManager.PostManager
     @Override
     public void onPostSaved() {
         ((HomeActivity) getActivity()).replaceFragment(new ScreenSlidePageFragment());
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onAttach");
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onCreate");
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onActivityCreated");
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onStart");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onResume");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onPause");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onStop");
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onDestroyView");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onDestroy");
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.d("Lifecycle", this.getClass().getSimpleName() + " onDetach");
     }
 }
