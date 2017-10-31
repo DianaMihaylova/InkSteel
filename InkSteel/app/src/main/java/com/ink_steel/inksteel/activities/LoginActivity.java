@@ -14,23 +14,24 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.data.FirebaseManager;
+import com.ink_steel.inksteel.data.UserManager;
 import com.ink_steel.inksteel.helpers.IOnFragmentButtonListener;
 import com.ink_steel.inksteel.fragments.LoginFragment;
 import com.ink_steel.inksteel.helpers.ConstantUtils;
 
 public class LoginActivity extends AppCompatActivity implements IOnFragmentButtonListener,
-        FirebaseManager.CurrentUserInfoListener {
+        UserManager.UserManagerListener {
 
     public static final String IS_NEW_USER = "isNewUser";
-    private FirebaseAuth mAuth;
-    private FirebaseManager.UserManager mManager;
+    private UserManager mUserManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mAuth = FirebaseAuth.getInstance();
+        mUserManager = UserManager.getInstance();
+        mUserManager.checkIfSignedIn(this);
 
         LoginFragment fragment = new LoginFragment();
         getFragmentManager()
@@ -38,56 +39,29 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
                 .replace(R.id.fragment_placeholder, fragment)
                 .addToBackStack(null)
                 .commit();
-
-        mManager = FirebaseManager.getInstance().getUserManager();
-
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            goToFeed();
-        }
-    }
-
-    private void goToFeed() {
-        Intent i = new Intent(LoginActivity.this, HomeActivity.class);
-        startActivity(i);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        finish();
     }
 
     @Override
     public void onFragmentButtonListener(int which, String email, String password) {
         switch (which) {
             case ConstantUtils.LOGIN_BUTTON:
-                loginUser(email, password, false);
+                mUserManager.loginUser(this, email, password);
                 break;
             case ConstantUtils.REGISTER_BUTTON:
-                registerUser(email, password);
+                mUserManager.signUpUser(this, email, password);
                 break;
         }
     }
 
-    private void loginUser(final String email, String password, final boolean isNewUser) {
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    mManager.loadUserInfo(LoginActivity.this, email, isNewUser);
-                    Toast.makeText(LoginActivity.this, "Sign in " + ConstantUtils.USER_EMAIL,
-                            Toast.LENGTH_SHORT).show();
-
-                } else {
-                    showAlert();
-                }
-            }
-        });
+    @Override
+    public void onUserLogInError(String error) {
+        // handle error
+        showAlert(error);
     }
 
-    private void showAlert() {
+    private void showAlert(String error) {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(LoginActivity.this);
-        alertBuilder.setMessage("Wrong e-mail or password! Try again.")
+        alertBuilder.setMessage(error)
                 .setCancelable(false)
                 .setPositiveButton("BACK", new DialogInterface.OnClickListener() {
                     @Override
@@ -101,27 +75,18 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
         ad.show();
     }
 
-    private void registerUser(final String email, final String password) {
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "User registered!\n" +
-                                    ConstantUtils.USER_EMAIL, Toast.LENGTH_SHORT).show();
-                            loginUser(email, password, true);
-                        } else {
-                            Toast.makeText(LoginActivity.this, "User NOT registered!",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+    @Override
+    public void onUserSignUpError(String error) {
+        // handle error
     }
 
     @Override
-    public void onInfoLoaded(boolean isNewUser) {
-        Intent i = new Intent(LoginActivity.this, HomeActivity.class);
-        i.putExtra(IS_NEW_USER, isNewUser);
-        startActivity(i);
+    public void onUserInfoLoaded() {
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        if (mUserManager.getCurrentUser().getName().isEmpty())
+            intent.putExtra(IS_NEW_USER, true);
+        else
+            intent.putExtra(IS_NEW_USER, false);
+        startActivity(intent);
     }
 }

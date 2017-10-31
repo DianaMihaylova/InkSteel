@@ -37,6 +37,14 @@ public class GalleryFragment extends Fragment implements IOnGalleryImageLongClic
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK) {
+            mManager.saveImage(data.getData());
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -121,5 +129,12 @@ public class GalleryFragment extends Fragment implements IOnGalleryImageLongClic
                 selectImage();
             }
         });
+    }
+
+    private void selectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), CHOOSE_IMAGE);
     }
 }
