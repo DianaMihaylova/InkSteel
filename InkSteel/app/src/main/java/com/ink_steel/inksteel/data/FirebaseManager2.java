@@ -7,13 +7,20 @@ import com.ink_steel.inksteel.model.User;
 
 public class FirebaseManager2 {
 
-    protected FirebaseFirestore mFirestore;
-    protected User mCurrentUser;
-    protected StorageReference mStorage;
+    FirebaseFirestore mFirestore;
+    User mCurrentUser;
+    StorageReference mStorage;
+    private static FirebaseManager2 mManager;
 
-    protected FirebaseManager2() {
+    private FirebaseManager2() {
         mFirestore = FirebaseFirestore.getInstance();
         mStorage = FirebaseStorage.getInstance().getReference();
+    }
+
+    static FirebaseManager2 getInstance() {
+        if (mManager == null)
+            mManager = new FirebaseManager2();
+        return mManager;
     }
 
     public User getCurrentUser() {

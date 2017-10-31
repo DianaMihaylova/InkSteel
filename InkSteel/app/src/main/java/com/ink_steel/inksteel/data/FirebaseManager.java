@@ -221,7 +221,6 @@ public class FirebaseManager {
             Post post = mPostsManager.getNextPost(mCurrentPostId);
             if (post != null)
                 setCurrentPost(post);
-
             return post;
         }
 

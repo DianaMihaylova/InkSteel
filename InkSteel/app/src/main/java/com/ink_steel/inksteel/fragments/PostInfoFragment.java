@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.adapters.ReactionsAdapter;
-import com.ink_steel.inksteel.data.FirebaseManager;
+import com.ink_steel.inksteel.data.PostsManager;
 import com.ink_steel.inksteel.model.Post;
 import com.ink_steel.inksteel.model.Reaction;
 import com.squareup.picasso.Picasso;
@@ -24,8 +24,8 @@ import com.squareup.picasso.Picasso;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PostFullFragment extends Fragment implements FirebaseManager.PostListener,
-        View.OnClickListener {
+public class PostInfoFragment extends Fragment implements View.OnClickListener,
+        PostsManager.PostListener {
 
     boolean isCollapsed;
     private ReactionsAdapter mAdapter;
@@ -37,7 +37,6 @@ public class PostFullFragment extends Fragment implements FirebaseManager.PostLi
     private ImageView mPostUserProfileImage;
     private TextView mReactionUserEmail;
     private ImageView mPostImage;
-    private FirebaseManager.PostManager mManager;
     private List<Reaction> mReactions;
     private RecyclerView mRecyclerView;
     private View mUserInfoView;
@@ -46,12 +45,14 @@ public class PostFullFragment extends Fragment implements FirebaseManager.PostLi
     private ConstraintSet mCs;
     private ConstraintLayout mCl;
     private TextView mPostDescription;
+    private PostsManager mManager;
+    private Post currentPost;
 
-    public PostFullFragment() {
+    public PostInfoFragment() {
     }
 
-    public static PostFullFragment newInstance(String postId) {
-        PostFullFragment postInfoFragment = new PostFullFragment();
+    public static PostInfoFragment newInstance(String postId) {
+        PostInfoFragment postInfoFragment = new PostInfoFragment();
         Bundle bundle = new Bundle(1);
         bundle.putString("postId", postId);
         postInfoFragment.setArguments(bundle);
@@ -91,8 +92,9 @@ public class PostFullFragment extends Fragment implements FirebaseManager.PostLi
         mCs = new ConstraintSet();
         mCl = view.findViewById(R.id.post_cl);
 
-        mManager = FirebaseManager.getInstance().getPostManager(postId, this);
-        displayPost(mManager.getPost(), true);
+        mManager = PostsManager.getInstance();
+        currentPost = mManager.getPost(this, postId);
+        displayPost(true);
 
         mCollapse.setOnClickListener(this);
         next.setOnClickListener(this);
@@ -146,15 +148,15 @@ public class PostFullFragment extends Fragment implements FirebaseManager.PostLi
         mCs.applyTo(mCl);
     }
 
-    private void displayPost(Post post, boolean isInitial) {
-        if (post != null) {
-            mReactionUserEmail.setText(post.getUserEmail());
-            Picasso.with(getActivity()).load(post.getUrlProfileImage())
+    private void displayPost(boolean isInitial) {
+        if (currentPost != null) {
+            mReactionUserEmail.setText(currentPost.getUserEmail());
+            Picasso.with(getActivity()).load(currentPost.getUrlProfileImage())
                     .into(mPostUserProfileImage);
-            Picasso.with(getActivity()).load(post.getUrlImage())
+            Picasso.with(getActivity()).load(currentPost.getUrlImage())
                     .into(mPostImage);
-            mPostDescription.setText(post.getDescription());
-            updateReactions(post);
+            mPostDescription.setText(currentPost.getDescription());
+            updateReactions();
             if (!isInitial)
                 clearRecyclerView();
         }
@@ -166,38 +168,12 @@ public class PostFullFragment extends Fragment implements FirebaseManager.PostLi
         mAdapter.notifyDataSetChanged();
     }
 
-    private void updateReactions(Post post) {
+    private void updateReactions() {
 
-        mLikeCount.setText(String.valueOf(post.getReactionLike()));
-        mBlushCount.setText(String.valueOf(post.getReactionBlush()));
-        mDevilCount.setText(String.valueOf(post.getReactionDevil()));
-        mDazedCount.setText(String.valueOf(post.getReactionDazed()));
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mManager.registerPostListener();
-        mManager.registerReactionsListener();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mManager.unregisterPostListener();
-        mManager.unregisterReactionsListener();
-    }
-
-    @Override
-    public void onUserReactionChange(Post post) {
-        updateReactions(post);
-    }
-
-    @Override
-    public void onReactionsChanged(Reaction reaction) {
-        mReactions.add(0, reaction);
-        mAdapter.notifyItemInserted(0);
-        mRecyclerView.scrollToPosition(0);
+        mLikeCount.setText(String.valueOf(currentPost.getReactions().get(0)));
+        mBlushCount.setText(String.valueOf(currentPost.getReactions().get(1)));
+        mDevilCount.setText(String.valueOf(currentPost.getReactions().get(2)));
+        mDazedCount.setText(String.valueOf(currentPost.getReactions().get(3)));
     }
 
     @Override
@@ -220,13 +196,27 @@ public class PostFullFragment extends Fragment implements FirebaseManager.PostLi
                 toggleReactionsRecycler();
                 break;
             case R.id.next:
-                displayPost(mManager.getNextPost(), false);
+                currentPost = mManager.getNextPost(this);
+                displayPost(false);
                 break;
             case R.id.previous:
-                displayPost(mManager.getPreviousPost(), false);
+                currentPost = mManager.getPreviousPost(this);
+                displayPost(false);
                 break;
         }
         if (!reaction.isEmpty())
             mManager.saveUserReaction(reaction);
+    }
+
+    @Override
+    public void onPostReactionsChanged() {
+        updateReactions();
+    }
+
+    @Override
+    public void onReactionAdded(Reaction reaction) {
+        mReactions.add(0, reaction);
+        mAdapter.notifyItemInserted(0);
+        mRecyclerView.scrollToPosition(0);
     }
 }

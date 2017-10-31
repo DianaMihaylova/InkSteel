@@ -45,7 +45,8 @@ public class ProfileFragment extends Fragment {
         Button editProfileBtn = view.findViewById(R.id.btn_edit_profile);
 
         currentUser = UserManager.getInstance().getCurrentUser();
-        displayUserInfo();
+        if (currentUser != null)
+            displayUserInfo();
 
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override

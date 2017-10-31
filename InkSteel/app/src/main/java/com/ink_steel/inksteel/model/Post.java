@@ -1,5 +1,8 @@
 package com.ink_steel.inksteel.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class Post {
 
     private String postId;
@@ -9,22 +12,21 @@ public class Post {
     private String urlImage;
     private String urlThumbnailImage;
     private String description;
-    private int reactionLike;
-    private int reactionBlush;
-    private int reactionDevil;
-    private int reactionDazed;
+    private ArrayList<Integer> reactions;
 
     public Post() {
     }
 
     public Post(String postId, String userEmail, long createdAt, String urlProfileImage,
                 String urlImage, String urlThumbnailImage, String description,
-                int reactionLike, int reactionBlush, int reactionDevil, int reactionDazed) {
-        this(postId, userEmail, createdAt, urlProfileImage, urlImage, urlThumbnailImage, description);
-        this.reactionLike = reactionLike;
-        this.reactionBlush = reactionBlush;
-        this.reactionDevil = reactionDevil;
-        this.reactionDazed = reactionDazed;
+                int like, int blush, int devil, int dazed) {
+        this(postId, userEmail, createdAt, urlProfileImage,
+                urlImage, urlThumbnailImage, description);
+        reactions.clear();
+        reactions.add(like);
+        reactions.add(blush);
+        reactions.add(devil);
+        reactions.add(dazed);
     }
 
     public Post(String postId, String userEmail, long createdAt, String urlProfileImage,
@@ -36,6 +38,8 @@ public class Post {
         this.urlImage = urlImage;
         this.urlThumbnailImage = urlThumbnailImage;
         this.description = description;
+        reactions = new ArrayList<>();
+        Collections.addAll(reactions, 0, 0, 0, 0);
     }
 
     public String getUserEmail() {
@@ -66,32 +70,22 @@ public class Post {
         return description;
     }
 
-    public int getReactionLike() {
-        return reactionLike;
-    }
-
-    public int getReactionBlush() {
-        return reactionBlush;
-    }
-
-    public int getReactionDevil() {
-        return reactionDevil;
-    }
-
-    public int getReactionDazed() {
-        return reactionDazed;
+    public ArrayList<Integer> getReactions() {
+        return reactions;
     }
 
     public int getReactionCount(String type) {
+        if (type == null)
+            return 0;
         switch (type) {
             case "like":
-                return reactionLike;
+                return reactions.get(0);
             case "blush":
-                return reactionBlush;
+                return reactions.get(1);
             case "devil":
-                return reactionDevil;
+                return reactions.get(2);
             case "dazed":
-                return reactionDazed;
+                return reactions.get(3);
         }
         return 0;
     }

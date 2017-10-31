@@ -6,15 +6,15 @@ public class Reaction {
 
     private boolean initial;
     private String userEmail;
-    private String reactionType;
+    private String type;
     private long time;
 
     public Reaction() {
     }
 
-    public Reaction(String user, String reactionType, boolean isInitial, long time) {
+    public Reaction(String user, String type, boolean isInitial, long time) {
         this.userEmail = user;
-        this.reactionType = reactionType;
+        this.type = type;
         this.initial = isInitial;
         this.time = time;
     }
@@ -23,8 +23,8 @@ public class Reaction {
         return userEmail;
     }
 
-    public String getReactionType() {
-        return reactionType;
+    public String getType() {
+        return type;
     }
 
     public long getTime() {
@@ -36,7 +36,7 @@ public class Reaction {
     }
 
     public int getReactionIcon() {
-        switch (reactionType) {
+        switch (type) {
             case "like":
                 return R.drawable.like;
             case "blush":

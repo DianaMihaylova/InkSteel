@@ -19,6 +19,8 @@ import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.data.UserManager;
 import com.ink_steel.inksteel.model.User;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
 
@@ -41,12 +43,18 @@ public class UserInfoFragment extends Fragment implements UserManager.UserInfoLi
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK) {
-            Uri uri = data.getData();
-
+            Intent intent = CropImage.activity(data.getData())
+                    .setCropShape(CropImageView.CropShape.OVAL)
+                    .setFixAspectRatio(true).getIntent(getActivity());
+            startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             try {
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
                 imageBitmap = MediaStore.Images.Media
-                        .getBitmap(getActivity().getContentResolver(), uri);
-                imageView.setImageBitmap(imageBitmap);
+                        .getBitmap(getActivity().getContentResolver(), result.getUri());
+                Picasso.with(getActivity()).load(result.getUri())
+                        .transform(new CropCircleTransformation())
+                        .into(imageView);
 
             } catch (IOException ioe) {
                 ioe.printStackTrace();
@@ -85,7 +93,8 @@ public class UserInfoFragment extends Fragment implements UserManager.UserInfoLi
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), CHOOSE_IMAGE);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"),
+                        CHOOSE_IMAGE);
             }
         });
 
@@ -117,10 +126,12 @@ public class UserInfoFragment extends Fragment implements UserManager.UserInfoLi
     }
 
     private void displayUserInfo() {
-        name.setText(mUser.getName());
-        city.setText(mUser.getCity());
-        age.setText(mUser.getAge());
-        loadImage(mUser.getProfileImage());
+        if (mUser != null) {
+            name.setText(mUser.getName());
+            city.setText(mUser.getCity());
+            age.setText(mUser.getAge());
+            loadImage(mUser.getProfileImage());
+        }
     }
 
     private void loadImage(String uri) {
@@ -129,7 +140,6 @@ public class UserInfoFragment extends Fragment implements UserManager.UserInfoLi
                     .load(Uri.parse(uri))
                     .transform(new CropCircleTransformation())
                     .into(imageView);
-//            mBitmap = imageView.getDrawingCache();
         }
     }
 

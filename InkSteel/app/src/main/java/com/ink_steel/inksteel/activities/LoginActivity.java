@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +30,8 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Log.d("Lifecycle", this.getClass().getSimpleName() + " onCreate");
 
         mUserManager = UserManager.getInstance();
         mUserManager.checkIfSignedIn(this);
@@ -82,11 +85,44 @@ public class LoginActivity extends AppCompatActivity implements IOnFragmentButto
 
     @Override
     public void onUserInfoLoaded() {
+
+        Log.d("Lifecycle", this.getClass().getSimpleName() + " onUserInfoLoaded");
         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
         if (mUserManager.getCurrentUser().getName().isEmpty())
             intent.putExtra(IS_NEW_USER, true);
         else
             intent.putExtra(IS_NEW_USER, false);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("Lifecycle", this.getClass().getSimpleName() + " onStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("Lifecycle", this.getClass().getSimpleName() + " onResume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("Lifecycle", this.getClass().getSimpleName() + " onPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("Lifecycle", this.getClass().getSimpleName() + " onStop");
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d("Lifecycle", this.getClass().getSimpleName() + " onDestroy");
+        super.onDestroy();
     }
 }

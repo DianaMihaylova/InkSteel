@@ -3,6 +3,7 @@ package com.ink_steel.inksteel.data;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -11,18 +12,21 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.UploadTask;
 import com.ink_steel.inksteel.model.User;
 
 import java.io.ByteArrayOutputStream;
 
-public class UserManager extends FirebaseManager2 {
+public class UserManager {
 
     private static UserManager mUserManager;
+    private static FirebaseManager2 mManager;
     private FirebaseAuth mAuth;
 
     private UserManager() {
         mAuth = FirebaseAuth.getInstance();
+        mManager = FirebaseManager2.getInstance();
     }
 
     public static UserManager getInstance() {
@@ -38,17 +42,17 @@ public class UserManager extends FirebaseManager2 {
     }
 
     private void loadUserInfo(final UserManagerListener listener, final String email) {
-        final DocumentReference userReference = mFirestore.collection("users").document(email);
+        final DocumentReference userReference = mManager.mFirestore.collection("users").document(email);
         userReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot snapshot = task.getResult();
                     if (snapshot.exists())
-                        mCurrentUser = snapshot.toObject(User.class);
+                        mManager.mCurrentUser = snapshot.toObject(User.class);
                     else {
-                        mCurrentUser = new User(email, "", "", "", "");
-                        userReference.set(mCurrentUser);
+                        mManager.mCurrentUser = new User(email, "", "", "", "");
+                        userReference.set(mManager.mCurrentUser);
                     }
                     listener.onUserInfoLoaded();
                 }
@@ -93,27 +97,48 @@ public class UserManager extends FirebaseManager2 {
     private void uploadImage(final UserInfoListener listener, Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-        mStorage.child(mCurrentUser.getEmail() + "/profile.jpeg").putBytes(baos.toByteArray())
+        mManager.mStorage.child(mManager.mCurrentUser.getEmail() + "/profile.jpeg").putBytes(baos.toByteArray())
                 .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         Uri downloadUri = task.getResult().getDownloadUrl();
                         if (task.isSuccessful() && downloadUri != null) {
-                            mCurrentUser.setProfileImage(downloadUri.toString());
-                            mFirestore.collection("users").document(mCurrentUser.getEmail())
-                                    .update("name", mCurrentUser.getName(),
-                                            "age", mCurrentUser.getAge(),
-                                            "city", mCurrentUser.getCity(),
-                                            "profileImage", mCurrentUser.getProfileImage())
+                            mManager.mCurrentUser.setProfileImage(downloadUri.toString());
+                            mManager.mFirestore.collection("users")
+                                    .document(mManager.mCurrentUser.getEmail())
+                                    .update("name", mManager.mCurrentUser.getName(),
+                                            "age", mManager.mCurrentUser.getAge(),
+                                            "city", mManager.mCurrentUser.getCity(),
+                                            "profileImage", mManager.mCurrentUser.getProfileImage())
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             listener.onUserInfoSaved();
+                                            updatePostsFromUser();
                                         }
+
                                     });
                         }
                     }
                 });
+    }
+
+    private void updatePostsFromUser() {
+        mManager.mFirestore.collection("posts")
+                .whereEqualTo("userEmail", mManager.mCurrentUser.getEmail())
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                for (DocumentSnapshot snapshot : documentSnapshots) {
+                    snapshot.getReference()
+                            .update("urlProfileImage", mManager.mCurrentUser.getProfileImage());
+                }
+            }
+        });
+    }
+
+    public User getCurrentUser() {
+        return mManager.mCurrentUser;
     }
 
     public interface UserManagerListener {
