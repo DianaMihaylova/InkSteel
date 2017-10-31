@@ -1,12 +1,6 @@
 package com.ink_steel.inksteel.data;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -19,14 +13,10 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.model.Post;
 import com.ink_steel.inksteel.model.Reaction;
-import com.ink_steel.inksteel.model.User;
 
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -35,39 +25,19 @@ public class FirebaseManager {
 
     private static PostsManager mPostsManager;
     private static FirebaseManager mFirebaseManager;
-    private static UserManager mUserManager;
     private static PostManager mPostManager;
-    private static GalleryManager mGalleryManager;
     private FirebaseFirestore mFirestore;
     private StorageReference mStorage;
-    private User currentUser;
 
     private FirebaseManager() {
         mFirestore = FirebaseFirestore.getInstance();
         mStorage = FirebaseStorage.getInstance().getReference();
-        mUserManager = new UserManager();
     }
 
     public static FirebaseManager getInstance() {
         if (mFirebaseManager == null)
             mFirebaseManager = new FirebaseManager();
         return mFirebaseManager;
-    }
-
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    public UserManager getUserManager() {
-        if (mUserManager == null)
-            mUserManager = new UserManager();
-        return mUserManager;
-    }
-
-    public GalleryManager getGalleryManager() {
-        if (mGalleryManager == null)
-            mGalleryManager = new GalleryManager();
-        return mGalleryManager;
     }
 
     public PostsManager getPostsManager(PostsListener listener) {
@@ -94,18 +64,6 @@ public class FirebaseManager {
         void onUserReactionChange(Post post);
 
         void onReactionsChanged(Reaction reaction);
-    }
-
-    public interface UsersListener {
-        void onUsersLoaded();
-    }
-
-    public interface CurrentUserInfoListener {
-        void onInfoLoaded(boolean isNewUser);
-    }
-
-    public interface OnSaveUserInfo {
-        void onUserInfoSaved();
     }
 
     public class PostsManager {
@@ -326,122 +284,6 @@ public class FirebaseManager {
 
             mPostReference.update(reactionX, ++reactionCount);
             mPostReference.collection("history").document().set(reactionData);
-        }
-    }
-
-    public class GalleryManager {
-
-        public void saveImage(Uri uri) {
-            mStorage.child(currentUser.getEmail() + "/pics/"
-                    + new Date().getTime() + ".jpeg")
-                    .putFile(uri)
-                    .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                            Uri downloadUri = task.getResult().getDownloadUrl();
-                            if (task.isSuccessful() && downloadUri != null) {
-                                currentUser.getGallery().add(downloadUri.toString());
-                                mFirestore.collection("users")
-                                        .document(currentUser.getEmail())
-                                        .update("gallery", currentUser.getGallery());
-                            }
-                        }
-                    });
-        }
-
-        public void removeImage(final String imageUrl) {
-            FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl).delete()
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            mFirestore.collection("users")
-                                    .document(mUserManager.getCurrentUser().getEmail())
-                                    .update("gallery", mUserManager.getCurrentUser().getGallery());
-                        }
-                    });
-        }
-
-    }
-
-    public class UserManager {
-
-        private ArrayList<User> users;
-
-        private UserManager() {
-            users = new ArrayList<>();
-        }
-
-        public User getCurrentUser() {
-            return currentUser;
-        }
-
-        public void loadUsers(final UsersListener listener) {
-            mFirestore.collection("users").get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot documentSnapshots) {
-                            for (DocumentSnapshot snapshot : documentSnapshots.getDocuments()) {
-                                if (snapshot.exists()) {
-                                    users.add(snapshot.toObject(User.class));
-                                }
-                            }
-                            listener.onUsersLoaded();
-                        }
-                    });
-        }
-
-        public ArrayList<User> getUsers() {
-            return users;
-        }
-
-        public void updateUserInfo(OnSaveUserInfo listener, Bitmap bitmap) {
-            uploadImage(listener, bitmap);
-        }
-
-        private void uploadImage(final OnSaveUserInfo listener, Bitmap bitmap) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-            mStorage.child(currentUser.getEmail() + "/profile.jpeg").putBytes(baos.toByteArray())
-                    .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                            Uri downloadUri = task.getResult().getDownloadUrl();
-                            if (task.isSuccessful() && downloadUri != null) {
-                                currentUser.setProfileImage(downloadUri.toString());
-                                mFirestore.collection("users").document(currentUser.getEmail())
-                                        .update("name", currentUser.getName(),
-                                                "age", currentUser.getAge(),
-                                                "city", currentUser.getCity(),
-                                                "profileImage", currentUser.getProfileImage())
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                listener.onUserInfoSaved();
-                                            }
-                                        });
-                            }
-                        }
-                    });
-        }
-
-        public void loadUserInfo(final CurrentUserInfoListener listener, String userEmail,
-                                 final boolean isNewUser) {
-            DocumentReference userReference = mFirestore.collection("users").document(userEmail);
-            if (isNewUser) {
-                currentUser = new User(userEmail, "", "", "", "");
-                userReference.set(currentUser);
-                listener.onInfoLoaded(true);
-            } else {
-                userReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            currentUser = documentSnapshot.toObject(User.class);
-                            listener.onInfoLoaded(false);
-                        }
-                    }
-                });
-            }
         }
     }
 }

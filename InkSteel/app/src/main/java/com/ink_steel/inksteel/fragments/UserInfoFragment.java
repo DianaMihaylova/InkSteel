@@ -16,7 +16,7 @@ import android.widget.ImageView;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.HomeActivity;
-import com.ink_steel.inksteel.data.UserManager;
+import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.model.User;
 import com.squareup.picasso.Picasso;
 
@@ -26,15 +26,52 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 import static android.app.Activity.RESULT_OK;
 
-
-public class UserInfoFragment extends Fragment implements UserManager.UserInfoListener {
+public class UserInfoFragment extends Fragment implements DatabaseManager.UserInfoListener {
 
     private static final int CHOOSE_IMAGE = 1;
     private EditText name, age, city;
     private ImageView imageView;
-    private User mUser;
+    private User mCurrentUser;
     private Bitmap imageBitmap;
-    private UserManager mManager;
+    private DatabaseManager mManager;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container, Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_user_info, container, false);
+
+        name = view.findViewById(R.id.user_name);
+        age = view.findViewById(R.id.user_age);
+        city = view.findViewById(R.id.user_city);
+        imageView = view.findViewById(R.id.profile_picture);
+        Button saveBtn = view.findViewById(R.id.button_save);
+
+        imageView.setDrawingCacheEnabled(true);
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateUserInfoFromFragment();
+            }
+        });
+
+        mManager = DatabaseManager.getInstance();
+        mCurrentUser = mManager.getCurrentUser();
+        displayUserInfo();
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), CHOOSE_IMAGE);
+            }
+        });
+
+        return view;
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -54,45 +91,7 @@ public class UserInfoFragment extends Fragment implements UserManager.UserInfoLi
         }
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-                             @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_info, container, false);
-
-        name = view.findViewById(R.id.user_name);
-        age = view.findViewById(R.id.user_age);
-        city = view.findViewById(R.id.user_city);
-        imageView = view.findViewById(R.id.profile_picture);
-        Button saveBtn = view.findViewById(R.id.button_save);
-
-        imageView.setDrawingCacheEnabled(true);
-
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateUserInfo();
-            }
-        });
-
-        mManager = UserManager.getInstance();
-        mUser = mManager.getCurrentUser();
-        displayUserInfo();
-
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), CHOOSE_IMAGE);
-            }
-        });
-
-        return view;
-    }
-
-    private void updateUserInfo() {
+    private void updateUserInfoFromFragment() {
         String userName = name.getText().toString();
         String userAge = age.getText().toString();
         String userCity = city.getText().toString();
@@ -112,15 +111,15 @@ public class UserInfoFragment extends Fragment implements UserManager.UserInfoLi
             return;
         }
 
-        mUser.updateUserInfo(userName, userAge, userCity);
+        mCurrentUser.updateUserInfo(userName, userAge, userCity);
         mManager.updateUserInfo(this, imageBitmap);
     }
 
     private void displayUserInfo() {
-        name.setText(mUser.getName());
-        city.setText(mUser.getCity());
-        age.setText(mUser.getAge());
-        loadImage(mUser.getProfileImage());
+        name.setText(mCurrentUser.getName());
+        city.setText(mCurrentUser.getCity());
+        age.setText(mCurrentUser.getAge());
+        loadImage(mCurrentUser.getProfileImage());
     }
 
     private void loadImage(String uri) {
@@ -129,7 +128,6 @@ public class UserInfoFragment extends Fragment implements UserManager.UserInfoLi
                     .load(Uri.parse(uri))
                     .transform(new CropCircleTransformation())
                     .into(imageView);
-//            mBitmap = imageView.getDrawingCache();
         }
     }
 

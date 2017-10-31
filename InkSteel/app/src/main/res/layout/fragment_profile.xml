@@ -72,9 +72,11 @@
         android:textStyle="bold"/>
 
     <LinearLayout
+        android:id="@+id/layout_btn"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:visibility="gone"
         android:orientation="horizontal">
 
         <Button
@@ -111,7 +113,22 @@
         android:layout_margin="16dp"
         android:background="@drawable/btn_custom"
         android:fontFamily="casual"
+        android:visibility="gone"
         android:text="@string/edit_profile"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <Button
+        android:id="@+id/btn_friend_gallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/btn_custom"
+        android:fontFamily="casual"
+        android:text="Gallery"
+        android:visibility="gone"
         android:textSize="16sp"
         android:textStyle="bold"/>
 

@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.fragments.ExploreFragment;
 import com.ink_steel.inksteel.model.User;
 import com.squareup.picasso.Picasso;
 
