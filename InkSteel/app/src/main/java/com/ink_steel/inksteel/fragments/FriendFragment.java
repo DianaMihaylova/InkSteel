@@ -20,10 +20,10 @@ import java.util.ArrayList;
 
 public class FriendFragment extends Fragment implements FriendClickListener,
         DatabaseManager.UsersListener {
-
-    public static ArrayList<User> mUsers;
+    public static ArrayList<User> mFriends;
     private FriendAdapter mAdapter;
     private DatabaseManager mManager;
+    private User mCurrentUser;
 
     public FriendFragment() {
     }
@@ -37,10 +37,11 @@ public class FriendFragment extends Fragment implements FriendClickListener,
         RecyclerView recyclerView = view.findViewById(R.id.friend_rv);
 
         mManager = DatabaseManager.getInstance();
-        mUsers = new ArrayList<>();
-        mAdapter = new FriendAdapter(getActivity(), mUsers, this);
+        mCurrentUser = mManager.getCurrentUser();
+        mFriends = new ArrayList<>();
+        mAdapter = new FriendAdapter(getActivity(), mFriends, this);
 
-        onUsersLoaded();
+        onFriendsLoaded();
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -61,10 +62,13 @@ public class FriendFragment extends Fragment implements FriendClickListener,
     }
 
     @Override
+    public void onFriendsLoaded() {
+//        mFriends.clear();
+//        mManager.loadFriends(this);
+    }
+
+    @Override
     public void onUsersLoaded() {
-        mUsers.clear();
-        mManager.loadUsers(this);
-        mUsers.addAll(mManager.getUsers());
-        mAdapter.notifyDataSetChanged();
+
     }
 }

@@ -102,7 +102,10 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
 
         mManager = DatabaseManager.getInstance();
         mCurrentUser = mManager.getCurrentUser();
-        displayUserInfo();
+        if (mCurrentUser != null) {
+            displayUserInfo();
+        }
+
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override

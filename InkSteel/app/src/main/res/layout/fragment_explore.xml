@@ -1,55 +1,40 @@
-<LinearLayout
+<?xml version="1.0" encoding="utf-8"?>
+<com.daprlabs.cardstack.SwipeFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:swipedeck="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    android:orientation="vertical"
-    tools:context="com.ink_steel.inksteel.fragments.ExploreFragment">
+    android:orientation="vertical">
 
-    <Switch
-        android:id="@+id/switch_auto_scroll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff"
-        android:checked="false"
-        android:text="Auto scroll explore in 5 sec"
-        android:textColor="@color/colorPrimaryDark"
-        android:textStyle="italic"/>
-
-
-    <com.tmall.ultraviewpager.UltraViewPager
-        android:id="@+id/ultra_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_weight="4"
-        android:background="#fff">
-    </com.tmall.ultraviewpager.UltraViewPager>
-
-    <LinearLayout
+    <com.daprlabs.cardstack.SwipeDeck
+        android:id="@+id/swipe_deck"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#000000"
-        android:orientation="horizontal">
+        android:layout_height="420dp"
+        android:padding="16dp"
+        swipedeck:card_spacing="10dp"
+        swipedeck:max_visible="3"
+        swipedeck:render_above="true"
+        swipedeck:rotation_degrees="15">
 
-        <Button
-            android:id="@+id/btn_unlike"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="36dp"
-            android:background="@drawable/btn_unlike"/>
+    </com.daprlabs.cardstack.SwipeDeck>
 
-        <Button
-            android:id="@+id/btn_like"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="90dp"
-            android:layout_marginStart="90dp"
-            android:background="@drawable/btn_like"/>
-    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="30dp"
+        android:text="@string/click_the_skull_to_explore_again"
+        android:textColor="@color/colorAccent"/>
 
-</LinearLayout>
+    <Button
+        android:id="@+id/btn_again"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="250dp"
+        android:background="@drawable/btn_like"/>
 
+</com.daprlabs.cardstack.SwipeFrameLayout>

@@ -1,11 +1,10 @@
 package com.ink_steel.inksteel.adapters;
 
 import android.content.Context;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,16 +12,18 @@ import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.model.User;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class ExploreAdapter extends PagerAdapter {
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
+public class ExploreAdapter extends BaseAdapter {
+
+    private List<User> users;
     private Context context;
-    private ArrayList<User> users;
 
-    public ExploreAdapter(Context context, ArrayList<User> users) {
-        this.context = context;
+    public ExploreAdapter(List<User> users, Context context) {
         this.users = users;
+        this.context = context;
     }
 
     @Override
@@ -31,42 +32,36 @@ public class ExploreAdapter extends PagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService
-                (Context.LAYOUT_INFLATER_SERVICE);
-        View view;
+    public Object getItem(int position) {
+        return users.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        View v;
         if (position % 2 == 0) {
-            view = layoutInflater.inflate(R.layout.item_explore, container, false);
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_explore, parent, false);
         } else {
-            view = layoutInflater.inflate(R.layout.item_explore_reverse, container, false);
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_explore_reverse, parent, false);
         }
 
-        ImageView imageView = view.findViewById(R.id.profile_pic);
-        TextView userName = view.findViewById(R.id.user_name);
-        TextView userCity = view.findViewById(R.id.user_city);
+        String username = "Username:\n" + users.get(position).getName();
+        String country = "Country:\n" + users.get(position).getCountry();
+        ((TextView) v.findViewById(R.id.user_name)).setText(username);
+        ((TextView) v.findViewById(R.id.user_country)).setText(country);
+        ImageView imageView = v.findViewById(R.id.profile_pic);
 
         Picasso.with(context)
                 .load(users.get(position).getProfileImage())
+                .transform(new CropCircleTransformation())
                 .into(imageView);
 
-        String uName = "User: " + users.get(position).getName();
-        String uCity = "Country: " + users.get(position).getCountry();
-        userName.setText(uName);
-        userCity.setText(uCity);
-
-        container.addView(view);
-        return view;
-    }
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        ViewPager viewPager = (ViewPager) container;
-        View view = (View) object;
-        viewPager.removeView(view);
-    }
-
-    @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return (view == object);
+        return v;
     }
 }

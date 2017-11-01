@@ -81,11 +81,11 @@ public class ProfileFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             final int position = bundle.getInt("position");
-            emailTxt = "Email: " + FriendFragment.mUsers.get(position).getEmail();
-            userNameTxt = "Username: " + FriendFragment.mUsers.get(position).getName();
-            cityTxt = "Country: " + FriendFragment.mUsers.get(position).getCountry();
-            ageTxt = "Age: " + FriendFragment.mUsers.get(position).getAge();
-            picture = FriendFragment.mUsers.get(position).getProfileImage();
+            emailTxt = "Email: " + FriendFragment.mFriends.get(position).getEmail();
+            userNameTxt = "Username: " + FriendFragment.mFriends.get(position).getName();
+            cityTxt = "Country: " + FriendFragment.mFriends.get(position).getCountry();
+            ageTxt = "Age: " + FriendFragment.mFriends.get(position).getAge();
+            picture = FriendFragment.mFriends.get(position).getProfileImage();
             galleryFriendBtn.setVisibility(View.VISIBLE);
             galleryFriendBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
