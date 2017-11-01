@@ -24,6 +24,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ink_steel.inksteel.adapters.GalleryRecyclerViewAdapter;
 import com.ink_steel.inksteel.model.ChatRoom;
+import com.ink_steel.inksteel.model.Message;
 import com.ink_steel.inksteel.model.Post;
 import com.ink_steel.inksteel.model.Reaction;
 import com.ink_steel.inksteel.model.User;
@@ -544,17 +545,20 @@ public class DatabaseManager {
     }
 //                              --Chat Manager --
 
-    private List<ChatRoom> mChatRooms;
     private Map<String, ChatRoom> mRooms;
+    private ArrayList<Message> messages;
+    private boolean isFirstTimeLoadMessage = true;
 
     private void createChatRoom(final ChatRoomCreatedListener listener, final String userEmail) {
         User user = mUsers.get(userEmail);
         DocumentReference reference = mFirestore.collection("chatRooms").document();
         String id = reference.getId();
+        Message message = new Message(mCurrentUser.getName(), "Chat room created!",
+                new Date().getTime());
         final ChatRoom chatRoom = new ChatRoom(id, mCurrentUser.getEmail(),
                 mCurrentUser.getProfileImage(), mCurrentUser.getName(),
                 user.getEmail(), user.getProfileImage(), user.getName(),
-                "Chat room created!", new Date().getTime());
+                message.getMessage(), message.getTime());
         reference.set(chatRoom).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -564,13 +568,58 @@ public class DatabaseManager {
                 }
             }
         });
+        reference.collection("messages").add(message);
+    }
+
+    public void saveMessageToDatabase(String msg, String chatId) {
+        Message message = new Message(mCurrentUser.getName(), msg,
+                new Date().getTime());
+        mFirestore.collection("chatRooms").document(chatId)
+                .collection("messages").add(message);
+    }
+
+
+    public void loadChatMessages(String chatRoomId, final OnMessagesLoadedListener listener) {
+        if (messages == null) {
+            messages = new ArrayList<>();
+        }
+        mFirestore.collection("chatRooms").document(chatRoomId).collection("messages")
+                .orderBy("time").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if (e != null) {
+                    return;
+                }
+                for (DocumentChange change : documentSnapshots.getDocumentChanges()) {
+                    if (change.getType() == DocumentChange.Type.ADDED) {
+                        Message message = change.getDocument().toObject(Message.class);
+                        messages.add(message);
+                        if (!isFirstTimeLoadMessage) {
+                            listener.onMessageAdded(message);
+                        }
+                    }
+                }
+                if (isFirstTimeLoadMessage) {
+                    listener.onMessagesLoaded();
+                }
+            }
+        });
+
+    }
+
+    public ArrayList<Message> getMessages() {
+        return messages;
+    }
+
+    public interface OnMessagesLoadedListener {
+        void onMessagesLoaded();
+
+        void onMessageAdded(Message message);
     }
 
     private int a = 0;
 
     public void loadChatRooms(final ChatRoomsLoadedListener listener) {
-//        if (mChatRooms == null)
-//            mChatRooms = Collections.synchronizedList(new ArrayList<ChatRoom>());
         if (mRooms == null)
             mRooms = Collections.synchronizedMap(new HashMap<String, ChatRoom>());
         a = 0;

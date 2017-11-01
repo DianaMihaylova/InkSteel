@@ -36,4 +36,5 @@ public class Listeners {
 
         void onChatItemClick(int position);
     }
+
 }

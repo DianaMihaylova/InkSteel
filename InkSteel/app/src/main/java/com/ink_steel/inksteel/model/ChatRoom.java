@@ -27,6 +27,7 @@ public class ChatRoom {
         this.userName2 = userName2;
         this.lastMessage = lastMessage;
         this.lastMessageTime = lastMessageTime;
+        this.chatId = chatId;
     }
 
     public String getChatId() {
@@ -87,6 +88,13 @@ public class ChatRoom {
     public String getOtherUserName(String email) {
         if (email.equals(email1))
             return userName2;
-        else return userName1;
+        return userName1;
+    }
+
+    @Exclude
+    public String getOtherUserEmail(String email) {
+        if (email.equals(email1))
+            return email2;
+        return email1;
     }
 }
