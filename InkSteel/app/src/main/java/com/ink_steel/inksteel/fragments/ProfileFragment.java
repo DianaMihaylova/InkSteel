@@ -44,17 +44,17 @@ public class ProfileFragment extends Fragment {
         city = view.findViewById(R.id.user_city);
         layoutGroupBtn = view.findViewById(R.id.layout_btn);
         Button galleryBtn = view.findViewById(R.id.btn_gallery);
-        Button messageBtn = view.findViewById(R.id.btn_msg);
+        Button friendsBtn = view.findViewById(R.id.btn_msg);
         editProfileBtn = view.findViewById(R.id.btn_edit_profile);
         galleryFriendBtn = view.findViewById(R.id.btn_friend_gallery);
 
         if (mCurrentUser != null)
             displayUserInfo();
 
-        messageBtn.setOnClickListener(new View.OnClickListener() {
+        friendsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((HomeActivity) getActivity()).replaceFragment(new ChatFragment());
+                ((HomeActivity) getActivity()).replaceFragment(new FriendsFragment());
             }
         });
 
@@ -81,11 +81,11 @@ public class ProfileFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             final int position = bundle.getInt("position");
-            emailTxt = "Email: " + FriendFragment.mFriends.get(position).getEmail();
-            userNameTxt = "Username: " + FriendFragment.mFriends.get(position).getName();
-            cityTxt = "Country: " + FriendFragment.mFriends.get(position).getCountry();
-            ageTxt = "Age: " + FriendFragment.mFriends.get(position).getAge();
-            picture = FriendFragment.mFriends.get(position).getProfileImage();
+            emailTxt = "Email: " + FriendsFragment.mFriends.get(position).getEmail();
+            userNameTxt = "Username: " + FriendsFragment.mFriends.get(position).getName();
+            cityTxt = "Country: " + FriendsFragment.mFriends.get(position).getCity();
+            ageTxt = "Age: " + FriendsFragment.mFriends.get(position).getAge();
+            picture = FriendsFragment.mFriends.get(position).getProfileImage();
             galleryFriendBtn.setVisibility(View.VISIBLE);
             galleryFriendBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -100,7 +100,7 @@ public class ProfileFragment extends Fragment {
         } else {
             emailTxt = "Email: " + mCurrentUser.getEmail();
             userNameTxt = "Username: " + mCurrentUser.getName();
-            cityTxt = "Country: " + mCurrentUser.getCountry();
+            cityTxt = "Country: " + mCurrentUser.getCity();
             ageTxt = "Age: " + mCurrentUser.getAge();
             picture = mCurrentUser.getProfileImage();
             layoutGroupBtn.setVisibility(View.VISIBLE);

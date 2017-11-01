@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,8 +46,9 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
 
         RecyclerView mRecyclerView = view.findViewById(R.id.image_recycler_view);
         mRecyclerView.setHasFixedSize(true);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
+
+        GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
+        mRecyclerView.setLayoutManager(manager);
 
         if (mCurrentUser != null)
             mAdapter = new GalleryRecyclerViewAdapter(mCurrentUser.getGallery(), this);

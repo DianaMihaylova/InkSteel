@@ -32,8 +32,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TreeSet;
-import java.util.LinkedList;
-import java.util.Map;
 import java.util.UUID;
 
 public class DatabaseManager {
@@ -179,7 +177,7 @@ public class DatabaseManager {
                             mFirestore.collection("users").document(mCurrentUser.getEmail())
                                     .update("name", mCurrentUser.getName(),
                                             "age", mCurrentUser.getAge(),
-                                            "country", mCurrentUser.getCountry(),
+                                            "country", mCurrentUser.getCity(),
                                             "profileImage", mCurrentUser.getProfileImage())
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
@@ -227,26 +225,25 @@ public class DatabaseManager {
 
 //    ------------------------------------ User explore ------------------------------------
 
-    private ArrayList<User> users = new ArrayList<>();
+    private HashMap<String, User> mUsers;
+    private ArrayList<User> mFriends;
 
     public void loadUsers(final UsersListener listener) {
+
+        if (mUsers == null) {
+            mUsers = new HashMap<>();
+        }
+
         mFirestore.collection("users").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (DocumentSnapshot document : task.getResult()) {
-                                DocumentReference userReference = document.getReference();
-                                userReference.get()
-                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                if (documentSnapshot.exists()) {
-                                                    User user = documentSnapshot.toObject(User.class);
-                                                    users.add(user);
-                                                }
-                                            }
-                                        });
+                            for (DocumentSnapshot snapshot : task.getResult()) {
+                                if (snapshot.exists()) {
+                                    User user = snapshot.toObject(User.class);
+                                    mUsers.put(user.getEmail(), user);
+                                }
                             }
                             listener.onUsersLoaded();
                         }
@@ -255,7 +252,7 @@ public class DatabaseManager {
     }
 
     public ArrayList<User> getUsers() {
-        return users;
+        return new ArrayList<>(mUsers.values());
     }
 
     public void addLike(String email) {
@@ -272,21 +269,17 @@ public class DatabaseManager {
                 .update("friends", mCurrentUser.getFriends());
     }
 
-//    private ArrayList<User> friends = new ArrayList<>();
-//
-//    public void loadFriends(final FriendsListener listener) {
-//        mFirestore.collection("users").document(mCurrentUser.getEmail()).get()
-//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                        if (documentSnapshot.exists()) {
-//                            User user = documentSnapshot.toObject(User.class);
-//                            friends.add(user);
-//                        }
-//                    }
-//                });
-//        listener.onFriendsLoaded();
-//    }
+    public ArrayList<User> getUserFriends() {
+        if (mFriends == null) {
+            mFriends = new ArrayList<>();
+            for (String email : mCurrentUser.getFriends()) {
+                if (mUsers.containsKey(email)) {
+                    mFriends.add(mUsers.get(email));
+                }
+            }
+        }
+        return mFriends;
+    }
 
 
 

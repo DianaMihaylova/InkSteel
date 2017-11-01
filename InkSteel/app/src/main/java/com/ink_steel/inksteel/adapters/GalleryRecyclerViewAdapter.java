@@ -21,6 +21,9 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
 
     public GalleryRecyclerViewAdapter(ArrayList<String> gallery, GalleryImageLongClickListener listener) {
         this.gallery = gallery;
+        gallery.add("https://undertheradar.military.com/wp-content/uploads/2016/07/Anchor-Tattoo-750x437.jpg");
+        gallery.add("https://i.pinimg.com/736x/c5/d8/c5/c5d8c5194695ac74c24bf9184333b9e9--rose-band-tattoo-rose-bracelet-tattoo.jpg");
+        gallery.add("http://lazara.bg/wp-content/uploads/2016/01/%D1%82%D0%B0%D1%82%D1%83%D1%81%D0%B8-%D0%B7%D0%B0-%D0%B3%D1%80%D1%8A%D0%B1-13.jpg");
         this.listener = listener;
     }
 
@@ -53,8 +56,8 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
         private void bind(String u, final int pos) {
             Picasso.with(itemView.getContext())
                     .load(u)
-                    .transform(new CropCircleTransformation())
-                    .resize(600, 690)
+                    .resize(200, 200)
+                    .centerCrop()
                     .into(image);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

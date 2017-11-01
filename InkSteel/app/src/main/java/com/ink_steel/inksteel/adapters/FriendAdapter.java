@@ -68,7 +68,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
 
         void bind(User user) {
             userName.setText(user.getName());
-            userCity.setText(user.getCountry());
+            userCity.setText(user.getCity());
 
             Picasso.with(context)
                     .load(user.getProfileImage())

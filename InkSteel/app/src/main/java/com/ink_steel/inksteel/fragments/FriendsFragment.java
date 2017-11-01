@@ -18,14 +18,14 @@ import com.ink_steel.inksteel.model.User;
 
 import java.util.ArrayList;
 
-public class FriendFragment extends Fragment implements FriendClickListener,
-        DatabaseManager.UsersListener {
+public class FriendsFragment extends Fragment implements FriendClickListener,
+        DatabaseManager.FriendsListener {
     public static ArrayList<User> mFriends;
     private FriendAdapter mAdapter;
     private DatabaseManager mManager;
     private User mCurrentUser;
 
-    public FriendFragment() {
+    public FriendsFragment() {
     }
 
     @Override
@@ -38,7 +38,7 @@ public class FriendFragment extends Fragment implements FriendClickListener,
 
         mManager = DatabaseManager.getInstance();
         mCurrentUser = mManager.getCurrentUser();
-        mFriends = new ArrayList<>();
+        mFriends = mManager.getUserFriends();
         mAdapter = new FriendAdapter(getActivity(), mFriends, this);
 
         onFriendsLoaded();
@@ -65,10 +65,5 @@ public class FriendFragment extends Fragment implements FriendClickListener,
     public void onFriendsLoaded() {
 //        mFriends.clear();
 //        mManager.loadFriends(this);
-    }
-
-    @Override
-    public void onUsersLoaded() {
-
     }
 }
