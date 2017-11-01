@@ -143,13 +143,15 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
     }
 
     private void displayUserInfo() {
-        name.setText(mCurrentUser.getName());
-        mCountry.setText(mCurrentUser.getCountry());
-        if (mCountry.getText().toString().isEmpty()) {
-            mCountry.setText(Locale.getDefault().getDisplayCountry());
+        if (mCurrentUser != null) {
+            name.setText(mCurrentUser.getName());
+            mCountry.setText(mCurrentUser.getCountry());
+            if (mCountry.getText().toString().isEmpty()) {
+                mCountry.setText(Locale.getDefault().getDisplayCountry());
+            }
+            age.setText(mCurrentUser.getAge());
+            loadImage(mCurrentUser.getProfileImage());
         }
-        age.setText(mCurrentUser.getAge());
-        loadImage(mCurrentUser.getProfileImage());
     }
 
     private void loadImage(String uri) {

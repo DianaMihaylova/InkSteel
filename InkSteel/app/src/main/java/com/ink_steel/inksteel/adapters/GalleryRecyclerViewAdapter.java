@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.helpers.IOnGalleryImageLongClickListener;
+import com.ink_steel.inksteel.helpers.Listeners.GalleryImageLongClickListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -17,9 +17,9 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecyclerViewAdapter.GalleryViewHolders> {
 
     private ArrayList<String> gallery;
-    private IOnGalleryImageLongClickListener listener;
+    private GalleryImageLongClickListener listener;
 
-    public GalleryRecyclerViewAdapter(ArrayList<String> gallery, IOnGalleryImageLongClickListener listener) {
+    public GalleryRecyclerViewAdapter(ArrayList<String> gallery, GalleryImageLongClickListener listener) {
         this.gallery = gallery;
         this.listener = listener;
     }
@@ -59,13 +59,13 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onGalleryImageLongClickListener(pos, false);
+                    listener.onGalleryImageLongClick(pos, false);
                 }
             });
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    listener.onGalleryImageLongClickListener(pos, true);
+                    listener.onGalleryImageLongClick(pos, true);
                     return true;
                 }
             });

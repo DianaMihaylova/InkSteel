@@ -17,12 +17,12 @@ import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.adapters.GalleryRecyclerViewAdapter;
 import com.ink_steel.inksteel.data.DatabaseManager;
-import com.ink_steel.inksteel.helpers.IOnGalleryImageLongClickListener;
+import com.ink_steel.inksteel.helpers.Listeners.GalleryImageLongClickListener;
 import com.ink_steel.inksteel.model.User;
 
 import static android.app.Activity.RESULT_OK;
 
-public class GalleryFragment extends Fragment implements IOnGalleryImageLongClickListener {
+public class GalleryFragment extends Fragment implements GalleryImageLongClickListener {
 
     private static final int CHOOSE_IMAGE = 1;
     private GalleryRecyclerViewAdapter mAdapter;
@@ -48,7 +48,8 @@ public class GalleryFragment extends Fragment implements IOnGalleryImageLongClic
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
-        mAdapter = new GalleryRecyclerViewAdapter(mCurrentUser.getGallery(), this);
+        if (mCurrentUser != null)
+            mAdapter = new GalleryRecyclerViewAdapter(mCurrentUser.getGallery(), this);
 
         mRecyclerView.setAdapter(mAdapter);
 
@@ -79,7 +80,7 @@ public class GalleryFragment extends Fragment implements IOnGalleryImageLongClic
     }
 
     @Override
-    public void onGalleryImageLongClickListener(int position, boolean isLongClick) {
+    public void onGalleryImageLongClick(int position, boolean isLongClick) {
         if (isLongClick) {
             showAlert(position);
         } else {

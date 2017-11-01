@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.helpers.IOnFriendClickListener;
+import com.ink_steel.inksteel.helpers.Listeners.FriendClickListener;
 import com.ink_steel.inksteel.model.User;
 import com.squareup.picasso.Picasso;
 
@@ -20,9 +20,9 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
 
     private Context context;
     private ArrayList<User> users;
-    private IOnFriendClickListener mListener;
+    private FriendClickListener mListener;
 
-    public FriendAdapter(Context context, ArrayList<User> users, IOnFriendClickListener listener) {
+    public FriendAdapter(Context context, ArrayList<User> users, FriendClickListener listener) {
         this.context = context;
         this.users = users;
         mListener = listener;
@@ -31,8 +31,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     @Override
     public FriendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_friend, parent, false);
-        FriendAdapter.FriendViewHolder vh = new FriendAdapter.FriendViewHolder(v);
-        return vh;
+        return new FriendViewHolder(v);
     }
 
     @Override
@@ -62,7 +61,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onFriendClickListener(getAdapterPosition());
+                    mListener.onFriendClick(getAdapterPosition());
                 }
             });
         }

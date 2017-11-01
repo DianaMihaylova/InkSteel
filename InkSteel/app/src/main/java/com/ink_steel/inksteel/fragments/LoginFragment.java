@@ -1,6 +1,8 @@
 package com.ink_steel.inksteel.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,16 +12,28 @@ import android.widget.EditText;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.LoginActivity;
-import com.ink_steel.inksteel.helpers.ConstantUtils;
+
+import com.ink_steel.inksteel.helpers.Listeners.OnLoginActivityButtonClickListener;
+
+import static com.ink_steel.inksteel.activities.LoginActivity.ButtonType.LOGIN;
 
 public class LoginFragment extends Fragment {
 
     private EditText mEmail, mPass;
-    private LoginActivity mLoginActivity;
     private String mUserEmail;
     private String mPassword;
+    private OnLoginActivityButtonClickListener mListener;
 
     public LoginFragment() {
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof LoginActivity) {
+            mListener = (LoginActivity) context;
+        }
     }
 
     @Override
@@ -27,8 +41,6 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-
-        mLoginActivity = (LoginActivity) getActivity();
 
         mEmail = view.findViewById(R.id.login_email);
         mPass = view.findViewById(R.id.login_pass);
@@ -38,30 +50,44 @@ public class LoginFragment extends Fragment {
         logBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mUserEmail = mEmail.getText().toString();
-                mPassword = mPass.getText().toString();
-                if (areFieldsValid()) {
-                    mLoginActivity.onFragmentButtonListener(ConstantUtils.LOGIN_BUTTON,
-                            mUserEmail, mPassword);
-                }
+                loginUser();
             }
         });
 
         regBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                RegisterFragment fragment = new RegisterFragment();
-
-                getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_placeholder, fragment)
-                        .addToBackStack(null)
-                        .commit();
+                goToRegister();
             }
         });
 
         return view;
+    }
+
+    private void goToRegister() {
+        RegisterFragment fragment = new RegisterFragment();
+
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_placeholder, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void loginUser() {
+        if (mListener == null) {
+            Activity activity = getActivity();
+            if (activity instanceof LoginActivity) {
+                mListener = (OnLoginActivityButtonClickListener) activity;
+            } else {
+                activity.finish();
+            }
+        }
+        mUserEmail = mEmail.getText().toString();
+        mPassword = mPass.getText().toString();
+        if (areFieldsValid()) {
+            mListener.onButtonClick(LOGIN, mUserEmail, mPassword);
+        }
     }
 
     private boolean areFieldsValid() {

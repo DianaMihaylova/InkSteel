@@ -1,7 +1,6 @@
 package com.ink_steel.inksteel.fragments;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -26,7 +25,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class AddPostFragment extends Fragment implements DatabaseManager.PostSavedListener {
 
-    public static final int REQUEST_CODE = 1;
+    public static final int IMAGE_CHOOSER_REQUEST_CODE = 1;
     private CropImageView mCropImageView;
     private Button mAddImageButton;
     private EditText mDescriptionEditText;
@@ -58,7 +57,7 @@ public class AddPostFragment extends Fragment implements DatabaseManager.PostSav
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"),
-                        REQUEST_CODE);
+                        IMAGE_CHOOSER_REQUEST_CODE);
             }
         });
 
@@ -84,7 +83,7 @@ public class AddPostFragment extends Fragment implements DatabaseManager.PostSav
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK) {
             mUri = data.getData();
 
             try {

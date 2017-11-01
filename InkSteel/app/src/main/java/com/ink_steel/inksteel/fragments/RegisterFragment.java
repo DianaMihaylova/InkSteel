@@ -1,6 +1,8 @@
 package com.ink_steel.inksteel.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -11,7 +13,9 @@ import android.widget.EditText;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.LoginActivity;
-import com.ink_steel.inksteel.helpers.ConstantUtils;
+import com.ink_steel.inksteel.helpers.Listeners.OnLoginActivityButtonClickListener;
+
+import static com.ink_steel.inksteel.activities.LoginActivity.ButtonType.REGISTER;
 
 public class RegisterFragment extends Fragment {
 
@@ -20,8 +24,18 @@ public class RegisterFragment extends Fragment {
     private String mUserEmail;
     private String mPassword;
     private String mConfirmPassword;
+    private OnLoginActivityButtonClickListener mListener;
 
     public RegisterFragment() {
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof LoginActivity) {
+            mListener = (LoginActivity) context;
+        }
     }
 
     @Override
@@ -40,17 +54,29 @@ public class RegisterFragment extends Fragment {
         regBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mUserEmail = mUserEmailEt.getText().toString();
-                mPassword = mUserPasswordEt.getText().toString();
-                mConfirmPassword = mConfirmPasswordEt.getText().toString();
-                if (areFieldsValid()) {
-                    mLoginActivity.onFragmentButtonListener(
-                            ConstantUtils.REGISTER_BUTTON, mUserEmail, mPassword);
-                }
+                registerUser();
             }
         });
 
         return view;
+    }
+
+    private void registerUser() {
+        if (mListener == null) {
+            Activity activity = getActivity();
+            if (activity instanceof LoginActivity) {
+                mListener = (OnLoginActivityButtonClickListener) activity;
+            } else {
+                activity.finish();
+            }
+        }
+
+        mUserEmail = mUserEmailEt.getText().toString();
+        mPassword = mUserPasswordEt.getText().toString();
+        mConfirmPassword = mConfirmPasswordEt.getText().toString();
+        if (areFieldsValid()) {
+            mLoginActivity.onButtonClick(REGISTER, mUserEmail, mPassword);
+        }
     }
 
     private boolean areFieldsValid() {

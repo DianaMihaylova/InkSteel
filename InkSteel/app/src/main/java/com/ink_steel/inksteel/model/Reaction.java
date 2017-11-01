@@ -1,5 +1,6 @@
 package com.ink_steel.inksteel.model;
 
+import com.google.firebase.firestore.Exclude;
 import com.ink_steel.inksteel.R;
 
 public class Reaction {
@@ -35,6 +36,8 @@ public class Reaction {
         return initial;
     }
 
+
+    @Exclude
     public int getReactionIcon() {
         switch (type) {
             case "like":
@@ -48,6 +51,7 @@ public class Reaction {
         }
     }
 
+    @Exclude
     public String getMessage() {
         return initial ? "reacted" : "updated reaction";
     }

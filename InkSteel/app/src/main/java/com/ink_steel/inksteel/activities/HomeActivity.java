@@ -8,11 +8,10 @@ import android.os.Bundle;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.fragments.ScreenSlidePageFragment;
 import com.ink_steel.inksteel.fragments.UserInfoFragment;
-import com.ink_steel.inksteel.helpers.OnReplaceFragment;
+import com.ink_steel.inksteel.helpers.Listeners.OnReplaceFragment;
 
 public class HomeActivity extends Activity implements OnReplaceFragment {
 
-    public static String userEmail;
     private FragmentManager mManager;
 
     @Override

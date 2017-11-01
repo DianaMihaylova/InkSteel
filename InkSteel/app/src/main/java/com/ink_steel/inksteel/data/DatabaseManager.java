@@ -331,6 +331,13 @@ public class DatabaseManager {
         return currentPost;
     }
 
+    public Post getNextPost(PostReactionsListener listener) {
+        int prevPost = mPostsId.get(currentPost.getPostId()) - 1;
+        if (prevPost != -1)
+            return getPost(listener, mPosts.get(prevPost).getPostId());
+        return null;
+    }
+
     private void unregisterPostListeners() {
         if (mReactionsListenerRegistration != null)
             mReactionsListenerRegistration.remove();
@@ -392,13 +399,6 @@ public class DatabaseManager {
     private void setCurrentReaction(String reactionType) {
         reaction = reactionType;
         reactionCount = currentPost.getReactionCount(reaction);
-    }
-
-    public Post getNextPost(PostReactionsListener listener) {
-        int prevPost = mPostsId.get(currentPost.getPostId()) - 1;
-        if (prevPost != -1)
-            return getPost(listener, mPosts.get(prevPost).getPostId());
-        return null;
     }
 
     // get all posts real time

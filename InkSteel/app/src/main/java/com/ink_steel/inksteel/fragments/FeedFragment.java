@@ -1,14 +1,11 @@
 package com.ink_steel.inksteel.fragments;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +14,14 @@ import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.adapters.PostsAdapter;
 import com.ink_steel.inksteel.data.DatabaseManager;
-import com.ink_steel.inksteel.helpers.OnPostClickListener;
+import com.ink_steel.inksteel.helpers.Listeners.PostClickListener;
 import com.ink_steel.inksteel.model.Post;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class FeedFragment extends Fragment implements OnPostClickListener, DatabaseManager.PostsListener {
+public class FeedFragment extends Fragment implements PostClickListener,
+        DatabaseManager.PostsListener {
 
     private List<Post> mPosts;
     private PostsAdapter mAdapter;
@@ -68,7 +66,7 @@ public class FeedFragment extends Fragment implements OnPostClickListener, Datab
     }
 
     @Override
-    public void onPostClickListener(int position) {
+    public void onPostClick(int position) {
         ((HomeActivity) getActivity())
                 .replaceFragment(PostInfoFragment.newInstance(mPosts.get(position).getPostId()));
     }

@@ -29,6 +29,11 @@
         <activity
             android:name=".activities.ChatActivity"
             android:parentActivityName=".activities.HomeActivity"/>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDrtfCglV0rbwfsClBpCT2MijhDsrBVwuU"/>
+        <!--AIzaSyBh2GbUPM4s8PDMiNcIEaMgW1yRITSFUac-->
     </application>
 
 </manifest>

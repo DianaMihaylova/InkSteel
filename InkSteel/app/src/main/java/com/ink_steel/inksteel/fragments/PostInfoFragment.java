@@ -149,13 +149,23 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
 
     private void displayPost(boolean isInitial) {
         if (currentPost != null) {
+
             mReactionUserEmail.setText(currentPost.getUserEmail());
+
             Picasso.with(getActivity()).load(currentPost.getUrlProfileImage())
                     .into(mPostUserProfileImage);
             Picasso.with(getActivity()).load(currentPost.getUrlImage())
                     .into(mPostImage);
-            mPostDescription.setText(currentPost.getDescription());
+
+            String description = currentPost.getDescription();
+            if (!description.isEmpty()) {
+                mPostDescription.setVisibility(View.VISIBLE);
+                mPostDescription.setText(currentPost.getDescription());
+            } else {
+                mPostDescription.setVisibility(View.INVISIBLE);
+            }
             updateReactions();
+
             if (!isInitial)
                 clearRecyclerView();
         }
@@ -197,7 +207,7 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
             case R.id.next: {
                 Post post = mManager.getNextPost(this);
                 if (post != null) {
-                    currentPost = mManager.getNextPost(this);
+                    currentPost = post;
                     displayPost(false);
                 }
             }
@@ -205,7 +215,7 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
             case R.id.previous: {
                 Post post = mManager.getPreviousPost(this);
                 if (post != null) {
-                    currentPost = mManager.getPreviousPost(this);
+                    currentPost = post;
                     displayPost(false);
                 }
             }

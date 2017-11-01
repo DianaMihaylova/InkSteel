@@ -28,7 +28,7 @@
         app:layout_constraintStart_toStartOf="@+id/studio_iv"/>
 
     <TextView
-        android:id="@+id/studio_tv"
+        android:id="@+id/studio_name_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -38,11 +38,11 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/view"
-        app:layout_constraintEnd_toStartOf="@+id/textView3"
+        app:layout_constraintEnd_toStartOf="@+id/studio_read_more_tv"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/view"
-        />
+        android:layout_marginRight="8dp"/>
 
     <RatingBar
         android:id="@+id/studio_rb"
@@ -61,7 +61,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/studio_read_more_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"

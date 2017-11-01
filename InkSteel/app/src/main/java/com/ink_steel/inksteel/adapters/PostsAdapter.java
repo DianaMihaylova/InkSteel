@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.helpers.OnPostClickListener;
+import com.ink_steel.inksteel.helpers.Listeners.PostClickListener;
 import com.ink_steel.inksteel.model.Post;
 import com.squareup.picasso.Picasso;
 
@@ -24,9 +24,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
 
     private Context context;
     private List<Post> posts;
-    private OnPostClickListener mListener;
+    private PostClickListener mListener;
 
-    public PostsAdapter(Context context, List<Post> posts, OnPostClickListener listener) {
+    public PostsAdapter(Context context, List<Post> posts, PostClickListener listener) {
         this.context = context;
         this.posts = posts;
         mListener = listener;
@@ -70,7 +70,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onPostClickListener(getAdapterPosition());
+                    mListener.onPostClick(getAdapterPosition());
                 }
             });
         }

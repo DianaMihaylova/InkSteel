@@ -50,7 +50,8 @@ public class ProfileFragment extends Fragment {
         editProfileBtn = view.findViewById(R.id.btn_edit_profile);
         galleryFriendBtn = view.findViewById(R.id.btn_friend_gallery);
 
-        displayUserInfo();
+        if (mCurrentUser != null)
+            displayUserInfo();
 
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override

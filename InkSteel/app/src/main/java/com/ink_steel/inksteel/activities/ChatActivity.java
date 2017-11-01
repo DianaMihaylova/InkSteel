@@ -11,15 +11,11 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.helpers.ConstantUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity {
-
-    private static final DocumentReference FIRESTORE_FRIENDS_REFERNENCE = FirebaseFirestore.getInstance()
-            .document("users/" + ConstantUtils.USER_EMAIL + "/friends/user1@gmail.com");
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -31,25 +27,25 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        Map<String, Object> friendData = new HashMap<>();
-        friendData.put("text", "Hello world!");
-        friendData.put("time", System.currentTimeMillis());
-        FIRESTORE_FRIENDS_REFERNENCE.set(friendData);
-
-        final TextView message1 = findViewById(R.id.message1);
-        final TextView message2 = findViewById(R.id.message2);
-        FIRESTORE_FRIENDS_REFERNENCE.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                message1.setText(documentSnapshot.getString("text"));
-                Map<String, Object> friendData = new HashMap<>();
-                friendData.put("text", "Zdr brat");
-                friendData.put("time", System.currentTimeMillis());
-                FIRESTORE_FRIENDS_REFERNENCE.set(friendData);
-            }
-        });
+//        if (getSupportActionBar() != null)
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//
+//        Map<String, Object> friendData = new HashMap<>();
+//        friendData.put("text", "Hello world!");
+//        friendData.put("time", System.currentTimeMillis());
+//        FIRESTORE_FRIENDS_REFERNENCE.set(friendData);
+//
+//        final TextView message1 = findViewById(R.id.message1);
+//        final TextView message2 = findViewById(R.id.message2);
+//        FIRESTORE_FRIENDS_REFERNENCE.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+//                message1.setText(documentSnapshot.getString("text"));
+//                Map<String, Object> friendData = new HashMap<>();
+//                friendData.put("text", "Zdr brat");
+//                friendData.put("time", System.currentTimeMillis());
+//                FIRESTORE_FRIENDS_REFERNENCE.set(friendData);
+//            }
+//        });
     }
 }

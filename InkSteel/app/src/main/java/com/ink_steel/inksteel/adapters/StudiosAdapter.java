@@ -1,6 +1,5 @@
 package com.ink_steel.inksteel.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,18 +9,20 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.ink_steel.inksteel.R;
+import com.ink_steel.inksteel.helpers.Listeners.StudioClickListener;
 import com.ink_steel.inksteel.model.Studio;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class StudiosAdapter extends RecyclerView.Adapter<StudiosAdapter.PostsViewHolder> {
 
-    private Context context;
-    private List<Studio> studios;
+    private List<Studio> mStudios;
+    private StudioClickListener mListener;
 
-    public StudiosAdapter(Context context, List<Studio> studios) {
-        this.context = context;
-        this.studios = studios;
+    public StudiosAdapter(StudioClickListener listener, List<Studio> studios) {
+        mStudios = studios;
+        mListener = listener;
     }
 
     @Override
@@ -33,30 +34,38 @@ public class StudiosAdapter extends RecyclerView.Adapter<StudiosAdapter.PostsVie
 
     @Override
     public void onBindViewHolder(PostsViewHolder holder, int position) {
-        holder.bind(studios.get(position));
+        holder.bind(mStudios.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return studios.size();
+        return mStudios.size();
     }
 
     class PostsViewHolder extends RecyclerView.ViewHolder {
 
         ImageView image;
-        TextView title;
+        TextView title, readMore;
         RatingBar rating;
 
         PostsViewHolder(final View itemView) {
             super(itemView);
 
             image = itemView.findViewById(R.id.studio_iv);
-            title = itemView.findViewById(R.id.studio_tv);
+            title = itemView.findViewById(R.id.studio_name_tv);
             rating = itemView.findViewById(R.id.studio_rb);
+            readMore = itemView.findViewById(R.id.studio_read_more_tv);
+            readMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListener.onStudioClick(getAdapterPosition());
+                }
+            });
         }
 
         void bind(Studio studio) {
-            image.setImageResource(studio.getImageId());
+
+            Picasso.with(itemView.getContext()).load(studio.getPhotoReference()).into(image);
             title.setText(studio.getName());
             rating.setRating(studio.getRating());
         }

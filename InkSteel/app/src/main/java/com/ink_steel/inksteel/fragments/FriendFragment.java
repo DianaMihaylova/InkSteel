@@ -13,12 +13,13 @@ import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.adapters.FriendAdapter;
 import com.ink_steel.inksteel.data.DatabaseManager;
-import com.ink_steel.inksteel.helpers.IOnFriendClickListener;
+import com.ink_steel.inksteel.helpers.Listeners.FriendClickListener;
 import com.ink_steel.inksteel.model.User;
 
 import java.util.ArrayList;
 
-public class FriendFragment extends Fragment implements IOnFriendClickListener, DatabaseManager.UsersListener {
+public class FriendFragment extends Fragment implements FriendClickListener,
+        DatabaseManager.UsersListener {
 
     public static ArrayList<User> mUsers;
     private FriendAdapter mAdapter;
@@ -51,7 +52,7 @@ public class FriendFragment extends Fragment implements IOnFriendClickListener, 
 
 
     @Override
-    public void onFriendClickListener(int position) {
+    public void onFriendClick(int position) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle bundle = new Bundle(1);
         bundle.putInt("position", position);

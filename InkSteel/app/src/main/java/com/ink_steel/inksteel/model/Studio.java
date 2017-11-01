@@ -4,12 +4,28 @@ public class Studio {
 
     private String name;
     private float rating;
-    private int imageId;
+    private String address;
+    private String photoReference;
+    private String placeId;
 
-    public Studio(String name, float rating, int imageId) {
+    public Studio(String name, float rating, String address, String id, String photo) {
         this.name = name;
         this.rating = rating;
-        this.imageId = imageId;
+        this.address = address;
+        this.placeId = id;
+        this.photoReference = photo;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    public String getPhotoReference() {
+        return photoReference;
     }
 
     public String getName() {
@@ -20,7 +36,8 @@ public class Studio {
         return rating;
     }
 
-    public int getImageId() {
-        return imageId;
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Studio && placeId.equals(((Studio) obj).placeId);
     }
 }
