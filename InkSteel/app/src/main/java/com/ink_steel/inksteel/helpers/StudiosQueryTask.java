@@ -38,6 +38,7 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
         String url = BASE_URL + QUERY_TEXT + "tattoo" +
                 "&location=" + mLocation.getLatitude() + "," + mLocation.getLongitude() + "&radius=40000"
                 + API_KEY;
+
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
         try {

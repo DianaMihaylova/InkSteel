@@ -5,6 +5,9 @@ public class Message {
     private String message;
     private long time;
 
+    public Message() {
+    }
+
     public Message(String userName, String message, long time) {
         this.userName = userName;
         this.message = message;

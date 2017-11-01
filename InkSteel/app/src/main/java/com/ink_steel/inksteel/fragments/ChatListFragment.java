@@ -65,7 +65,9 @@ public class ChatListFragment extends Fragment implements Listeners.ChatListClic
 
     @Override
     public void onChatItemClick(int position) {
-
+        ((HomeActivity) getActivity()).replaceFragment(ChatFragment
+                .newInstance(mChatRooms.get(position)
+                        .getOtherUserEmail(mManager.getCurrentUser().getEmail())));
     }
 
     @Override
