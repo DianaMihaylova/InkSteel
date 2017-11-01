@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.UUID;
 
 public class DatabaseManager {
@@ -56,6 +57,11 @@ public class DatabaseManager {
     // all users loaded
     public interface UsersListener {
         void onUsersLoaded();
+    }
+
+    // all friends loaded
+    public interface FriendsListener {
+        void onFriendsLoaded();
     }
 
     // post saved to database
@@ -82,13 +88,11 @@ public class DatabaseManager {
     private StorageReference mStorage;
     private static DatabaseManager mDatabaseManager;
     private User mCurrentUser;
-    private ArrayList<User> users;
 
     private DatabaseManager() {
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
         mStorage = FirebaseStorage.getInstance().getReference();
-        this.users = new ArrayList<>();
     }
 
     public static DatabaseManager getInstance() {
@@ -223,6 +227,8 @@ public class DatabaseManager {
 
 //    ------------------------------------ User explore ------------------------------------
 
+    private ArrayList<User> users = new ArrayList<>();
+
     public void loadUsers(final UsersListener listener) {
         mFirestore.collection("users").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -235,8 +241,10 @@ public class DatabaseManager {
                                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                             @Override
                                             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                User user = documentSnapshot.toObject(User.class);
-                                                users.add(user);
+                                                if (documentSnapshot.exists()) {
+                                                    User user = documentSnapshot.toObject(User.class);
+                                                    users.add(user);
+                                                }
                                             }
                                         });
                             }
@@ -249,6 +257,38 @@ public class DatabaseManager {
     public ArrayList<User> getUsers() {
         return users;
     }
+
+    public void addLike(String email) {
+        mCurrentUser.getLikes().add(email);
+        mFirestore.collection("users")
+                .document(mCurrentUser.getEmail())
+                .update("likes", mCurrentUser.getLikes());
+    }
+
+    public void addFriend(String email) {
+        mCurrentUser.getFriends().add(email);
+        mFirestore.collection("users")
+                .document(mCurrentUser.getEmail())
+                .update("friends", mCurrentUser.getFriends());
+    }
+
+//    private ArrayList<User> friends = new ArrayList<>();
+//
+//    public void loadFriends(final FriendsListener listener) {
+//        mFirestore.collection("users").document(mCurrentUser.getEmail()).get()
+//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                        if (documentSnapshot.exists()) {
+//                            User user = documentSnapshot.toObject(User.class);
+//                            friends.add(user);
+//                        }
+//                    }
+//                });
+//        listener.onFriendsLoaded();
+//    }
+
+
 
 //    ------------------------------------ Posts ------------------------------------
 

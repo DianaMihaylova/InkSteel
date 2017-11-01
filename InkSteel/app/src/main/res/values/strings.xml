@@ -23,4 +23,5 @@
     <string name="not_a_member_register">Not a member? Register</string>
     <string name="confirm_password">Confirm password</string>
     <string name="send_a_message">Send a message</string>
+    <string name="click_the_skull_to_explore_again"><![CDATA[Click the skull to explore again ----->]]></string>
 </resources>

@@ -18,27 +18,15 @@
             android:id="@+id/profile_pic"
             android:layout_width="304dp"
             android:layout_height="308dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:padding="8dp"
             android:scaleType="centerCrop"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintHorizontal_bias="0.0"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/user_name"
-            card_view:layout_constraintVertical_bias="0.0"
             card_view:srcCompat="@drawable/tatto1"/>
-
-        <ImageView
-            android:id="@+id/imageView12"
-            android:layout_width="40dp"
-            android:layout_height="39dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
-            android:src="@drawable/triangle_top"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@+id/user_city"/>
 
         <TextView
             android:id="@+id/user_name"
@@ -51,19 +39,19 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="36sp"
             android:textStyle="bold"
-            card_view:layout_constraintEnd_toStartOf="@+id/user_city"
-            card_view:layout_constraintHorizontal_bias="0.257"
+            card_view:layout_constraintEnd_toStartOf="@+id/user_country"
+            card_view:layout_constraintHorizontal_bias="0.097"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintVertical_weight="2"
             tools:text="Username"/>
 
         <TextView
-            android:id="@+id/user_city"
+            android:id="@+id/user_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="cursive"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="24sp"
