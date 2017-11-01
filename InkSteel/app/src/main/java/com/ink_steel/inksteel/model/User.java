@@ -1,5 +1,7 @@
 package com.ink_steel.inksteel.model;
 
+import com.google.firebase.firestore.Exclude;
+
 import java.util.ArrayList;
 
 public class User {
@@ -13,7 +15,7 @@ public class User {
     private ArrayList<String> friends;
     private ArrayList<String> likes;
     private ArrayList<String> likedBy;
-    private ArrayList<String> chatRooms;
+    private ArrayList<String> chatRoomsEmails;
 
     public User() {
     }
@@ -26,7 +28,8 @@ public class User {
 
     public User(String email, String name, String age, String city, String profileImage,
                 ArrayList<String> gallery, ArrayList<String> friends,
-                ArrayList<String> likes, ArrayList<String> likedBy, ArrayList<String> chatRooms) {
+                ArrayList<String> likes, ArrayList<String> likedBy,
+                ArrayList<String> chatRoomsEmails) {
         this.email = email;
         this.name = name;
         this.age = age;
@@ -36,7 +39,7 @@ public class User {
         this.friends = friends;
         this.likes = likes;
         this.likedBy = likedBy;
-        this.chatRooms = chatRooms;
+        this.chatRoomsEmails = chatRoomsEmails;
     }
 
     public void updateUserInfo(String name, String age, String country) {
@@ -86,6 +89,7 @@ public class User {
     }
 
     public ArrayList<String> getChatRooms() {
-        return chatRooms;
+        return chatRoomsEmails;
     }
+
 }

@@ -53,7 +53,7 @@ public class ExploreAdapter extends BaseAdapter {
 
         String username = "Username:\n" + users.get(position).getName();
         String country = "Country:\n" + users.get(position).getCity();
-        ((TextView) v.findViewById(R.id.user_name)).setText(username);
+        ((TextView) v.findViewById(R.id.qwerty)).setText(username);
         ((TextView) v.findViewById(R.id.user_country)).setText(country);
         ImageView imageView = v.findViewById(R.id.profile_pic);
 

@@ -8,19 +8,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.helpers.Listeners.StudioClickListener;
-import com.ink_steel.inksteel.model.User;
+import com.ink_steel.inksteel.helpers.Listeners.ChatListClickListener;
+import com.ink_steel.inksteel.model.ChatRoom;
+import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.PostsViewHolder> {
 
-    private List<User> mUsers;
-    private StudioClickListener mListener;
+    private List<ChatRoom> mChatRooms;
+    private String email;
+    private ChatListClickListener mListener;
 
-    public ChatListAdapter(StudioClickListener listener, List<User> users) {
-        mUsers = users;
+    public ChatListAdapter(ChatListClickListener listener, List<ChatRoom> chatRooms,
+                           String currentUserEmail) {
+        mChatRooms = chatRooms;
         mListener = listener;
+        email = currentUserEmail;
     }
 
     @Override
@@ -32,12 +39,12 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.PostsV
 
     @Override
     public void onBindViewHolder(PostsViewHolder holder, int position) {
-        holder.bind(mUsers.get(position));
+        holder.bind(mChatRooms.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mUsers.size();
+        return mChatRooms.size();
     }
 
     class PostsViewHolder extends RecyclerView.ViewHolder {
@@ -53,9 +60,33 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.PostsV
             time = itemView.findViewById(R.id.item_chat_time);
             image = itemView.findViewById(R.id.item_chat_image);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListener.onChatItemClick(getAdapterPosition());
+                }
+            });
+
         }
 
-        void bind(User user) {
+        void bind(ChatRoom chatRoom) {
+            String username, userPicture;
+            if (email.equals(chatRoom.getEmail1())) {
+                username = chatRoom.getUserName2();
+                userPicture = chatRoom.getProfilePicture2();
+            } else {
+                username = chatRoom.getUserName1();
+                userPicture = chatRoom.getProfilePicture1();
+            }
+
+            userName.setText(username);
+            Picasso.with(itemView.getContext())
+                    .load(userPicture).into(image);
+            lastMsg.setText(chatRoom.getLastMessage());
+            SimpleDateFormat format = new SimpleDateFormat("hh:mm, dd MMM",
+                    Locale.getDefault());
+            Date date = new Date(chatRoom.getLastMessageTime());
+            time.setText(format.format(date));
 
         }
     }

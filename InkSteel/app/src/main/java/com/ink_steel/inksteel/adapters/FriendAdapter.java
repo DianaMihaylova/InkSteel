@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ink_steel.inksteel.R;
+import com.ink_steel.inksteel.activities.HomeActivity;
+import com.ink_steel.inksteel.fragments.ChatFragment;
 import com.ink_steel.inksteel.helpers.Listeners.FriendClickListener;
 import com.ink_steel.inksteel.model.User;
 import com.squareup.picasso.Picasso;
@@ -48,13 +50,13 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
 
         private ImageView profilePic;
         private TextView userName, userCity;
-        Button msg;
+        private Button msg;
 
         FriendViewHolder(final View itemView) {
             super(itemView);
 
             profilePic = itemView.findViewById(R.id.user_image);
-            userName = itemView.findViewById(R.id.user_name);
+            userName = itemView.findViewById(R.id.qwerty);
             userCity = itemView.findViewById(R.id.user_city);
             msg = itemView.findViewById(R.id.btn_msg);
 
@@ -64,6 +66,16 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
                     mListener.onFriendClick(getAdapterPosition());
                 }
             });
+
+            msg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((HomeActivity) itemView.getContext())
+                            .replaceFragment(ChatFragment
+                                    .newInstance(users.get(getAdapterPosition()).getEmail()));
+                }
+            });
+
         }
 
         void bind(User user) {

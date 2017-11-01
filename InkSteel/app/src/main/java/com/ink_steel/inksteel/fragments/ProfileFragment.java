@@ -38,7 +38,7 @@ public class ProfileFragment extends Fragment {
         mCurrentUser = DatabaseManager.getInstance().getCurrentUser();
 
         imageView = view.findViewById(R.id.profile);
-        username = view.findViewById(R.id.user_name);
+        username = view.findViewById(R.id.qwerty);
         email = view.findViewById(R.id.user_email);
         age = view.findViewById(R.id.user_age);
         city = view.findViewById(R.id.user_city);

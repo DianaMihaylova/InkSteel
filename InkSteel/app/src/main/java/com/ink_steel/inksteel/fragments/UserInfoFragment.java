@@ -24,7 +24,6 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -71,10 +70,10 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
 
         View view = inflater.inflate(R.layout.fragment_user_info, container, false);
 
-        name = view.findViewById(R.id.user_name);
+        name = view.findViewById(R.id.qwerty);
         age = view.findViewById(R.id.user_age);
         imageView = view.findViewById(R.id.profile_picture);
-        mCity = view.findViewById(R.id.user_country);
+        mCity = view.findViewById(R.id.user_city);
         Button saveBtn = view.findViewById(R.id.button_save);
         imageView.setDrawingCacheEnabled(true);
 
@@ -126,8 +125,12 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
             return;
         }
 
+
         mCurrentUser.updateUserInfo(userName, userAge, country);
-        mManager.updateUserInfo(this, imageBitmap);
+        if (imageBitmap == null)
+            mManager.updateUserInfo(this);
+        else
+            mManager.updateUserInfo(this, imageBitmap);
     }
 
     private void displayUserInfo() {

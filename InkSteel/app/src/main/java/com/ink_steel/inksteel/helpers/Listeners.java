@@ -32,4 +32,8 @@ public class Listeners {
         void onStudioClick(int position);
     }
 
+    public interface ChatListClickListener {
+
+        void onChatItemClick(int position);
+    }
 }

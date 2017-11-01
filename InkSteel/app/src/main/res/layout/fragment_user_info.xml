@@ -15,7 +15,7 @@
         android:src="@drawable/ic_add"/>
 
     <EditText
-        android:id="@+id/user_name"
+        android:id="@+id/qwerty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="64dp"

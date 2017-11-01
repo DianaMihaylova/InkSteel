@@ -23,14 +23,18 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ink_steel.inksteel.adapters.GalleryRecyclerViewAdapter;
+import com.ink_steel.inksteel.model.ChatRoom;
 import com.ink_steel.inksteel.model.Post;
 import com.ink_steel.inksteel.model.Reaction;
 import com.ink_steel.inksteel.model.User;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
 
@@ -174,18 +178,22 @@ public class DatabaseManager {
                         Uri downloadUri = task.getResult().getDownloadUrl();
                         if (task.isSuccessful() && downloadUri != null) {
                             mCurrentUser.setProfileImage(downloadUri.toString());
-                            mFirestore.collection("users").document(mCurrentUser.getEmail())
-                                    .update("name", mCurrentUser.getName(),
-                                            "age", mCurrentUser.getAge(),
-                                            "country", mCurrentUser.getCity(),
-                                            "profileImage", mCurrentUser.getProfileImage())
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            listener.onUserInfoSaved();
-                                        }
-                                    });
+                            updateUserInfo(listener);
                         }
+                    }
+                });
+    }
+
+    public void updateUserInfo(final UserInfoListener listener) {
+        mFirestore.collection("users").document(mCurrentUser.getEmail())
+                .update("name", mCurrentUser.getName(),
+                        "age", mCurrentUser.getAge(),
+                        "city", mCurrentUser.getCity(),
+                        "profileImage", mCurrentUser.getProfileImage())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        listener.onUserInfoSaved();
                     }
                 });
     }
@@ -280,7 +288,6 @@ public class DatabaseManager {
         }
         return mFriends;
     }
-
 
 
 //    ------------------------------------ Posts ------------------------------------
@@ -534,6 +541,81 @@ public class DatabaseManager {
         currentPost.getReactions().set(index, ++reactionCount);
         postReference.update("reactions", currentPost.getReactions());
         postReference.collection("history").document().set(reactionData);
+    }
+//                              --Chat Manager --
+
+    private List<ChatRoom> mChatRooms;
+    private Map<String, ChatRoom> mRooms;
+
+    private void createChatRoom(final ChatRoomCreatedListener listener, final String userEmail) {
+        User user = mUsers.get(userEmail);
+        DocumentReference reference = mFirestore.collection("chatRooms").document();
+        String id = reference.getId();
+        final ChatRoom chatRoom = new ChatRoom(id, mCurrentUser.getEmail(),
+                mCurrentUser.getProfileImage(), mCurrentUser.getName(),
+                user.getEmail(), user.getProfileImage(), user.getName(),
+                "Chat room created!", new Date().getTime());
+        reference.set(chatRoom).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    mRooms.put(userEmail, chatRoom);
+                    listener.onChatRoomCreated(chatRoom);
+                }
+            }
+        });
+    }
+
+    private int a = 0;
+
+    public void loadChatRooms(final ChatRoomsLoadedListener listener) {
+//        if (mChatRooms == null)
+//            mChatRooms = Collections.synchronizedList(new ArrayList<ChatRoom>());
+        if (mRooms == null)
+            mRooms = Collections.synchronizedMap(new HashMap<String, ChatRoom>());
+        a = 0;
+        chatRoomsQuery(listener, "email1");
+        chatRoomsQuery(listener, "email2");
+    }
+
+    private void chatRoomsQuery(final ChatRoomsLoadedListener listener, final String query) {
+        mFirestore.collection("chatRooms")
+                .whereEqualTo(query, mCurrentUser.getEmail()).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot snapshot : task.getResult()) {
+                                if (snapshot.exists()) {
+                                    ChatRoom chatRoom = snapshot.toObject(ChatRoom.class);
+                                    mRooms.put(chatRoom.getOtherUser(query), chatRoom);
+                                }
+                            }
+                            a++;
+                            if (a == 2) {
+                                listener.onChatRoomsLoaded();
+                            }
+                        }
+                    }
+                });
+    }
+
+    public List<ChatRoom> getChatRooms() {
+        return new ArrayList<>(mRooms.values());
+    }
+
+    public ChatRoom getChatRoomByOtherUser(ChatRoomCreatedListener listener, String email) {
+        if (!mRooms.containsKey(email))
+            createChatRoom(listener, email);
+        return mRooms.get(email);
+    }
+
+    public interface ChatRoomsLoadedListener {
+        void onChatRoomsLoaded();
+    }
+
+    public interface ChatRoomCreatedListener {
+        void onChatRoomCreated(ChatRoom chatRoom);
     }
 
 }
