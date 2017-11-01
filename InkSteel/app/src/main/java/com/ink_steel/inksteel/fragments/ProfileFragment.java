@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ public class ProfileFragment extends Fragment {
         layoutGroupBtn = view.findViewById(R.id.layout_btn);
         Button galleryBtn = view.findViewById(R.id.btn_gallery);
         Button friendsBtn = view.findViewById(R.id.btn_msg);
+        ImageButton logoutBtn = view.findViewById(R.id.btn_logout);
         editProfileBtn = view.findViewById(R.id.btn_edit_profile);
         galleryFriendBtn = view.findViewById(R.id.btn_friend_gallery);
 
