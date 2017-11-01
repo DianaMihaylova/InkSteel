@@ -1,5 +1,6 @@
 package com.ink_steel.inksteel.helpers;
 
+import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -18,21 +19,25 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
 
     private static final String BASE_URL = "https://maps.googleapis.com/maps/api/place/textsearch/json";
     private static final String QUERY_TEXT = "?query=";
-    private static final String API_KEY = "&language=bg&key=AIzaSyBh2GbUPM4s8PDMiNcIEaMgW1yRITSFUac";
+    private static final String API_KEY = "&key=AIzaSyBh2GbUPM4s8PDMiNcIEaMgW1yRITSFUac";
 
     private static final String PHOTO_BASE_URL = "https://maps.googleapis.com/maps/api/place/" +
             "photo?maxwidth=400&photoreference=";
 
     private StudiosListener mListener;
+    private Location mLocation;
 
-    public StudiosQueryTask(StudiosListener listener) {
+    public StudiosQueryTask(StudiosListener listener, Location location) {
         mListener = listener;
+        mLocation = location;
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
 
-        String url = BASE_URL + QUERY_TEXT + "tattoo" + "in Sofia, Bulgaria" + API_KEY;
+        String url = BASE_URL + QUERY_TEXT + "tattoo" +
+                "&location=" + mLocation.getLatitude() + "," + mLocation.getLongitude() + "&radius=40000"
+                + API_KEY;
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
         try {

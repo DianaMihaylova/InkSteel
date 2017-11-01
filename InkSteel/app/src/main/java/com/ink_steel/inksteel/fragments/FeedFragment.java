@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ public class FeedFragment extends Fragment implements PostClickListener,
 
     private List<Post> mPosts;
     private PostsAdapter mAdapter;
+    private DatabaseManager mManager;
 
     public FeedFragment() {
     }
@@ -39,8 +41,8 @@ public class FeedFragment extends Fragment implements PostClickListener,
         mPosts = new LinkedList<>();
         mAdapter = new PostsAdapter(getActivity().getApplicationContext(), mPosts, this);
 
-        DatabaseManager manager = DatabaseManager.getInstance();
-        manager.registerPostsListener(this);
+        mManager = DatabaseManager.getInstance();
+        mManager.registerPostsListener(this);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -72,20 +74,16 @@ public class FeedFragment extends Fragment implements PostClickListener,
     }
 
     @Override
-    public void onPostsAdded(Post post) {
-        if (!mPosts.contains(post)) {
-            if (mPosts.size() != 0)
-                mPosts.add(0, post);
-            else
-                mPosts.add(post);
-            mAdapter.notifyDataSetChanged();
-        }
+    public void onPostAdded(Post post) {
+        mPosts.add(0, post);
+        mAdapter.notifyItemInserted(0);
+
     }
 
     @Override
-    public void onPostChanged(Post post) {
-        mAdapter.notifyItemChanged(mPosts.indexOf(post));
+    public void onPostsLoaded() {
+        mPosts.addAll(mManager.getPosts());
+        mAdapter.notifyDataSetChanged();
     }
-
 }
 

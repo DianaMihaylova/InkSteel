@@ -18,6 +18,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+    }
 }
 
 dependencies {
@@ -47,5 +49,6 @@ dependencies {
     }
     testImplementation 'junit:junit:4.12'
     implementation 'com.google.android.gms:play-services-places:11.4.2'
+    implementation 'com.google.android.gms:play-services-location:11.4.2'
 }
 apply plugin: 'com.google.gms.google-services'

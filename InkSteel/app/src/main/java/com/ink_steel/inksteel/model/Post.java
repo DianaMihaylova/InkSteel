@@ -1,9 +1,13 @@
 package com.ink_steel.inksteel.model;
 
+import android.support.annotation.NonNull;
+
+import com.google.firebase.firestore.Exclude;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Post {
+public class Post implements Comparable<Post> {
 
     private String postId;
     private String userEmail;
@@ -74,6 +78,7 @@ public class Post {
         return reactions;
     }
 
+    @Exclude
     public int getReactionCount(String type) {
         if (type == null)
             return 0;
@@ -91,7 +96,9 @@ public class Post {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof Post && postId.equals(((Post) obj).postId);
+    public int compareTo(@NonNull Post post) {
+        if (postId.equals(post.postId))
+            return 0;
+        return (int) (post.createdAt - createdAt);
     }
 }

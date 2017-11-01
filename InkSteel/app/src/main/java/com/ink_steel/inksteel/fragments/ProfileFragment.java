@@ -1,7 +1,6 @@
 package com.ink_steel.inksteel.fragments;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.activities.ChatActivity;
 import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.model.User;
@@ -56,8 +54,7 @@ public class ProfileFragment extends Fragment {
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ChatActivity.class);
-                startActivity(intent);
+                ((HomeActivity) getActivity()).replaceFragment(new ChatFragment());
             }
         });
 

@@ -22,8 +22,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.ink_steel.inksteel.adapters.ExploreAdapter;
-import com.ink_steel.inksteel.adapters.FriendAdapter;
 import com.ink_steel.inksteel.adapters.GalleryRecyclerViewAdapter;
 import com.ink_steel.inksteel.model.Post;
 import com.ink_steel.inksteel.model.Reaction;
@@ -33,7 +31,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.TreeSet;
 import java.util.UUID;
 
 public class DatabaseManager {
@@ -65,9 +63,10 @@ public class DatabaseManager {
 
     // posts added / changed
     public interface PostsListener {
-        void onPostsAdded(Post post);
 
-        void onPostChanged(Post post);
+        void onPostAdded(Post post);
+
+        void onPostsLoaded();
     }
 
     // reactions added / changed
@@ -302,40 +301,51 @@ public class DatabaseManager {
 
     //    -- Post --
     private Post currentPost;
-    private int postIndex = 0;
-    private HashMap<String, Integer> mPostsId = new HashMap<>();
-    private LinkedList<Post> mPosts = new LinkedList<>();
     private ListenerRegistration mPostListenerRegistration;
     private ListenerRegistration mReactionsListenerRegistration;
     private HashMap<String, Integer> reactions = new HashMap<>();
-
+    private TreeSet<Post> mPosts = new TreeSet<>();
     private String reaction;
     private int reactionCount;
     private ListenerRegistration mPostsListenerRegistration;
-
-    public Post getPreviousPost(PostReactionsListener listener) {
-        int nextPos = mPostsId.get(currentPost.getPostId()) + 1;
-        if (mPosts.size() != nextPos)
-            return getPost(listener, mPosts.get(nextPos).getPostId());
-        return null;
-    }
+    private boolean isInitialLoad = true;
 
     public Post getPost(PostReactionsListener listener, String postId) {
-        currentPost = mPosts.get(mPostsId.get(postId));
+        boolean found = false;
+        for (Post post : mPosts) {
+            if (post.getPostId().equals(postId)) {
+                setPost(listener, post);
+                found = true;
+                break;
+            }
+        }
+        return found ? currentPost : null;
+    }
+
+    private void setPost(PostReactionsListener listener, Post post) {
+        currentPost = post;
         unregisterPostListeners();
         reaction = null;
         reactionCount = 0;
         hasUserReacted();
         registerPostListener(listener);
         registerReactionsListener(listener);
-        return currentPost;
     }
 
     public Post getNextPost(PostReactionsListener listener) {
-        int prevPost = mPostsId.get(currentPost.getPostId()) - 1;
-        if (prevPost != -1)
-            return getPost(listener, mPosts.get(prevPost).getPostId());
-        return null;
+        Post post = mPosts.higher(currentPost);
+        if (post == null)
+            return null;
+        setPost(listener, post);
+        return post;
+    }
+
+    public Post getPreviousPost(PostReactionsListener listener) {
+        Post post = mPosts.lower(currentPost);
+        if (post == null)
+            return null;
+        setPost(listener, post);
+        return post;
     }
 
     private void unregisterPostListeners() {
@@ -343,6 +353,10 @@ public class DatabaseManager {
             mReactionsListenerRegistration.remove();
         if (mPostListenerRegistration != null)
             mPostListenerRegistration.remove();
+    }
+
+    public TreeSet<Post> getPosts() {
+        return mPosts;
     }
 
     // get the post's reaction's count real time
@@ -390,8 +404,10 @@ public class DatabaseManager {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot snapshot) {
-                        if (snapshot.exists())
+                        if (snapshot.exists()) {
                             setCurrentReaction(snapshot.getString("reactionType"));
+                            Log.d("reaction", reaction + " --" + currentPost.getPostId());
+                        }
                     }
                 });
     }
@@ -414,29 +430,37 @@ public class DatabaseManager {
                             return;
 
                         for (DocumentChange change : documentSnapshots.getDocumentChanges()) {
-                            if (change.getType() == DocumentChange.Type.ADDED) {
-                                DocumentSnapshot snapshot = change.getDocument();
-                                if (snapshot.exists()) {
+                            DocumentSnapshot snapshot = change.getDocument();
+                            if (snapshot.exists()) {
+                                if (change.getType() == DocumentChange.Type.ADDED) {
                                     Post post = snapshot.toObject(Post.class);
-//                                    if (!mPostsId.containsKey(post.getPostId())) {
-                                    mPostsId.put(post.getPostId(), postIndex);
                                     mPosts.add(post);
-                                    postIndex++;
-                                    listener.onPostsAdded(post);
-//                                    }
+                                    if (!isInitialLoad) {
+                                        listener.onPostAdded(post);
+                                    }
                                 }
-                            } else if (change.getType() == DocumentChange.Type.MODIFIED) {
-                                listener.onPostChanged(change.getDocument().toObject(Post.class));
                             }
                         }
+
+                        if (isInitialLoad) {
+                            listener.onPostsLoaded();
+                            isInitialLoad = false;
+                        }
+
                     }
                 });
+    }
+
+    public void unregisterPostsListener() {
+        if (mPostsListenerRegistration != null)
+            mPostsListenerRegistration.remove();
     }
 
     public void saveUserReaction(String newReaction) {
 
         if (newReaction.isEmpty())
             return;
+
         if (reactions.isEmpty()) {
             reactions.put("like", 0);
             reactions.put("blush", 1);

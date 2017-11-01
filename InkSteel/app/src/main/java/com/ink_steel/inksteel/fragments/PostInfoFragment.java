@@ -46,6 +46,7 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
     private TextView mPostDescription;
     private Post currentPost;
     private DatabaseManager mManager;
+    private Picasso mPicasso;
 
     public PostInfoFragment() {
     }
@@ -90,6 +91,7 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
         isFullScreen = false;
         mCs = new ConstraintSet();
         mCl = view.findViewById(R.id.post_cl);
+        mPicasso = new Picasso.Builder(getActivity()).indicatorsEnabled(true).build();
 
         mManager = DatabaseManager.getInstance();
         currentPost = mManager.getPost(this, postId);
@@ -147,14 +149,15 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
         mCs.applyTo(mCl);
     }
 
+
     private void displayPost(boolean isInitial) {
         if (currentPost != null) {
 
             mReactionUserEmail.setText(currentPost.getUserEmail());
 
-            Picasso.with(getActivity()).load(currentPost.getUrlProfileImage())
+            mPicasso.load(currentPost.getUrlProfileImage())
                     .into(mPostUserProfileImage);
-            Picasso.with(getActivity()).load(currentPost.getUrlImage())
+            mPicasso.load(currentPost.getUrlImage())
                     .into(mPostImage);
 
             String description = currentPost.getDescription();
