@@ -27,6 +27,7 @@ public class ChatRoom {
         this.userName2 = userName2;
         this.lastMessage = lastMessage;
         this.lastMessageTime = lastMessageTime;
+        this.chatId = chatId;
     }
 
     public String getChatId() {
