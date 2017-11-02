@@ -19,7 +19,7 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
 
     private static final String BASE_URL = "https://maps.googleapis.com/maps/api/place/textsearch/json";
     private static final String QUERY_TEXT = "?query=";
-    private static final String API_KEY = "&key=AIzaSyBh2GbUPM4s8PDMiNcIEaMgW1yRITSFUac";
+    private static final String API_KEY = "&key=AIzaSyACnb8t5MxO5woaX7nQpS3qMowHnSZznno";
 
     private static final String PHOTO_BASE_URL = "https://maps.googleapis.com/maps/api/place/" +
             "photo?maxwidth=400&photoreference=";
@@ -36,8 +36,8 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
     protected Void doInBackground(Void... voids) {
 
         String url = BASE_URL + QUERY_TEXT + "tattoo" +
-                "&location=" + mLocation.getLatitude() + "," + mLocation.getLongitude() + "&radius=40000"
-                + API_KEY;
+                "&location=" + mLocation.getLatitude() + "," + mLocation.getLongitude() +
+                "&radius=40000" + API_KEY;
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
@@ -45,6 +45,7 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
             Response response = client.newCall(request).execute();
             if (!response.isSuccessful())
                 return null;
+
             extractStudiosFromJSON(response.body().string());
         } catch (IOException e) {
             e.printStackTrace();
