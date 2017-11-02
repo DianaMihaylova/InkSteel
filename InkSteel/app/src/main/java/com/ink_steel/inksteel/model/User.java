@@ -84,4 +84,8 @@ public class User implements Serializable {
         return chatRoomsEmails;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof User && email.equals(((User) obj).email);
+    }
 }

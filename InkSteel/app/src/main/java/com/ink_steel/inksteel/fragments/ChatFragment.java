@@ -72,6 +72,7 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
                 String msg = messageEt.getText().toString();
                 if (!msg.isEmpty()) {
                     mManager.saveMessageToDatabase(msg, mChatRoom.getChatId());
+                    messageEt.setText("");
                 }
             }
         });

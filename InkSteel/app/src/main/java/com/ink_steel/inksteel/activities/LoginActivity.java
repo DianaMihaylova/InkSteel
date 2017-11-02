@@ -35,7 +35,6 @@ public class LoginActivity extends AppCompatActivity implements DatabaseManager.
 
     @Override
     public void onUserLogInError(String error) {
-        // handle error
         showAlert(error);
     }
 
@@ -63,7 +62,7 @@ public class LoginActivity extends AppCompatActivity implements DatabaseManager.
 
     @Override
     public void onUserSignUpError(String error) {
-        // handle error
+        showAlert(error);
     }
 
     @Override

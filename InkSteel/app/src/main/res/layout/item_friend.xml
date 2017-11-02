@@ -11,18 +11,19 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/cardview_dark_background">
 
         <TextView
             android:id="@+id/user_city"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:fontFamily="cursive"
             android:gravity="end"
             android:text="TextView"
+            android:textColor="@color/cardview_light_background"
             android:textSize="18sp"
             android:textStyle="bold"
             card_view:layout_constraintEnd_toEndOf="parent"
@@ -45,11 +46,11 @@
             android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:fontFamily="cursive"
             android:gravity="bottom|center_horizontal"
+            android:textColor="@color/cardview_light_background"
             android:textSize="24sp"
             android:textStyle="bold"
             card_view:layout_constraintStart_toEndOf="@+id/imageView4"
@@ -74,6 +75,7 @@
             android:id="@+id/btn_msg"
             android:layout_width="153dp"
             android:layout_height="42dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
