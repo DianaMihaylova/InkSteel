@@ -271,7 +271,7 @@ public class DatabaseManager {
         return new ArrayList<>(mUsers.values());
     }
 
-    private ArrayList<User> exploreUsers;
+    private ArrayList<User> exploreUsers = new ArrayList<>();
 
     public ArrayList<User> loadExplore(UsersListener listener) {
 //        loadUsers();
@@ -282,7 +282,7 @@ public class DatabaseManager {
                     exploreUsers.add(mUsers.get(email));
                 }
             }
-            for (String email : mCurrentUser.getLikes()) {
+            for (String email : mCurrentUser.getLiked()) {
                 if (!(mUsers.equals(email))) {
                     exploreUsers.add(mUsers.get(email));
                 }
@@ -293,10 +293,10 @@ public class DatabaseManager {
     }
 
     public void addLike(String email) {
-        mCurrentUser.getLikes().add(email);
+        mCurrentUser.getLiked().add(email);
         mFirestore.collection("users")
                 .document(mCurrentUser.getEmail())
-                .update("likes", mCurrentUser.getLikes());
+                .update("likes", mCurrentUser.getLiked());
     }
 
 //    ------------------------------------ Friends ------------------------------------

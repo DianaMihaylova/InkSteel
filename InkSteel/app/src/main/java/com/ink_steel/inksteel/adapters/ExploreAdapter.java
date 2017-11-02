@@ -64,7 +64,6 @@ public class ExploreAdapter extends BaseAdapter {
                 .transform(new CropCircleTransformation())
                 .into(imageView);
 
-
         return v;
     }
 }
