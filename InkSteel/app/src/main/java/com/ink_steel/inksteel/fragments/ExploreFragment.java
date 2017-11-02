@@ -20,7 +20,7 @@ public class ExploreFragment extends Fragment implements DatabaseManager.UsersLi
 
     private DatabaseManager mManager;
     private SwipeDeck cardStack;
-    private ExploreAdapter adapter;
+    private ExploreAdapter mAdapter;
     private User mCurrentUser;
     private ArrayList<User> mUsers;
 
@@ -37,12 +37,27 @@ public class ExploreFragment extends Fragment implements DatabaseManager.UsersLi
         mCurrentUser = mManager.getCurrentUser();
         mUsers = new ArrayList<>();
 
-        onUsersLoaded();
         cardStack = view.findViewById(R.id.swipe_deck);
+        mAdapter = new ExploreAdapter(mUsers, getActivity());
+        onUsersLoaded();
+        setCardStackEvent();
+        cardStack.setAdapter(mAdapter);
 
-        adapter = new ExploreAdapter(mUsers, getActivity());
-        cardStack.setAdapter(adapter);
 
+        Button againBtn = view.findViewById(R.id.btn_again);
+        againBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onUsersLoaded();
+                mAdapter = new ExploreAdapter(mUsers, getActivity());
+                cardStack.setAdapter(mAdapter);
+            }
+        });
+
+        return view;
+    }
+
+    public void setCardStackEvent() {
         cardStack.setEventCallback(new SwipeDeck.SwipeEventCallback() {
             @Override
             public void cardSwipedLeft(int position) {
@@ -52,19 +67,20 @@ public class ExploreFragment extends Fragment implements DatabaseManager.UsersLi
             @Override
             public void cardSwipedRight(int position) {
                 Toast.makeText(getActivity(), "L I K E", Toast.LENGTH_SHORT).show();
-                String likesEmail = mUsers.get(position).getEmail();
-                mManager.addLike(likesEmail);
-                for (int i = 0; i < mCurrentUser.getLikedBy().size(); i++) {
-                    String likedByEmail = mCurrentUser.getLikedBy().get(i);
-                    if (likedByEmail.equals(likesEmail)) {
-                        mManager.addFriend(likesEmail);
+                User likedUser = mUsers.get(position);
+                String likedEmail = likedUser.getEmail();
+                mManager.addLike(likedEmail);
+                for (int i = 0; i < likedUser.getLikes().size(); i++) {
+                    String likedByEmail = likedUser.getLikes().get(i);
+                    if (likedByEmail.equals(likedEmail)) {
+                        mManager.addFriend(likedEmail);
                     }
                 }
             }
 
             @Override
             public void cardsDepleted() {
-                Toast.makeText(getActivity(), "No more cards!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "No more cards!", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -75,19 +91,6 @@ public class ExploreFragment extends Fragment implements DatabaseManager.UsersLi
             public void cardActionUp() {
             }
         });
-
-
-        Button againBtn = view.findViewById(R.id.btn_again);
-        againBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onUsersLoaded();
-                adapter = new ExploreAdapter(mUsers, getActivity());
-                cardStack.setAdapter(adapter);
-            }
-        });
-
-        return view;
     }
 
 
@@ -96,5 +99,7 @@ public class ExploreFragment extends Fragment implements DatabaseManager.UsersLi
         mUsers.clear();
         mManager.loadUsers(this);
         mUsers.addAll(mManager.getUsers());
+//        mUsers = mManager.loadExplore(this);
+        mAdapter.notifyDataSetChanged();
     }
 }

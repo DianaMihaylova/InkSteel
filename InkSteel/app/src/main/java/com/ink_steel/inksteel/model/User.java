@@ -1,10 +1,9 @@
 package com.ink_steel.inksteel.model;
 
-import com.google.firebase.firestore.Exclude;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User {
+public class User implements Serializable {
 
     private String email;
     private String name;
@@ -18,12 +17,6 @@ public class User {
     private ArrayList<String> chatRoomsEmails;
 
     public User() {
-    }
-
-    public User(String email, String name, String age, String city, String profileImage) {
-        this(email, name, age, city, profileImage,
-                new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(),
-                new ArrayList<String>(), new ArrayList<String>());
     }
 
     public User(String email, String name, String age, String city, String profileImage,
@@ -42,10 +35,16 @@ public class User {
         this.chatRoomsEmails = chatRoomsEmails;
     }
 
-    public void updateUserInfo(String name, String age, String country) {
+    public User(String email, String name, String age, String city, String profileImage) {
+        this(email, name, age, city, profileImage,
+                new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(),
+                new ArrayList<String>(), new ArrayList<String>());
+    }
+
+    public void updateUserInfo(String name, String age, String city) {
         this.name = name;
         this.age = age;
-        this.city = country;
+        this.city = city;
     }
 
     public String getEmail() {

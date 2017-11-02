@@ -56,7 +56,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
             super(itemView);
 
             profilePic = itemView.findViewById(R.id.user_image);
-            userName = itemView.findViewById(R.id.qwerty);
+            userName = itemView.findViewById(R.id.user_name);
             userCity = itemView.findViewById(R.id.user_city);
             msg = itemView.findViewById(R.id.btn_msg);
 
@@ -75,7 +75,6 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
                                     .newInstance(users.get(getAdapterPosition()).getEmail()));
                 }
             });
-
         }
 
         void bind(User user) {

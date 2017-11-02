@@ -50,8 +50,9 @@ public class ProfileFragment extends Fragment {
         editProfileBtn = view.findViewById(R.id.btn_edit_profile);
         galleryFriendBtn = view.findViewById(R.id.btn_friend_gallery);
 
-        if (mCurrentUser != null)
+        if (mCurrentUser != null) {
             displayUserInfo();
+        }
 
         friendsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +75,13 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO
+            }
+        });
+
         return view;
     }
 
@@ -82,19 +90,19 @@ public class ProfileFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            final int position = bundle.getInt("position");
-            emailTxt = "Email: " + FriendsFragment.mFriends.get(position).getEmail();
-            userNameTxt = "Username: " + FriendsFragment.mFriends.get(position).getName();
-            cityTxt = "Country: " + FriendsFragment.mFriends.get(position).getCity();
-            ageTxt = "Age: " + FriendsFragment.mFriends.get(position).getAge();
-            picture = FriendsFragment.mFriends.get(position).getProfileImage();
+            final User friend = (User) bundle.getSerializable("friend");
+            emailTxt = "Email: " + friend.getEmail();
+            userNameTxt = "Username: " + friend.getName();
+            cityTxt = "City: " + friend.getCity();
+            ageTxt = "Age: " + friend.getAge();
+            picture = friend.getProfileImage();
             galleryFriendBtn.setVisibility(View.VISIBLE);
             galleryFriendBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FullScreenImageFragment fragment = new FullScreenImageFragment();
+                    GalleryFragment fragment = new GalleryFragment();
                     Bundle bundle = new Bundle(1);
-                    bundle.putInt("position", position);
+                    bundle.putSerializable("friend", friend);
                     fragment.setArguments(bundle);
                     ((HomeActivity) getActivity()).replaceFragment(fragment);
                 }
@@ -102,7 +110,7 @@ public class ProfileFragment extends Fragment {
         } else {
             emailTxt = "Email: " + mCurrentUser.getEmail();
             userNameTxt = "Username: " + mCurrentUser.getName();
-            cityTxt = "Country: " + mCurrentUser.getCity();
+            cityTxt = "City: " + mCurrentUser.getCity();
             ageTxt = "Age: " + mCurrentUser.getAge();
             picture = mCurrentUser.getProfileImage();
             layoutGroupBtn.setVisibility(View.VISIBLE);
@@ -119,5 +127,4 @@ public class ProfileFragment extends Fragment {
                 .transform(new CropCircleTransformation())
                 .into(imageView);
     }
-
 }

@@ -18,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:fontFamily="cursive"
             android:gravity="end"
@@ -41,10 +42,11 @@
             card_view:srcCompat="@drawable/tatto2"/>
 
         <TextView
-            android:id="@+id/qwerty"
+            android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
             android:fontFamily="cursive"
             android:gravity="bottom|center_horizontal"
@@ -84,7 +86,7 @@
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintHorizontal_bias="0.643"
             card_view:layout_constraintStart_toEndOf="@+id/imageView4"
-            card_view:layout_constraintTop_toBottomOf="@+id/qwerty"/>
+            card_view:layout_constraintTop_toBottomOf="@+id/user_name"/>
 
     </android.support.constraint.ConstraintLayout>
 

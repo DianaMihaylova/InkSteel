@@ -19,12 +19,10 @@ public class Listeners {
     }
 
     public interface GalleryImageLongClickListener {
-
         void onGalleryImageLongClick(int position, boolean isLongClick);
     }
 
     public interface FriendClickListener {
-
         void onFriendClick(int position);
     }
 
@@ -33,8 +31,6 @@ public class Listeners {
     }
 
     public interface ChatListClickListener {
-
         void onChatItemClick(int position);
     }
-
 }

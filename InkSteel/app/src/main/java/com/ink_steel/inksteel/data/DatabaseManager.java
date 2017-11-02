@@ -44,10 +44,8 @@ public class DatabaseManager {
     public interface UserManagerListener {
         // already signed in or just signing in
         void onUserLogInError(String error);
-
         // new user
         void onUserSignUpError(String error);
-
         // user loaded
         void onUserInfoLoaded();
     }
@@ -73,17 +71,28 @@ public class DatabaseManager {
 
     // posts added / changed
     public interface PostsListener {
-
         void onPostAdded(Post post);
-
         void onPostsLoaded();
     }
 
     // reactions added / changed
     public interface PostReactionsListener {
         void onPostReactionsChanged();
-
         void onReactionAdded(Reaction reaction);
+    }
+
+    public interface OnMessagesLoadedListener {
+        void onMessagesLoaded();
+
+        void onMessageAdded(Message message);
+    }
+
+    public interface ChatRoomsLoadedListener {
+        void onChatRoomsLoaded();
+    }
+
+    public interface ChatRoomCreatedListener {
+        void onChatRoomCreated(ChatRoom chatRoom);
     }
 
     private FirebaseAuth mAuth;
@@ -108,7 +117,7 @@ public class DatabaseManager {
         return mCurrentUser;
     }
 
-//    ------------------------------------ User login/register ------------------------------------
+//    ------------------------------------ Login/register ------------------------------------
 
     public void checkIfSignedIn(UserManagerListener listener) {
         if (mAuth.getCurrentUser() != null) {
@@ -123,9 +132,9 @@ public class DatabaseManager {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot snapshot = task.getResult();
-                    if (snapshot.exists())
+                    if (snapshot.exists()) {
                         mCurrentUser = snapshot.toObject(User.class);
-                    else {
+                    } else {
                         mCurrentUser = new User(email, "", "", "", "");
                         userReference.set(mCurrentUser);
                     }
@@ -199,7 +208,7 @@ public class DatabaseManager {
                 });
     }
 
-//    ------------------------------------ User gallery ------------------------------------
+//    ------------------------------------ Gallery ------------------------------------
 
     public void saveImage(Uri uri, final GalleryRecyclerViewAdapter mAdapter) {
         mStorage.child(mCurrentUser.getEmail() + "/pics/"
@@ -232,17 +241,15 @@ public class DatabaseManager {
                 });
     }
 
-//    ------------------------------------ User explore ------------------------------------
+//    ------------------------------------ Explore ------------------------------------
 
     private HashMap<String, User> mUsers;
-    private ArrayList<User> mFriends;
 
     public void loadUsers(final UsersListener listener) {
 
         if (mUsers == null) {
             mUsers = new HashMap<>();
         }
-
         mFirestore.collection("users").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -264,12 +271,37 @@ public class DatabaseManager {
         return new ArrayList<>(mUsers.values());
     }
 
+    private ArrayList<User> exploreUsers;
+
+    public ArrayList<User> loadExplore(UsersListener listener) {
+//        loadUsers();
+        if (exploreUsers == null) {
+            exploreUsers = new ArrayList<>();
+            for (String email : mCurrentUser.getFriends()) {
+                if (!(mUsers.equals(email))) {
+                    exploreUsers.add(mUsers.get(email));
+                }
+            }
+            for (String email : mCurrentUser.getLikes()) {
+                if (!(mUsers.equals(email))) {
+                    exploreUsers.add(mUsers.get(email));
+                }
+            }
+            listener.onUsersLoaded();
+        }
+        return exploreUsers;
+    }
+
     public void addLike(String email) {
         mCurrentUser.getLikes().add(email);
         mFirestore.collection("users")
                 .document(mCurrentUser.getEmail())
                 .update("likes", mCurrentUser.getLikes());
     }
+
+//    ------------------------------------ Friends ------------------------------------
+
+    private ArrayList<User> mFriends;
 
     public void addFriend(String email) {
         mCurrentUser.getFriends().add(email);
@@ -279,6 +311,7 @@ public class DatabaseManager {
     }
 
     public ArrayList<User> getUserFriends() {
+//        loadUsers();
         if (mFriends == null) {
             mFriends = new ArrayList<>();
             for (String email : mCurrentUser.getFriends()) {
@@ -289,7 +322,6 @@ public class DatabaseManager {
         }
         return mFriends;
     }
-
 
 //    ------------------------------------ Posts ------------------------------------
 
@@ -543,7 +575,8 @@ public class DatabaseManager {
         postReference.update("reactions", currentPost.getReactions());
         postReference.collection("history").document().set(reactionData);
     }
-//                              --Chat Manager --
+
+//    ------------------------------------ Chat ------------------------------------
 
     private Map<String, ChatRoom> mRooms;
     private ArrayList<Message> messages;
@@ -611,12 +644,6 @@ public class DatabaseManager {
         return messages;
     }
 
-    public interface OnMessagesLoadedListener {
-        void onMessagesLoaded();
-
-        void onMessageAdded(Message message);
-    }
-
     private int a = 0;
 
     public void loadChatRooms(final ChatRoomsLoadedListener listener) {
@@ -658,13 +685,4 @@ public class DatabaseManager {
             createChatRoom(listener, email);
         return mRooms.get(email);
     }
-
-    public interface ChatRoomsLoadedListener {
-        void onChatRoomsLoaded();
-    }
-
-    public interface ChatRoomCreatedListener {
-        void onChatRoomCreated(ChatRoom chatRoom);
-    }
-
 }

@@ -9,7 +9,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +28,8 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
     private GalleryRecyclerViewAdapter mAdapter;
     private User mCurrentUser;
     private DatabaseManager mUserManager;
+    private boolean isFriendGallery;
+    private User friend;
 
     public GalleryFragment() {
     }
@@ -46,12 +47,20 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
 
         RecyclerView mRecyclerView = view.findViewById(R.id.image_recycler_view);
         mRecyclerView.setHasFixedSize(true);
-
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(manager);
 
-        if (mCurrentUser != null)
-            mAdapter = new GalleryRecyclerViewAdapter(mCurrentUser.getGallery(), this);
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            friend = (User) bundle.getSerializable("friend");
+            mAdapter = new GalleryRecyclerViewAdapter(friend.getGallery(), this);
+            fab.setVisibility(View.INVISIBLE);
+            isFriendGallery = true;
+        } else {
+            if (mCurrentUser != null) {
+                mAdapter = new GalleryRecyclerViewAdapter(mCurrentUser.getGallery(), this);
+            }
+        }
 
         mRecyclerView.setAdapter(mAdapter);
 
@@ -83,14 +92,20 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
 
     @Override
     public void onGalleryImageLongClick(int position, boolean isLongClick) {
-        if (isLongClick) {
-            showAlert(position);
+        if (isFriendGallery) {
+            isLongClick = false;
+            ((HomeActivity) getActivity())
+                    .replaceFragment(FullScreenImageFragment.newInstance(position, friend));
         } else {
-            FullScreenImageFragment fragment = new FullScreenImageFragment();
-            Bundle bundle = new Bundle(1);
-            bundle.putInt("image", position);
-            fragment.setArguments(bundle);
-            ((HomeActivity) getActivity()).replaceFragment(fragment);
+            if (isLongClick) {
+                showAlert(position);
+            } else {
+                FullScreenImageFragment fragment = new FullScreenImageFragment();
+                Bundle bundle = new Bundle(1);
+                bundle.putInt("image", position);
+                fragment.setArguments(bundle);
+                ((HomeActivity) getActivity()).replaceFragment(fragment);
+            }
         }
     }
 

@@ -18,12 +18,9 @@ import com.ink_steel.inksteel.model.User;
 
 import java.util.ArrayList;
 
-public class FriendsFragment extends Fragment implements FriendClickListener,
-        DatabaseManager.FriendsListener {
-    public static ArrayList<User> mFriends;
-    private FriendAdapter mAdapter;
-    private DatabaseManager mManager;
-    private User mCurrentUser;
+public class FriendsFragment extends Fragment implements FriendClickListener {
+
+    private ArrayList<User> mFriends;
 
     public FriendsFragment() {
     }
@@ -36,13 +33,11 @@ public class FriendsFragment extends Fragment implements FriendClickListener,
 
         RecyclerView recyclerView = view.findViewById(R.id.friend_rv);
 
-        mManager = DatabaseManager.getInstance();
-        mCurrentUser = mManager.getCurrentUser();
+        DatabaseManager mManager = DatabaseManager.getInstance();
+
         mFriends = mManager.getUserFriends();
-        mAdapter = new FriendAdapter(getActivity(), mFriends, this);
 
-        onFriendsLoaded();
-
+        FriendAdapter mAdapter = new FriendAdapter(getActivity(), mFriends, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -55,15 +50,10 @@ public class FriendsFragment extends Fragment implements FriendClickListener,
     @Override
     public void onFriendClick(int position) {
         ProfileFragment fragment = new ProfileFragment();
+        User friend = mFriends.get(position);
         Bundle bundle = new Bundle(1);
-        bundle.putInt("position", position);
+        bundle.putSerializable("friend", friend);
         fragment.setArguments(bundle);
         ((HomeActivity) getActivity()).replaceFragment(fragment);
-    }
-
-    @Override
-    public void onFriendsLoaded() {
-//        mFriends.clear();
-//        mManager.loadFriends(this);
     }
 }
