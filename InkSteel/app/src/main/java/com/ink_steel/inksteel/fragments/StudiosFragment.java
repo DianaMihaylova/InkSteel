@@ -1,30 +1,31 @@
 package com.ink_steel.inksteel.fragments;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.adapters.StudiosAdapter;
 import com.ink_steel.inksteel.data.DatabaseManager;
-import com.ink_steel.inksteel.helpers.Listeners.StudioClickListener;
 import com.ink_steel.inksteel.helpers.Listeners.OnReplaceFragment;
+import com.ink_steel.inksteel.helpers.Listeners.StudioClickListener;
 import com.ink_steel.inksteel.helpers.StudiosQueryTask;
 import com.ink_steel.inksteel.model.Studio;
 import com.ink_steel.inksteel.model.User;
@@ -102,14 +103,29 @@ public class StudiosFragment extends Fragment implements StudiosQueryTask.Studio
         mListener.replaceFragment(StudioInfoFragment.newInstance(mStudios.get(position).getPlaceId()));
     }
 
+    Location location;
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        try {
+            FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(getActivity());
 
-        @SuppressLint("MissingPermission")
-        Location location = LocationServices.FusedLocationApi.getLastLocation(mClient);
-        if (location != null) {
-            StudiosQueryTask task = new StudiosQueryTask(this, location);
-            task.execute();
+            client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task1) {
+                    location = task1.getResult();
+                    if (location == null) {
+                        location = new Location("");
+                        location.setLatitude(42.698334);
+                        location.setLongitude(23.319941);
+                    }
+
+                    StudiosQueryTask task = new StudiosQueryTask(StudiosFragment.this,
+                            location);
+                    task.execute();
+                }
+            });
+        } catch (SecurityException e) {
+            Log.d("omg", "omg");
         }
     }
 
