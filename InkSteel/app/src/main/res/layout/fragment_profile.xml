@@ -86,7 +86,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:background="@drawable/btn_custom"
             android:fontFamily="casual"
             android:text="Gallery"
@@ -98,10 +98,23 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:background="@drawable/btn_custom"
             android:fontFamily="casual"
             android:text="Friends"
+            android:textStyle="bold"/>
+
+        <ImageButton
+            android:id="@+id/btn_logout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_custom"
+            android:fontFamily="casual"
+            android:src="@android:drawable/ic_lock_power_off"
+            android:text="Log out"
             android:textStyle="bold"/>
 
     </LinearLayout>
