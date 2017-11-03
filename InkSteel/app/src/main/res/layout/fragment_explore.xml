@@ -23,11 +23,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:layout_marginBottom="30dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="30dp"
-        android:text="@string/click_the_skull_to_explore_again"
-        android:textColor="@color/colorAccent"/>
+        android:fontFamily="serif"
+        android:text="Click to explore again ->"
+        android:textColor="@color/colorAccent"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"/>
 
     <Button
         android:id="@+id/btn_again"

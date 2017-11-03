@@ -22,6 +22,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.ink_steel.inksteel.adapters.ExploreAdapter;
 import com.ink_steel.inksteel.adapters.GalleryRecyclerViewAdapter;
 import com.ink_steel.inksteel.model.ChatRoom;
 import com.ink_steel.inksteel.model.Message;
@@ -48,8 +49,8 @@ public class DatabaseManager {
     private User mCurrentUser;
     //    -- Users --
     private HashMap<String, User> mUsers;
-    private ArrayList<User> exploreUsers;
-    private ArrayList<User> mFriends;
+    private HashMap<String, User> exploreUsers;
+    private HashMap<String, User> mFriends;
     private String thumbnailDownloadUrl;
     private String imageDownloadUrl;
     //    -- Post --
@@ -63,7 +64,7 @@ public class DatabaseManager {
     private ListenerRegistration mPostsListenerRegistration;
 
     private boolean isInitialLoad = true;
-    private Map<String, ChatRoom> mRooms;
+    private Map<String, ChatRoom> mRooms = new HashMap<>();
     private ArrayList<Message> messages;
     private boolean isFirstTimeLoadMessage = true;
     private int a = 0;
@@ -92,13 +93,31 @@ public class DatabaseManager {
         }
     }
 
-    private void loadUserInfo(final UserManagerListener listener, final String email) {
+    private void loadUserInfo2(final UserManagerListener listener, final String email) {
         final DocumentReference userReference = mFirestore.collection("users").document(email);
         userReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot snapshot = task.getResult();
+                    if (snapshot.exists()) {
+                        mCurrentUser = snapshot.toObject(User.class);
+                    } else {
+                        mCurrentUser = new User(email, "", "", "", "");
+                        userReference.set(mCurrentUser);
+                    }
+                    listener.onUserInfoLoaded();
+                }
+            }
+        });
+    }
+
+    private void loadUserInfo(final UserManagerListener listener, final String email) {
+        final DocumentReference userReference = mFirestore.collection("users").document(email);
+        userReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(DocumentSnapshot snapshot, FirebaseFirestoreException e) {
+                if (snapshot.exists()) {
                     if (snapshot.exists()) {
                         mCurrentUser = snapshot.toObject(User.class);
                     } else {
@@ -216,8 +235,11 @@ public class DatabaseManager {
 
 //    ------------------------------------ Explore ------------------------------------
 
-    public void loadUsers(final UsersListener listener) {
+    private void loadUsers() {
+        loadUsers(null);
+    }
 
+    private void loadUsers(final UsersListener listener) {
         if (mUsers == null) {
             mUsers = new HashMap<>();
         }
@@ -232,33 +254,31 @@ public class DatabaseManager {
                                     mUsers.put(user.getEmail(), user);
                                 }
                             }
-                            listener.onUsersLoaded();
+                            if (listener != null)
+                                getExploreUsers(listener);
                         }
                     }
                 });
     }
 
-    public ArrayList<User> getUsers() {
-        return new ArrayList<>(mUsers.values());
+    public void loadExplore(UsersListener listener) {
+        if (mUsers == null) {
+            loadUsers(listener);
+        } else {
+            getExploreUsers(listener);
+        }
     }
 
-    public ArrayList<User> loadExplore(UsersListener listener) {
-//        loadUsers();
-        if (exploreUsers == null) {
-            exploreUsers = new ArrayList<>();
-            for (String email : mCurrentUser.getFriends()) {
-                if (!(mUsers.equals(email))) {
-                    exploreUsers.add(mUsers.get(email));
-                }
-            }
-            for (String email : mCurrentUser.getLiked()) {
-                if (!(mUsers.equals(email))) {
-                    exploreUsers.add(mUsers.get(email));
-                }
-            }
-            listener.onUsersLoaded();
-        }
-        return exploreUsers;
+    private void getExploreUsers(UsersListener listener) {
+        exploreUsers = new HashMap<>(mUsers);
+        exploreUsers.keySet().remove(mCurrentUser.getEmail());
+        exploreUsers.keySet().removeAll(mCurrentUser.getFriends());
+        exploreUsers.keySet().removeAll(mCurrentUser.getLiked());
+        listener.onUsersLoaded();
+    }
+
+    public ArrayList<User> getExploreUsers() {
+        return new ArrayList<>(exploreUsers.values());
     }
 
     public void addLike(String email) {
@@ -278,20 +298,24 @@ public class DatabaseManager {
         mFirestore.collection("users")
                 .document(email)
                 .update("friends", user.getFriends());
-
     }
 
-    public ArrayList<User> getUserFriends() {
-//        loadUsers();
-        if (mFriends == null) {
-            mFriends = new ArrayList<>();
-            for (String email : mCurrentUser.getFriends()) {
+    public void loadFriends(UsersListener listener) {
+        if (mUsers == null) {
+            loadUsers();
+        }
+        mFriends = new HashMap<>();
+        for (String email : mCurrentUser.getFriends()) {
                 if (mUsers.containsKey(email)) {
-                    mFriends.add(mUsers.get(email));
+                    User u = mUsers.get(email);
+                    mFriends.put(u.getEmail(), u);
                 }
             }
-        }
-        return mFriends;
+        listener.onUsersLoaded();
+    }
+
+    public ArrayList<User> getFriends() {
+        return new ArrayList<>(mFriends.values());
     }
 
 //    ------------------------------------ Posts ------------------------------------

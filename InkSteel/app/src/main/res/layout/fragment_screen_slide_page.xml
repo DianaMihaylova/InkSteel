@@ -14,6 +14,7 @@
         android:background="#000"
         android:textAlignment="center"
         app:tabMode="scrollable"
+        app:tabTextAppearance="@style/TabLayoutTextStyle"
         app:tabSelectedTextColor="@color/colorAccent"
         app:tabTextColor="@color/colorAccent"/>
 

@@ -13,14 +13,13 @@ public class User implements Serializable {
     private ArrayList<String> gallery;
     private ArrayList<String> friends;
     private ArrayList<String> liked;
-    private ArrayList<String> chatRoomsEmails;
 
     public User() {
     }
 
     public User(String email, String name, String age, String city, String profileImage,
                 ArrayList<String> gallery, ArrayList<String> friends,
-                ArrayList<String> liked, ArrayList<String> chatRoomsEmails) {
+                ArrayList<String> liked) {
         this.email = email;
         this.name = name;
         this.age = age;
@@ -29,13 +28,11 @@ public class User implements Serializable {
         this.gallery = gallery;
         this.friends = friends;
         this.liked = liked;
-        this.chatRoomsEmails = chatRoomsEmails;
     }
 
     public User(String email, String name, String age, String city, String profileImage) {
         this(email, name, age, city, profileImage,
-                new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(),
-                new ArrayList<String>());
+                new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>());
     }
 
     public void updateUserInfo(String name, String age, String city) {
@@ -78,10 +75,6 @@ public class User implements Serializable {
 
     public ArrayList<String> getLiked() {
         return liked;
-    }
-
-    public ArrayList<String> getChatRooms() {
-        return chatRoomsEmails;
     }
 
     @Override

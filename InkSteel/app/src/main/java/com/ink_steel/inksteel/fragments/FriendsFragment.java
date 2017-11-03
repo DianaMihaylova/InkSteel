@@ -18,9 +18,10 @@ import com.ink_steel.inksteel.model.User;
 
 import java.util.ArrayList;
 
-public class FriendsFragment extends Fragment implements FriendClickListener {
+public class FriendsFragment extends Fragment implements FriendClickListener, DatabaseManager.UsersListener {
 
     private ArrayList<User> mFriends;
+    private DatabaseManager mManager;
 
     public FriendsFragment() {
     }
@@ -33,9 +34,9 @@ public class FriendsFragment extends Fragment implements FriendClickListener {
 
         RecyclerView recyclerView = view.findViewById(R.id.friend_rv);
 
-        DatabaseManager mManager = DatabaseManager.getInstance();
-
-        mFriends = mManager.getUserFriends();
+        mManager = DatabaseManager.getInstance();
+        mFriends = new ArrayList<>();
+        mManager.loadFriends(this);
 
         FriendAdapter mAdapter = new FriendAdapter(getActivity(), mFriends, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -55,5 +56,11 @@ public class FriendsFragment extends Fragment implements FriendClickListener {
         bundle.putSerializable("friend", friend);
         fragment.setArguments(bundle);
         ((HomeActivity) getActivity()).replaceFragment(fragment);
+    }
+
+    @Override
+    public void onUsersLoaded() {
+        mFriends.clear();
+        mFriends = mManager.getFriends();
     }
 }

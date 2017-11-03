@@ -51,13 +51,14 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
+        View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
         mImageView = view.findViewById(R.id.asdfg);
         mTextView = view.findViewById(R.id.qwerty);
         msgbtn = view.findViewById(R.id.chat_send_btn);
         final EditText messageEt = view.findViewById(R.id.chat_message_et);
+
         String userEmail = getArguments().getString("userEmail");
         mManager = DatabaseManager.getInstance();
         mChatRoom = mManager.getChatRoomByOtherUser(this, userEmail);

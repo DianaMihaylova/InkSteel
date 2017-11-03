@@ -6,13 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    card_view:cardBackgroundColor="@color/cardview_light_background"
+    card_view:cardBackgroundColor="@color/place_autocomplete_search_text"
     card_view:cardCornerRadius="16dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/cardview_dark_background">
+        android:background="@color/place_autocomplete_search_text">
 
         <TextView
             android:id="@+id/user_city"
@@ -80,7 +80,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/btn_custom"
-            android:fontFamily="cursive"
+            android:fontFamily="serif"
             android:text="@string/send_a_message"
             android:textSize="16sp"
             android:textStyle="bold"
