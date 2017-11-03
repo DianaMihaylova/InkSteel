@@ -67,7 +67,6 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
     private void extractStudiosFromJSON(String jsonBody) throws IOException {
         try {
             JSONObject jsonObject = new JSONObject(jsonBody);
-//            ArrayList<Studio> studios = new ArrayList<>();
             JSONArray results;
             Studio studio;
 
@@ -77,9 +76,7 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
 
             for (int i = 0; i < results.length(); i++) {
                 studio = getStudioFromJSONObject(results.getJSONObject(i));
-                if (studio != null) {
-                    publishProgress(studio);
-                }
+                publishProgress(studio);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -88,13 +85,10 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
     }
 
     private Studio getStudioFromJSONObject(JSONObject object) throws JSONException, IOException {
-        String address, place_id, name, photo;
+        String place_id, name, photoReference, imageUrl = null;
         float rating;
         JSONArray photos;
 
-        if (object.has("formatted_address"))
-            address = object.getString("formatted_address");
-        else address = "Address";
         if (object.has("name"))
             name = object.getString("name");
         else name = "Name";
@@ -107,24 +101,20 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
 
         if (object.has("photos")) {
             photos = object.getJSONArray("photos");
-
             JSONObject photoObject = photos.getJSONObject(0);
             if (photoObject.has("photo_reference")) {
-                photo = photoObject.getString("photo_reference");
-                photo = getPhotoUrl(photo);
-            } else photo = "";
-        } else photo = "";
+                photoReference = photoObject.getString("photo_reference");
+                imageUrl = getPhotoUrl(photoReference);
+            }
+        }
 
-        if (photo.isEmpty())
-            return null;
-        return new Studio(name, rating, address, place_id, photo);
+        return new Studio(name, rating, place_id, imageUrl);
     }
 
     private String getPhotoUrl(String photo) throws IOException {
         String url = PHOTO_BASE_URL + photo + API_KEY;
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
-
         Response response = client.newCall(request).execute();
         return response.request().httpUrl().toString();
     }

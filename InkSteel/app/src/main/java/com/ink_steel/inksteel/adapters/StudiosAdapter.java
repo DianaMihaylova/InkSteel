@@ -65,7 +65,7 @@ public class StudiosAdapter extends RecyclerView.Adapter<StudiosAdapter.PostsVie
 
         void bind(Studio studio) {
 
-            Picasso.with(itemView.getContext()).load(studio.getPhotoReference()).into(image);
+            Picasso.with(itemView.getContext()).load(studio.getImageUrl()).into(image);
             title.setText(studio.getName());
             rating.setRating(studio.getRating());
         }

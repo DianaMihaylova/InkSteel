@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/studio_name"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/studio_image"/>
+
+    <TextView
+        android:id="@+id/studio_info_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="24dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/studio_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/studio_name"
+        app:layout_constraintTop_toTopOf="@+id/studio_name"/>
+
+    <TextView
+        android:id="@+id/studio_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Address"
+        app:layout_constraintEnd_toEndOf="@+id/studio_name"
+        app:layout_constraintStart_toStartOf="@+id/studio_name"
+        app:layout_constraintTop_toBottomOf="@+id/studio_name"/>
+
+    <TextView
+        android:id="@+id/studio_info_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/studio_address"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/studio_address"
+        app:layout_constraintTop_toTopOf="@+id/studio_address"/>
+
+    <TextView
+        android:id="@+id/studio_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/studio_address"
+        app:layout_constraintStart_toStartOf="@+id/studio_address"
+        app:layout_constraintTop_toBottomOf="@+id/studio_address"/>
+
+    <TextView
+        android:id="@+id/studio_info_phone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/studio_phone"
+        app:layout_constraintStart_toEndOf="@+id/studio_phone"
+        app:layout_constraintTop_toTopOf="@+id/studio_phone"/>
+
+    <TextView
+        android:id="@+id/studio_info_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/studio_info_website"
+        app:layout_constraintTop_toTopOf="@+id/studio_info_website"/>
+
+    <TextView
+        android:id="@+id/studio_info_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/studio_info_rating"
+        app:layout_constraintTop_toTopOf="@+id/studio_info_rating"/>
+
+    <TextView
+        android:id="@+id/studio_info_website"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="TextView"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintStart_toStartOf="@+id/studio_phone"
+        app:layout_constraintTop_toBottomOf="@+id/studio_phone"/>
+
+</android.support.constraint.ConstraintLayout>

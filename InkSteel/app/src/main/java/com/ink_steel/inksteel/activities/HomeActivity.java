@@ -8,9 +8,9 @@ import android.os.Bundle;
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.fragments.ScreenSlidePageFragment;
 import com.ink_steel.inksteel.fragments.UserInfoFragment;
-import com.ink_steel.inksteel.helpers.Listeners.OnReplaceFragment;
+import com.ink_steel.inksteel.helpers.Listeners.OnReplaceFragmentListener;
 
-public class HomeActivity extends Activity implements OnReplaceFragment {
+public class HomeActivity extends Activity implements OnReplaceFragmentListener {
 
     private FragmentManager mManager;
 

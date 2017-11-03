@@ -10,7 +10,7 @@ public class Listeners {
         void onButtonClick(LoginActivity.ButtonType buttonType, String email, String password);
     }
 
-    public interface OnReplaceFragment {
+    public interface OnReplaceFragmentListener {
         void replaceFragment(Fragment fragment);
     }
 

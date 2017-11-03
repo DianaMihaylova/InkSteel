@@ -1,10 +1,14 @@
 package com.ink_steel.inksteel.data;
 
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.PlaceBufferResponse;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -23,10 +27,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ink_steel.inksteel.adapters.GalleryRecyclerViewAdapter;
+import com.ink_steel.inksteel.fragments.StudioInfoFragment;
+import com.ink_steel.inksteel.helpers.StudiosQueryTask;
 import com.ink_steel.inksteel.model.ChatRoom;
 import com.ink_steel.inksteel.model.Message;
 import com.ink_steel.inksteel.model.Post;
 import com.ink_steel.inksteel.model.Reaction;
+import com.ink_steel.inksteel.model.Studio;
 import com.ink_steel.inksteel.model.User;
 
 import java.io.ByteArrayOutputStream;
@@ -39,7 +46,8 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
 
-public class DatabaseManager {
+public class DatabaseManager implements StudiosQueryTask.StudiosListener {
+
 
     public interface UserManagerListener {
         // already signed in or just signing in
@@ -665,6 +673,68 @@ public class DatabaseManager {
 
     public interface ChatRoomCreatedListener {
         void onChatRoomCreated(ChatRoom chatRoom);
+    }
+
+//    Studios
+
+    private HashMap<String, Studio> mStudios;
+    private StudiosQueryTask.StudiosListener mListener;
+    private Studio currentStudio;
+
+    public Studio getStudioById(String id) {
+        return mStudios.get(id);
+    }
+
+    public void getNearbyStudios(StudiosQueryTask.StudiosListener listener, Location location) {
+        if (mStudios == null)
+            mStudios = new HashMap<>();
+        mListener = listener;
+        StudiosQueryTask task = new StudiosQueryTask(this, location);
+        task.execute();
+    }
+
+    public void getStudioInfoById(final String studioId, GeoDataClient client, final StudioListener listener) {
+        final Studio studio = mStudios.get(studioId);
+        if (studio.getGooglePlace() != null) {
+            listener.onStudioInfoLoaded(studio);
+        } else {
+            client.getPlaceById(studioId)
+                    .addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
+                        @Override
+                        public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
+                            if (task.isSuccessful()) {
+                                studio.setGooglePlace(task.getResult().get(0));
+                                if (listener != null)
+                                    listener.onStudioInfoLoaded(studio);
+                            }
+                        }
+                    });
+        }
+    }
+
+    public void getStudioInfoById(final String studioId, GeoDataClient client) {
+        getStudioInfoById(studioId, client, null);
+    }
+
+    public void setCurrentStudio(Studio currentStudio) {
+        this.currentStudio = currentStudio;
+    }
+
+    @Override
+    public void onStudioLoaded(Studio studio) {
+        Log.d("studio", "in onStudioLoaded " + studio.getPlaceId());
+        mStudios.put(studio.getPlaceId(), studio);
+        if (mListener != null)
+            mListener.onStudioLoaded(studio);
+    }
+
+
+    public Studio getCurrentStudio() {
+        return currentStudio;
+    }
+
+    public interface StudioListener {
+        void onStudioInfoLoaded(Studio studio);
     }
 
 }
