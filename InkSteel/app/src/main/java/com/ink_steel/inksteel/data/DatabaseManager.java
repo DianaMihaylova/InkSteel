@@ -42,8 +42,9 @@ import java.util.UUID;
 
 public class DatabaseManager {
 
-    private static final String DEFAULT_PROFILE_PICTURE = "https://firebasestorage.googleapis.com/v0" +
-            "/b/inksteel-7911e.appspot.com/o/default.jpg?alt=media&token=2a0f4edc-81e5-40a2-9558-015e18b8b1ff";
+    private static final String DEFAULT_PROFILE_PICTURE = "https://firebasestorage.googleapis.com/" +
+            "v0/b/inksteel-7911e.appspot.com/o/default.jpg?alt=media&token=2a0f4edc-81e5-" +
+            "-9558-015e18b8b1ff";
     private static DatabaseManager mDatabaseManager;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
@@ -151,12 +152,7 @@ public class DatabaseManager {
     }
 
     public void updateUserInfo(final UserInfoListener listener, Bitmap bitmap) {
-        if (bitmap == null) {
-            mCurrentUser.setProfileImage(DEFAULT_PROFILE_PICTURE);
-            updateUserInfo(listener);
-        } else {
-            uploadImage(listener, bitmap);
-        }
+        uploadImage(listener, bitmap);
     }
 
     private void uploadImage(final UserInfoListener listener, Bitmap bitmap) {
@@ -176,6 +172,10 @@ public class DatabaseManager {
     }
 
     public void updateUserInfo(final UserInfoListener listener) {
+        String defaultProfileImage = mCurrentUser.getProfileImage();
+        if (defaultProfileImage == null || defaultProfileImage.isEmpty()) {
+            mCurrentUser.setProfileImage(DEFAULT_PROFILE_PICTURE);
+        }
         mFirestore.collection("users").document(mCurrentUser.getEmail())
                 .update("name", mCurrentUser.getName(),
                         "age", mCurrentUser.getAge(),
