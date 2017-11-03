@@ -42,6 +42,8 @@ import java.util.UUID;
 
 public class DatabaseManager {
 
+    private static final String DEFAULT_PROFILE_PICTURE = "https://firebasestorage.googleapis.com/v0" +
+            "/b/inksteel-7911e.appspot.com/o/default.jpg?alt=media&token=2a0f4edc-81e5-40a2-9558-015e18b8b1ff";
     private static DatabaseManager mDatabaseManager;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
@@ -93,31 +95,13 @@ public class DatabaseManager {
         }
     }
 
-    private void loadUserInfo2(final UserManagerListener listener, final String email) {
+    private void loadUserInfo(final UserManagerListener listener, final String email) {
         final DocumentReference userReference = mFirestore.collection("users").document(email);
         userReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot snapshot = task.getResult();
-                    if (snapshot.exists()) {
-                        mCurrentUser = snapshot.toObject(User.class);
-                    } else {
-                        mCurrentUser = new User(email, "", "", "", "");
-                        userReference.set(mCurrentUser);
-                    }
-                    listener.onUserInfoLoaded();
-                }
-            }
-        });
-    }
-
-    private void loadUserInfo(final UserManagerListener listener, final String email) {
-        final DocumentReference userReference = mFirestore.collection("users").document(email);
-        userReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(DocumentSnapshot snapshot, FirebaseFirestoreException e) {
-                if (snapshot.exists()) {
                     if (snapshot.exists()) {
                         mCurrentUser = snapshot.toObject(User.class);
                     } else {
@@ -166,8 +150,13 @@ public class DatabaseManager {
         }
     }
 
-    public void updateUserInfo(UserInfoListener listener, Bitmap bitmap) {
-        uploadImage(listener, bitmap);
+    public void updateUserInfo(final UserInfoListener listener, Bitmap bitmap) {
+        if (bitmap == null) {
+            mCurrentUser.setProfileImage(DEFAULT_PROFILE_PICTURE);
+            updateUserInfo(listener);
+        } else {
+            uploadImage(listener, bitmap);
+        }
     }
 
     private void uploadImage(final UserInfoListener listener, Bitmap bitmap) {
