@@ -1,34 +1,32 @@
 package com.ink_steel.inksteel.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.firebase.firestore.Exclude;
 
-public class ChatRoom {
-    private String email1;
-    private String userName1;
-    private String profilePicture1;
-    private String email2;
-    private String userName2;
-    private String profilePicture2;
+public class ChatRoom implements Comparable<ChatRoom> {
+    private String email;
+    private String userName;
+    private String profilePicture;
     private String lastMessage;
     private long lastMessageTime;
+    private String lastMessageSender;
     private String chatId;
     private boolean seen;
 
     public ChatRoom() {
     }
 
-    public ChatRoom(String chatId, String email1, String profilePicture1, String userName1,
-                    String email2, String profilePicture2, String userName2,
-                    String lastMessage, long lastMessageTime, boolean seen) {
-        this.email1 = email1;
-        this.profilePicture1 = profilePicture1;
-        this.userName1 = userName1;
-        this.email2 = email2;
-        this.profilePicture2 = profilePicture2;
-        this.userName2 = userName2;
+    public ChatRoom(String chatId, String email, String profilePicture, String userName,
+                    String lastMessage, long lastMessageTime, String lastMessageSender,
+                    boolean seen) {
+        this.chatId = chatId;
+        this.email = email;
+        this.profilePicture = profilePicture;
+        this.userName = userName;
         this.lastMessage = lastMessage;
         this.lastMessageTime = lastMessageTime;
-        this.chatId = chatId;
+        this.lastMessageSender = lastMessageSender;
         this.seen = seen;
     }
 
@@ -40,20 +38,12 @@ public class ChatRoom {
         return chatId;
     }
 
-    public String getEmail1() {
-        return email1;
+    public String getEmail() {
+        return email;
     }
 
-    public String getProfilePicture1() {
-        return profilePicture1;
-    }
-
-    public String getEmail2() {
-        return email2;
-    }
-
-    public String getProfilePicture2() {
-        return profilePicture2;
+    public String getProfilePicture() {
+        return profilePicture;
     }
 
     public String getLastMessage() {
@@ -64,43 +54,23 @@ public class ChatRoom {
         return lastMessageTime;
     }
 
-    public String getUserName1() {
-        return userName1;
+    public String getUserName() {
+        return userName;
     }
 
-    public String getUserName2() {
-        return userName2;
-    }
-
-    @Exclude
-    public String getOtherUser(String query) {
-        switch (query) {
-            case "email1":
-                return email2;
-            case "email2":
-                return email1;
-        }
-        return null;
+    public String getLastMessageSender() {
+        return lastMessageSender;
     }
 
     @Exclude
-    public String getOtherProfilePicture(String email) {
-        if (email.equals(email1))
-            return profilePicture2;
-        else return profilePicture1;
-    }
-
-    @Exclude
-    public String getOtherUserName(String email) {
-        if (email.equals(email1))
-            return userName2;
-        return userName1;
-    }
-
-    @Exclude
-    public String getOtherUserEmail(String email) {
-        if (email.equals(email1))
-            return email2;
-        return email1;
+    @Override
+    public int compareTo(@NonNull ChatRoom chatRoom) {
+        if (chatId.equals(chatRoom.chatId))
+            return 0;
+        if (!seen && !chatRoom.seen) {
+            return (int) (lastMessageTime - chatRoom.lastMessageTime);
+        } else if (!seen)
+            return 1;
+        return (int) (lastMessageTime - chatRoom.lastMessageTime);
     }
 }

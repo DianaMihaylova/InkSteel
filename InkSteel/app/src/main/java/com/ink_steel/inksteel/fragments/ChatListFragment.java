@@ -17,12 +17,10 @@ import com.ink_steel.inksteel.adapters.ChatListAdapter;
 import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.helpers.Listeners;
 import com.ink_steel.inksteel.model.ChatRoom;
-import com.ink_steel.inksteel.model.User;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
-
-public class ChatListFragment extends Fragment implements Listeners.ChatListClickListener, DatabaseManager.ChatRoomsLoadedListener {
+public class ChatListFragment extends Fragment implements Listeners.ChatListClickListener, DatabaseManager.UserChatRoomsListener {
 
     private DatabaseManager mManager;
     private ChatListAdapter mAdapter;
@@ -30,7 +28,7 @@ public class ChatListFragment extends Fragment implements Listeners.ChatListClic
     public ChatListFragment() {
     }
 
-    private ArrayList<ChatRoom> mChatRooms;
+    private LinkedList<ChatRoom> mChatRooms;
 
     @Nullable
     @Override
@@ -38,8 +36,9 @@ public class ChatListFragment extends Fragment implements Listeners.ChatListClic
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
+
         mManager = DatabaseManager.getInstance();
-        mManager.loadChatRooms(this);
+        mManager.getUserChatRooms(this);
 
         FloatingActionButton fab = view.findViewById(R.id.chat_list_add);
 
@@ -50,7 +49,7 @@ public class ChatListFragment extends Fragment implements Listeners.ChatListClic
             }
         });
 
-        mChatRooms = new ArrayList<>();
+        mChatRooms = new LinkedList<>();
 
         RecyclerView recyclerView = view.findViewById(R.id.chat_list_rv);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -66,17 +65,27 @@ public class ChatListFragment extends Fragment implements Listeners.ChatListClic
     @Override
     public void onChatItemClick(int position) {
         ((HomeActivity) getActivity()).replaceFragment(ChatFragment
-                .newInstance(mChatRooms.get(position)
-                        .getOtherUserEmail(mManager.getCurrentUser().getEmail())));
+                .newInstance(mChatRooms.get(position).getEmail()));
     }
 
     @Override
     public void onChatRoomsLoaded() {
-        if (mChatRooms == null) {
-            mChatRooms = new ArrayList<>();
-        }
         mChatRooms.clear();
-        mChatRooms.addAll(mManager.getChatRooms());
+        mChatRooms.addAll(mManager.getUserChatRooms());
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onChatRoomChanged(ChatRoom a) {
+        mChatRooms.clear();
+        mChatRooms.addAll(mManager.getUserChatRooms());
+
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStop() {
+        mManager.unregisterChatRoomsListener();
+        super.onStop();
     }
 }

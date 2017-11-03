@@ -21,9 +21,10 @@ import com.ink_steel.inksteel.model.Message;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCreatedListener,
-        DatabaseManager.OnMessagesLoadedListener {
+        DatabaseManager.OnMessagesLoadedListener, DatabaseManager.ChatListener {
 
     private ImageView mImageView;
     private TextView mTextView;
@@ -32,17 +33,15 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
     private MessageAdapter adapter;
     private RecyclerView recyclerView;
     private ImageButton msgbtn;
-
+    private ChatRoom mChatRoom;
 
     public ChatFragment() {
     }
 
-    private ChatRoom mChatRoom;
-
-    public static ChatFragment newInstance(String userEmail) {
+    public static ChatFragment newInstance(String email) {
         ChatFragment chatFragment = new ChatFragment();
         Bundle bundle = new Bundle(1);
-        bundle.putString("userEmail", userEmail);
+        bundle.putString("email", email);
         chatFragment.setArguments(bundle);
         return chatFragment;
     }
@@ -59,12 +58,14 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
         msgbtn = view.findViewById(R.id.chat_send_btn);
         final EditText messageEt = view.findViewById(R.id.chat_message_et);
 
-        String userEmail = getArguments().getString("userEmail");
+        String email = getArguments().getString("email");
         mManager = DatabaseManager.getInstance();
-        mChatRoom = mManager.getChatRoomByOtherUser(this, userEmail);
-        if (mChatRoom != null) {
+        mChatRoom = mManager.isChatRoomCreated(email);
+        if (mChatRoom == null)
+            mManager.createChatRoom(email, this);
+        else {
             displayChatRoom();
-            mManager.loadChatMessages(mChatRoom.getChatId(), this);
+            loadChatRoomMessages();
         }
 
         msgbtn.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +73,9 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
             public void onClick(View view) {
                 String msg = messageEt.getText().toString();
                 if (!msg.isEmpty()) {
-                    mManager.saveMessageToDatabase(msg, mChatRoom.getChatId());
+                    Message message = new Message(mManager.getCurrentUser().getName(), msg,
+                            new Date().getTime());
+                    mManager.addMessage(message, mChatRoom);
                     messageEt.setText("");
                 }
             }
@@ -85,30 +88,26 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
         return view;
     }
 
     private void displayChatRoom() {
-        String email = mManager.getCurrentUser().getEmail();
         Picasso.with(getActivity())
-                .load(mChatRoom.getOtherProfilePicture(email)).into(mImageView);
-        mTextView.setText(mChatRoom.getOtherUserName(email));
+                .load(mChatRoom.getProfilePicture())
+                .into(mImageView);
+        mTextView.setText(mChatRoom.getEmail());
     }
 
     @Override
     public void onChatRoomCreated(ChatRoom chatRoom) {
         mChatRoom = chatRoom;
-        if (mChatRoom != null) {
-            mManager.loadChatMessages(mChatRoom.getChatId(), this);
-            displayChatRoom();
-        }
+        displayChatRoom();
+        loadChatRoomMessages();
     }
 
     @Override
     public void onMessagesLoaded() {
-        messages.clear();
-        messages.addAll(mManager.getMessages());
+        messages.addAll(mManager.getChatMessages());
         recyclerView.scrollToPosition(messages.size() - 1);
         adapter.notifyDataSetChanged();
     }
@@ -122,7 +121,11 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
 
     @Override
     public void onStop() {
-        mManager.removeChatMsg();
+        mManager.unregisterChatListener();
         super.onStop();
+    }
+
+    public void loadChatRoomMessages() {
+        mManager.getChatMessagesById(mChatRoom.getChatId(), this);
     }
 }

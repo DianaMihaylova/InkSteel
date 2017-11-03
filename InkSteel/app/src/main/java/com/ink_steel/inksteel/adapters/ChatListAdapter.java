@@ -70,18 +70,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.PostsV
         }
 
         void bind(ChatRoom chatRoom) {
-            String username, userPicture;
-            if (email.equals(chatRoom.getEmail1())) {
-                username = chatRoom.getUserName2();
-                userPicture = chatRoom.getProfilePicture2();
-            } else {
-                username = chatRoom.getUserName1();
-                userPicture = chatRoom.getProfilePicture1();
-            }
 
-            userName.setText(username);
+            userName.setText(chatRoom.getEmail());
             Picasso.with(itemView.getContext())
-                    .load(userPicture).into(image);
+                    .load(chatRoom.getProfilePicture()).into(image);
             lastMsg.setText(chatRoom.getLastMessage());
             SimpleDateFormat format = new SimpleDateFormat("hh:mm, dd MMM",
                     Locale.getDefault());

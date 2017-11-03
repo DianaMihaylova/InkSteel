@@ -18,8 +18,7 @@ public class User implements Serializable {
     }
 
     public User(String email, String name, String age, String city, String profileImage,
-                ArrayList<String> gallery, ArrayList<String> friends,
-                ArrayList<String> liked) {
+                ArrayList<String> gallery, ArrayList<String> friends, ArrayList<String> liked) {
         this.email = email;
         this.name = name;
         this.age = age;

@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.PlaceBufferResponse;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -27,9 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.ink_steel.inksteel.adapters.ExploreAdapter;
 import com.ink_steel.inksteel.adapters.GalleryRecyclerViewAdapter;
-import com.ink_steel.inksteel.fragments.StudioInfoFragment;
 import com.ink_steel.inksteel.helpers.StudiosQueryTask;
 import com.ink_steel.inksteel.model.ChatRoom;
 import com.ink_steel.inksteel.model.Message;
@@ -40,17 +37,14 @@ import com.ink_steel.inksteel.model.User;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DatabaseManager implements StudiosQueryTask.StudiosListener {
-
 
     private static final String DEFAULT_PROFILE_PICTURE = "https://firebasestorage.googleapis.com/" +
             "v0/b/inksteel-7911e.appspot.com/o/default.jpg?alt=media&token=2a0f4edc-81e5-" +
@@ -77,12 +71,13 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     private ListenerRegistration mPostsListenerRegistration;
 
     private Activity mActivity;
-
     private boolean isInitialLoad = true;
-    private Map<String, ChatRoom> mRooms = new HashMap<>();
-    private ArrayList<Message> messages;
-    private boolean isFirstTimeLoadMessage = true;
-    private AtomicInteger a;
+    private ListenerRegistration chatRoomsRegistration;
+    private ListenerRegistration chatRegistration;
+    private TreeSet<ChatRoom> mUserChatRooms;
+    private boolean isChatRoomsInitialLoad;
+    private ArrayList<Message> chatMessages;
+    private boolean isChatMessagesInitialLoad;
 
     public void setActivity(Activity activity) {
         mActivity = activity;
@@ -311,11 +306,11 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         }
         mFriends = new HashMap<>();
         for (String email : mCurrentUser.getFriends()) {
-                if (mUsers.containsKey(email)) {
-                    User u = mUsers.get(email);
-                    mFriends.put(u.getEmail(), u);
-                }
+            if (mUsers.containsKey(email)) {
+                User u = mUsers.get(email);
+                mFriends.put(u.getEmail(), u);
             }
+        }
         listener.onUsersLoaded();
     }
 
@@ -562,118 +557,157 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         postReference.collection("history").document().set(reactionData);
     }
 
-    //    ------------------------------------ Chat ------------------------------------
+//    ------------------------------------ Chat ------------------------------------
 
-    public void saveMessageToDatabase(String msg, String chatId) {
-        Message message = new Message(mCurrentUser.getName(), msg,
+    // create chat room for current user and given user's email
+    public void createChatRoom(String email, ChatRoomCreatedListener listener) {
+        DocumentReference reference = mFirestore.collection("chatRooms").document();
+        Message message = new Message(mCurrentUser.getName(), "Chat room created!",
                 new Date().getTime());
-        mFirestore.collection("chatRooms").document(chatId)
-                .collection("messages").add(message);
-        mFirestore.collection("chatRooms").document(chatId)
-                .update("lastMessage", message.getMessage(),
-                        "lastMessageTime", message.getTime(),
-                        "seen", false);
+        User user = mUsers.get(email);
+        ChatRoom chatRoom1 = new ChatRoom(reference.getId(), email, user.getProfileImage(),
+                user.getName(), message.getMessage(), message.getTime(), message.getUserName(),
+                false);
+        ChatRoom chatRoom2 = new ChatRoom(reference.getId(), mCurrentUser.getEmail(),
+                mCurrentUser.getProfileImage(), mCurrentUser.getName(), message.getMessage(),
+                message.getTime(), message.getUserName(), false);
+        reference.collection("messages").add(message);
+
+        mFirestore.collection("users").document(email).collection("chatRooms")
+                .document(reference.getId()).set(chatRoom2);
+
+        mFirestore.collection("users").document(mCurrentUser.getEmail())
+                .collection("chatRooms").document(reference.getId()).set(chatRoom1);
+
+        listener.onChatRoomCreated(chatRoom1);
     }
 
-    public void loadChatMessages(final String chatRoomId, final OnMessagesLoadedListener listener) {
-        if (messages == null) {
-            messages = new ArrayList<>();
+    public TreeSet<ChatRoom> getUserChatRooms() {
+        return mUserChatRooms;
+    }
+
+    public void getUserChatRooms(final UserChatRoomsListener listener) {
+        if (mUserChatRooms == null) {
+            isChatRoomsInitialLoad = true;
+            mUserChatRooms = new TreeSet<>();
         }
-        mFirestore.collection("chatRooms").document(chatRoomId).collection("messages")
-                .orderBy("time").addSnapshotListener(mActivity, new EventListener<QuerySnapshot>() {
+        chatRoomsRegistration = mFirestore.collection("users")
+                .document(mCurrentUser.getEmail()).collection("chatRooms")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                if (e != null) {
+                if (e != null)
                     return;
+                for (DocumentChange change : documentSnapshots.getDocumentChanges()) {
+                    ChatRoom chatRoom = change.getDocument().toObject(ChatRoom.class);
+                    switch (change.getType()) {
+                        case ADDED:
+                            mUserChatRooms.add(change.getDocument().toObject(ChatRoom.class));
+                            break;
+                        case MODIFIED:
+                            if (mUserChatRooms.contains(chatRoom))
+                                mUserChatRooms.remove(chatRoom);
+                            mUserChatRooms.add(chatRoom);
+                            listener.onChatRoomChanged(chatRoom);
+                            break;
+                    }
                 }
+                if (isChatRoomsInitialLoad) {
+                    listener.onChatRoomsLoaded();
+                    isChatRoomsInitialLoad = false;
+                }
+            }
+                });
+    }
+
+
+    public void getChatMessagesById(String chatId, final ChatListener listener) {
+
+        if (chatMessages == null) {
+            chatMessages = new ArrayList<>();
+            isChatMessagesInitialLoad = true;
+        }
+        chatRegistration = mFirestore.collection("chatRooms").document(chatId)
+                .collection("messages").orderBy("time")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                        if (e != null)
+                            return;
                 for (DocumentChange change : documentSnapshots.getDocumentChanges()) {
                     if (change.getType() == DocumentChange.Type.ADDED) {
                         Message message = change.getDocument().toObject(Message.class);
-                        messages.add(message);
-                        Log.d("message", message.getMessage());
-                        mFirestore.collection("chatRooms")
-                                .document(chatRoomId).update("seen", true);
-                        if (!isFirstTimeLoadMessage) {
+                        chatMessages.add(message);
+                        if (!isChatMessagesInitialLoad) {
                             listener.onMessageAdded(message);
                         }
                     }
                 }
-                if (isFirstTimeLoadMessage) {
+                        if (isChatMessagesInitialLoad) {
                     listener.onMessagesLoaded();
+                            isChatMessagesInitialLoad = false;
                 }
             }
         });
-
     }
 
-    public void removeChatMsg() {
-        messages.clear();
+    public void addMessage(Message message, ChatRoom chatRoom) {
+        mFirestore.collection("chatRooms").document(chatRoom.getChatId())
+                .collection("messages").add(message);
+        mFirestore.collection("users").document(mCurrentUser.getEmail())
+                .collection("chatRooms").document(chatRoom.getChatId())
+                .update("lastMessage", message.getMessage(),
+                        "lastMessageTime", message.getTime(),
+                        "lastMessageSender", mCurrentUser.getEmail(),
+                        "seen", false);
+        mFirestore.collection("users").document(chatRoom.getEmail())
+                .collection("chatRooms").document(chatRoom.getChatId())
+                .update("lastMessage", message.getMessage(),
+                        "lastMessageTime", message.getTime(),
+                        "lastMessageSender", mCurrentUser.getEmail(),
+                        "seen", false);
     }
 
-    public ArrayList<Message> getMessages() {
-        return messages;
-    }
-
-    public void loadChatRooms(final ChatRoomsLoadedListener listener) {
-        if (mRooms == null)
-            mRooms = Collections.synchronizedMap(new HashMap<String, ChatRoom>());
-        a = new AtomicInteger(0);
-        chatRoomsQuery(listener, "email1");
-        chatRoomsQuery(listener, "email2");
-    }
-
-    private void chatRoomsQuery(final ChatRoomsLoadedListener listener, final String query) {
-        mFirestore.collection("chatRooms")
-                .whereEqualTo(query, mCurrentUser.getEmail()).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot snapshot : task.getResult()) {
-                                if (snapshot.exists()) {
-                                    ChatRoom chatRoom = snapshot.toObject(ChatRoom.class);
-                                    mRooms.put(chatRoom.getOtherUser(query), chatRoom);
-                                }
-                            }
-                            if (a.incrementAndGet() == 2) {
-                                listener.onChatRoomsLoaded();
-                            }
-                        }
-                    }
-                });
-    }
-
-    public List<ChatRoom> getChatRooms() {
-        return new ArrayList<>(mRooms.values());
-    }
-
-    public ChatRoom getChatRoomByOtherUser(ChatRoomCreatedListener listener, String email) {
-        if (!mRooms.containsKey(email))
-            createChatRoom(listener, email);
-        return mRooms.get(email);
-    }
-
-    private void createChatRoom(final ChatRoomCreatedListener listener, final String userEmail) {
-        User user = mUsers.get(userEmail);
-        DocumentReference reference = mFirestore.collection("chatRooms").document();
-        String id = reference.getId();
-        Message message = new Message(mCurrentUser.getName(), "Chat room created!",
-                new Date().getTime());
-        final ChatRoom chatRoom = new ChatRoom(id, mCurrentUser.getEmail(),
-                mCurrentUser.getProfileImage(), mCurrentUser.getName(),
-                user.getEmail(), user.getProfileImage(), user.getName(),
-                message.getMessage(), message.getTime(), false);
-        reference.set(chatRoom).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    mRooms.put(userEmail, chatRoom);
-                    listener.onChatRoomCreated(chatRoom);
-                }
+    public ChatRoom isChatRoomCreated(String email) {
+        for (ChatRoom chatRoom : mUserChatRooms) {
+            if (chatRoom.getEmail().equals(email)) {
+                return chatRoom;
             }
-        });
-        reference.collection("messages").add(message);
+        }
+        return null;
     }
+
+    public ArrayList<Message> getChatMessages() {
+        return chatMessages;
+    }
+
+    public void unregisterChatRoomsListener() {
+        if (chatRoomsRegistration != null) {
+            chatRoomsRegistration.remove();
+            isChatRoomsInitialLoad = true;
+        }
+    }
+
+    public void unregisterChatListener() {
+        if (chatRegistration != null) {
+            chatRegistration.remove();
+            isChatMessagesInitialLoad = true;
+            chatMessages.clear();
+        }
+    }
+
+    public interface ChatListener {
+        void onMessageAdded(Message message);
+
+        void onMessagesLoaded();
+    }
+
+    public interface UserChatRoomsListener {
+        void onChatRoomsLoaded();
+
+        void onChatRoomChanged(ChatRoom a);
+    }
+
 
     public interface UserManagerListener {
         // already signed in or just signing in
@@ -693,12 +727,6 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     // all users loaded
     public interface UsersListener {
         void onUsersLoaded();
-    }
-
-
-    // all friends loaded
-    public interface FriendsListener {
-        void onFriendsLoaded();
     }
 
     // post saved to database
@@ -724,10 +752,6 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         void onMessagesLoaded();
 
         void onMessageAdded(Message message);
-    }
-
-    public interface ChatRoomsLoadedListener {
-        void onChatRoomsLoaded();
     }
 
     public interface ChatRoomCreatedListener {
