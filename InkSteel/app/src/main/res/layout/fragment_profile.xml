@@ -3,7 +3,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#000"
+              android:background="@android:color/black"
               android:orientation="vertical"
               tools:context="com.ink_steel.inksteel.fragments.ProfileFragment">
 
@@ -84,12 +84,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
             android:layout_weight="2"
             android:background="@drawable/btn_custom"
-            android:fontFamily="casual"
+            android:fontFamily="serif"
             android:text="Gallery"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
             android:textStyle="bold"/>
 
         <Button
@@ -100,21 +104,24 @@
             android:layout_marginTop="8dp"
             android:layout_weight="2"
             android:background="@drawable/btn_custom"
-            android:fontFamily="casual"
+            android:fontFamily="serif"
             android:text="Friends"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
             android:textStyle="bold"/>
 
         <ImageButton
             android:id="@+id/btn_logout"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:background="@drawable/btn_custom"
-            android:fontFamily="casual"
+            android:fontFamily="serif"
             android:src="@android:drawable/ic_lock_power_off"
             android:text="Log out"
+            android:textColor="@android:color/black"
             android:textStyle="bold"/>
 
     </LinearLayout>
@@ -125,10 +132,11 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/btn_custom"
-        android:fontFamily="casual"
+        android:fontFamily="serif"
         android:visibility="gone"
         android:text="@string/edit_profile"
-        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
         android:textStyle="bold"/>
 
     <Button
@@ -139,10 +147,11 @@
         android:layout_margin="16dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/btn_custom"
-        android:fontFamily="casual"
+        android:fontFamily="serif"
         android:text="Gallery"
+        android:textColor="@android:color/black"
         android:visibility="gone"
-        android:textSize="16sp"
+        android:textSize="24sp"
         android:textStyle="bold"/>
 
 </LinearLayout>

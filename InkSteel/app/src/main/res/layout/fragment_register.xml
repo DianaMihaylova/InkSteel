@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="64dp"
         android:layout_marginRight="64dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
+            android:fontFamily="serif"
             android:inputType="textEmailAddress"
             android:maxLines="1"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -49,6 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
+            android:fontFamily="serif"
             android:inputType="textPassword"
             android:maxLines="1" />
 
@@ -72,6 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/confirm_password"
+            android:fontFamily="serif"
             android:inputType="textPassword"
             android:maxLines="1" />
 
@@ -83,12 +86,13 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="28dp"
         android:background="@drawable/btn_custom"
-        android:fontFamily="casual"
+        android:fontFamily="serif"
         android:text="@string/register"
-        android:textColor="#000000"
+        android:textColor="@android:color/black"
         android:textStyle="bold"
+        android:textSize="20sp"
         app:layout_constraintLeft_toLeftOf="@+id/text_input_layout2"
         app:layout_constraintRight_toRightOf="@+id/text_input_layout2"
         app:layout_constraintTop_toBottomOf="@+id/text_input_layout2"/>

@@ -51,14 +51,16 @@ public class ExploreAdapter extends BaseAdapter {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_explore_reverse, parent, false);
         }
 
-        String username = "Username:\n" + users.get(position).getName();
-        String country = "Country:\n" + users.get(position).getCity();
-        ((TextView) v.findViewById(R.id.qwerty)).setText(username);
-        ((TextView) v.findViewById(R.id.user_country)).setText(country);
+        User user = (User) getItem(position);
+
+        String username = "Username:\n" + user.getName();
+        String country = "City:\n" + user.getCity();
+        ((TextView) v.findViewById(R.id.user_name)).setText(username);
+        ((TextView) v.findViewById(R.id.user_city)).setText(country);
         ImageView imageView = v.findViewById(R.id.profile_pic);
 
         Picasso.with(context)
-                .load(users.get(position).getProfileImage())
+                .load(user.getProfileImage())
                 .transform(new CropCircleTransformation())
                 .into(imageView);
 

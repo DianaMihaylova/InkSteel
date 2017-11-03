@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.ink_steel.inksteel.adapters.ExploreAdapter;
 import com.ink_steel.inksteel.adapters.GalleryRecyclerViewAdapter;
 import com.ink_steel.inksteel.fragments.StudioInfoFragment;
 import com.ink_steel.inksteel.helpers.StudiosQueryTask;
@@ -49,56 +50,34 @@ import java.util.UUID;
 public class DatabaseManager implements StudiosQueryTask.StudiosListener {
 
 
-    public interface UserManagerListener {
-        // already signed in or just signing in
-        void onUserLogInError(String error);
-
-        // new user
-        void onUserSignUpError(String error);
-
-        // user loaded
-        void onUserInfoLoaded();
-    }
-
-    public interface UserInfoListener {
-        void onUserInfoSaved();
-    }
-
-    // all users loaded
-    public interface UsersListener {
-        void onUsersLoaded();
-    }
-
-    // all friends loaded
-    public interface FriendsListener {
-        void onFriendsLoaded();
-    }
-
-    // post saved to database
-    public interface PostSavedListener {
-        void onPostSaved();
-    }
-
-    // posts added / changed
-    public interface PostsListener {
-
-        void onPostAdded(Post post);
-
-        void onPostsLoaded();
-    }
-
-    // reactions added / changed
-    public interface PostReactionsListener {
-        void onPostReactionsChanged();
-
-        void onReactionAdded(Reaction reaction);
-    }
-
+    private static final String DEFAULT_PROFILE_PICTURE = "https://firebasestorage.googleapis.com/v0" +
+            "/b/inksteel-7911e.appspot.com/o/default.jpg?alt=media&token=2a0f4edc-81e5-40a2-9558-015e18b8b1ff";
+    private static DatabaseManager mDatabaseManager;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
     private StorageReference mStorage;
-    private static DatabaseManager mDatabaseManager;
     private User mCurrentUser;
+    //    -- Users --
+    private HashMap<String, User> mUsers;
+    private HashMap<String, User> exploreUsers;
+    private HashMap<String, User> mFriends;
+    private String thumbnailDownloadUrl;
+    private String imageDownloadUrl;
+    //    -- Post --
+    private Post currentPost;
+    private ListenerRegistration mPostListenerRegistration;
+    private ListenerRegistration mReactionsListenerRegistration;
+    private HashMap<String, Integer> reactions = new HashMap<>();
+    private TreeSet<Post> mPosts = new TreeSet<>();
+    private String reaction;
+    private int reactionCount;
+    private ListenerRegistration mPostsListenerRegistration;
+
+    private boolean isInitialLoad = true;
+    private Map<String, ChatRoom> mRooms = new HashMap<>();
+    private ArrayList<Message> messages;
+    private boolean isFirstTimeLoadMessage = true;
+    private int a = 0;
 
     private DatabaseManager() {
         mAuth = FirebaseAuth.getInstance();
@@ -116,7 +95,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         return mCurrentUser;
     }
 
-//    ------------------------------------ User login/register ------------------------------------
+//    ------------------------------------ Login/register ------------------------------------
 
     public void checkIfSignedIn(UserManagerListener listener) {
         if (mAuth.getCurrentUser() != null) {
@@ -131,9 +110,9 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot snapshot = task.getResult();
-                    if (snapshot.exists())
+                    if (snapshot.exists()) {
                         mCurrentUser = snapshot.toObject(User.class);
-                    else {
+                    } else {
                         mCurrentUser = new User(email, "", "", "", "");
                         userReference.set(mCurrentUser);
                     }
@@ -173,8 +152,19 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
                 });
     }
 
-    public void updateUserInfo(UserInfoListener listener, Bitmap bitmap) {
-        uploadImage(listener, bitmap);
+    public void signOut() {
+        if (mAuth.getCurrentUser() != null) {
+            mAuth.signOut();
+        }
+    }
+
+    public void updateUserInfo(final UserInfoListener listener, Bitmap bitmap) {
+        if (bitmap == null) {
+            mCurrentUser.setProfileImage(DEFAULT_PROFILE_PICTURE);
+            updateUserInfo(listener);
+        } else {
+            uploadImage(listener, bitmap);
+        }
     }
 
     private void uploadImage(final UserInfoListener listener, Bitmap bitmap) {
@@ -207,7 +197,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
                 });
     }
 
-//    ------------------------------------ User gallery ------------------------------------
+//    ------------------------------------ Gallery ------------------------------------
 
     public void saveImage(Uri uri, final GalleryRecyclerViewAdapter mAdapter) {
         mStorage.child(mCurrentUser.getEmail() + "/pics/"
@@ -240,17 +230,16 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
                 });
     }
 
-//    ------------------------------------ User explore ------------------------------------
+//    ------------------------------------ Explore ------------------------------------
 
-    private HashMap<String, User> mUsers;
-    private ArrayList<User> mFriends;
+    private void loadUsers() {
+        loadUsers(null);
+    }
 
-    public void loadUsers(final UsersListener listener) {
-
+    private void loadUsers(final UsersListener listener) {
         if (mUsers == null) {
             mUsers = new HashMap<>();
         }
-
         mFirestore.collection("users").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -262,21 +251,38 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
                                     mUsers.put(user.getEmail(), user);
                                 }
                             }
-                            listener.onUsersLoaded();
+                            if (listener != null)
+                                getExploreUsers(listener);
                         }
                     }
                 });
     }
 
-    public ArrayList<User> getUsers() {
-        return new ArrayList<>(mUsers.values());
+    public void loadExplore(UsersListener listener) {
+        if (mUsers == null) {
+            loadUsers(listener);
+        } else {
+            getExploreUsers(listener);
+        }
+    }
+
+    private void getExploreUsers(UsersListener listener) {
+        exploreUsers = new HashMap<>(mUsers);
+        exploreUsers.keySet().remove(mCurrentUser.getEmail());
+        exploreUsers.keySet().removeAll(mCurrentUser.getFriends());
+        exploreUsers.keySet().removeAll(mCurrentUser.getLiked());
+        listener.onUsersLoaded();
+    }
+
+    public ArrayList<User> getExploreUsers() {
+        return new ArrayList<>(exploreUsers.values());
     }
 
     public void addLike(String email) {
-        mCurrentUser.getLikes().add(email);
+        mCurrentUser.getLiked().add(email);
         mFirestore.collection("users")
                 .document(mCurrentUser.getEmail())
-                .update("likes", mCurrentUser.getLikes());
+                .update("liked", mCurrentUser.getLiked());
     }
 
     public void addFriend(String email) {
@@ -284,25 +290,32 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         mFirestore.collection("users")
                 .document(mCurrentUser.getEmail())
                 .update("friends", mCurrentUser.getFriends());
+        User user = mUsers.get(email);
+        user.getFriends().add(mCurrentUser.getEmail());
+        mFirestore.collection("users")
+                .document(email)
+                .update("friends", user.getFriends());
     }
 
-    public ArrayList<User> getUserFriends() {
-        if (mFriends == null) {
-            mFriends = new ArrayList<>();
-            for (String email : mCurrentUser.getFriends()) {
+    public void loadFriends(UsersListener listener) {
+        if (mUsers == null) {
+            loadUsers();
+        }
+        mFriends = new HashMap<>();
+        for (String email : mCurrentUser.getFriends()) {
                 if (mUsers.containsKey(email)) {
-                    mFriends.add(mUsers.get(email));
+                    User u = mUsers.get(email);
+                    mFriends.put(u.getEmail(), u);
                 }
             }
-        }
-        return mFriends;
+        listener.onUsersLoaded();
     }
 
+    public ArrayList<User> getFriends() {
+        return new ArrayList<>(mFriends.values());
+    }
 
 //    ------------------------------------ Posts ------------------------------------
-
-    private String thumbnailDownloadUrl;
-    private String imageDownloadUrl;
 
     public void savePost(final PostSavedListener listener, Bitmap thumbnail,
                          final Uri image, final String description) {
@@ -349,17 +362,6 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         });
     }
 
-    //    -- Post --
-    private Post currentPost;
-    private ListenerRegistration mPostListenerRegistration;
-    private ListenerRegistration mReactionsListenerRegistration;
-    private HashMap<String, Integer> reactions = new HashMap<>();
-    private TreeSet<Post> mPosts = new TreeSet<>();
-    private String reaction;
-    private int reactionCount;
-    private ListenerRegistration mPostsListenerRegistration;
-    private boolean isInitialLoad = true;
-
     public Post getPost(PostReactionsListener listener, String postId) {
         boolean found = false;
         for (Post post : mPosts) {
@@ -382,22 +384,6 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         registerReactionsListener(listener);
     }
 
-    public Post getNextPost(PostReactionsListener listener) {
-        Post post = mPosts.higher(currentPost);
-        if (post == null)
-            return null;
-        setPost(listener, post);
-        return post;
-    }
-
-    public Post getPreviousPost(PostReactionsListener listener) {
-        Post post = mPosts.lower(currentPost);
-        if (post == null)
-            return null;
-        setPost(listener, post);
-        return post;
-    }
-
     private void unregisterPostListeners() {
         if (mReactionsListenerRegistration != null)
             mReactionsListenerRegistration.remove();
@@ -405,8 +391,18 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
             mPostListenerRegistration.remove();
     }
 
-    public TreeSet<Post> getPosts() {
-        return mPosts;
+    private void hasUserReacted() {
+        mFirestore.collection("posts").document(currentPost.getPostId())
+                .collection("reactions").document(mCurrentUser.getEmail()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            setCurrentReaction(snapshot.getString("reactionType"));
+                            Log.d("reaction", reaction + " --" + currentPost.getPostId());
+                        }
+                    }
+                });
     }
 
     // get the post's reaction's count real time
@@ -448,23 +444,29 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
                 });
     }
 
-    private void hasUserReacted() {
-        mFirestore.collection("posts").document(currentPost.getPostId())
-                .collection("reactions").document(mCurrentUser.getEmail()).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            setCurrentReaction(snapshot.getString("reactionType"));
-                            Log.d("reaction", reaction + " --" + currentPost.getPostId());
-                        }
-                    }
-                });
-    }
-
     private void setCurrentReaction(String reactionType) {
         reaction = reactionType;
         reactionCount = currentPost.getReactionCount(reaction);
+    }
+
+    public Post getNextPost(PostReactionsListener listener) {
+        Post post = mPosts.higher(currentPost);
+        if (post == null)
+            return null;
+        setPost(listener, post);
+        return post;
+    }
+
+    public Post getPreviousPost(PostReactionsListener listener) {
+        Post post = mPosts.lower(currentPost);
+        if (post == null)
+            return null;
+        setPost(listener, post);
+        return post;
+    }
+
+    public TreeSet<Post> getPosts() {
+        return mPosts;
     }
 
     // get all posts real time
@@ -551,33 +553,8 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         postReference.update("reactions", currentPost.getReactions());
         postReference.collection("history").document().set(reactionData);
     }
-//                              --Chat Manager --
 
-    private Map<String, ChatRoom> mRooms;
-    private ArrayList<Message> messages;
-    private boolean isFirstTimeLoadMessage = true;
-
-    private void createChatRoom(final ChatRoomCreatedListener listener, final String userEmail) {
-        User user = mUsers.get(userEmail);
-        DocumentReference reference = mFirestore.collection("chatRooms").document();
-        String id = reference.getId();
-        Message message = new Message(mCurrentUser.getName(), "Chat room created!",
-                new Date().getTime());
-        final ChatRoom chatRoom = new ChatRoom(id, mCurrentUser.getEmail(),
-                mCurrentUser.getProfileImage(), mCurrentUser.getName(),
-                user.getEmail(), user.getProfileImage(), user.getName(),
-                message.getMessage(), message.getTime());
-        reference.set(chatRoom).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    mRooms.put(userEmail, chatRoom);
-                    listener.onChatRoomCreated(chatRoom);
-                }
-            }
-        });
-        reference.collection("messages").add(message);
-    }
+    //    ------------------------------------ Chat ------------------------------------
 
     public void saveMessageToDatabase(String msg, String chatId) {
         Message message = new Message(mCurrentUser.getName(), msg,
@@ -585,7 +562,6 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         mFirestore.collection("chatRooms").document(chatId)
                 .collection("messages").add(message);
     }
-
 
     public void loadChatMessages(String chatRoomId, final OnMessagesLoadedListener listener) {
         if (messages == null) {
@@ -618,14 +594,6 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     public ArrayList<Message> getMessages() {
         return messages;
     }
-
-    public interface OnMessagesLoadedListener {
-        void onMessagesLoaded();
-
-        void onMessageAdded(Message message);
-    }
-
-    private int a = 0;
 
     public void loadChatRooms(final ChatRoomsLoadedListener listener) {
         if (mRooms == null)
@@ -665,6 +633,79 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         if (!mRooms.containsKey(email))
             createChatRoom(listener, email);
         return mRooms.get(email);
+    }
+
+    private void createChatRoom(final ChatRoomCreatedListener listener, final String userEmail) {
+        User user = mUsers.get(userEmail);
+        DocumentReference reference = mFirestore.collection("chatRooms").document();
+        String id = reference.getId();
+        Message message = new Message(mCurrentUser.getName(), "Chat room created!",
+                new Date().getTime());
+        final ChatRoom chatRoom = new ChatRoom(id, mCurrentUser.getEmail(),
+                mCurrentUser.getProfileImage(), mCurrentUser.getName(),
+                user.getEmail(), user.getProfileImage(), user.getName(),
+                message.getMessage(), message.getTime());
+        reference.set(chatRoom).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    mRooms.put(userEmail, chatRoom);
+                    listener.onChatRoomCreated(chatRoom);
+                }
+            }
+        });
+        reference.collection("messages").add(message);
+    }
+
+    public interface UserManagerListener {
+        // already signed in or just signing in
+        void onUserLogInError(String error);
+
+        // new user
+        void onUserSignUpError(String error);
+
+        // user loaded
+        void onUserInfoLoaded();
+    }
+
+    public interface UserInfoListener {
+        void onUserInfoSaved();
+    }
+
+    // all users loaded
+    public interface UsersListener {
+        void onUsersLoaded();
+    }
+
+
+    // all friends loaded
+    public interface FriendsListener {
+        void onFriendsLoaded();
+    }
+
+    // post saved to database
+    public interface PostSavedListener {
+        void onPostSaved();
+    }
+
+    // posts added / changed
+    public interface PostsListener {
+        void onPostAdded(Post post);
+
+        void onPostsLoaded();
+    }
+
+    // reactions added / changed
+    public interface PostReactionsListener {
+        void onPostReactionsChanged();
+
+        void onReactionAdded(Reaction reaction);
+    }
+
+    public interface OnMessagesLoadedListener {
+        void onMessagesLoaded();
+
+        void onMessageAdded(Message message);
     }
 
     public interface ChatRoomsLoadedListener {

@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:elevation="8dp"
-    card_view:cardBackgroundColor="@color/cardview_light_background"
+    card_view:cardBackgroundColor="@color/place_autocomplete_search_text"
     card_view:cardCornerRadius="16dp">
 
     <android.support.constraint.ConstraintLayout
@@ -25,21 +25,21 @@
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@+id/qwerty"
+            card_view:layout_constraintTop_toBottomOf="@+id/user_name"
             card_view:srcCompat="@drawable/tatto1"/>
 
         <TextView
-            android:id="@+id/qwerty"
+            android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:fontFamily="cursive"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorAccent"
             android:textSize="36sp"
             android:textStyle="bold"
-            card_view:layout_constraintEnd_toStartOf="@+id/user_country"
+            card_view:layout_constraintEnd_toStartOf="@+id/user_city"
             card_view:layout_constraintHorizontal_bias="0.097"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
@@ -47,13 +47,14 @@
             tools:text="Username"/>
 
         <TextView
-            android:id="@+id/user_country"
+            android:id="@+id/user_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:fontFamily="cursive"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorAccent"
             android:textSize="24sp"
             android:textStyle="bold"
             card_view:layout_constraintEnd_toEndOf="parent"

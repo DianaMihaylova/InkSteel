@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:elevation="8dp"
-    card_view:cardBackgroundColor="@color/colorAccent"
+    card_view:cardBackgroundColor="@color/colorPrimaryDark"
     card_view:cardCornerRadius="16dp">
 
     <android.support.constraint.ConstraintLayout
@@ -22,7 +22,7 @@
             android:padding="8dp"
             android:layout_marginLeft="12dp"
             android:layout_marginStart="12dp"
-            card_view:layout_constraintBottom_toTopOf="@+id/qwerty"
+            card_view:layout_constraintBottom_toTopOf="@+id/user_name"
             card_view:layout_constraintDimensionRatio="w,4:3"
             card_view:layout_constraintHorizontal_bias="0.0"
             card_view:layout_constraintHorizontal_weight="3"
@@ -33,7 +33,7 @@
             card_view:srcCompat="@drawable/tatto1"/>
 
         <TextView
-            android:id="@+id/qwerty"
+            android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -41,16 +41,16 @@
             android:fontFamily="cursive"
             android:textSize="36sp"
             android:textStyle="bold"
-            android:textColor="#000000"
+            android:textColor="@android:color/black"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintHorizontal_bias="0.137"
             card_view:layout_constraintLeft_toLeftOf="parent"
-            card_view:layout_constraintRight_toLeftOf="@+id/user_country"
+            card_view:layout_constraintRight_toLeftOf="@+id/user_city"
             card_view:layout_constraintVertical_weight="2"
             tools:text="Username"/>
 
         <TextView
-            android:id="@+id/user_country"
+            android:id="@+id/user_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="28dp"
@@ -58,11 +58,11 @@
             android:fontFamily="cursive"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="#000000"
+            android:textColor="@android:color/black"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintRight_toRightOf="parent"
             card_view:layout_constraintVertical_weight="2"
-            tools:text="UserCountry"/>
+            tools:text="UserCity"/>
 
     </android.support.constraint.ConstraintLayout>
 

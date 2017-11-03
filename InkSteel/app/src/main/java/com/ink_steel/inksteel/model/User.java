@@ -1,10 +1,9 @@
 package com.ink_steel.inksteel.model;
 
-import com.google.firebase.firestore.Exclude;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User {
+public class User implements Serializable {
 
     private String email;
     private String name;
@@ -13,23 +12,14 @@ public class User {
     private String profileImage;
     private ArrayList<String> gallery;
     private ArrayList<String> friends;
-    private ArrayList<String> likes;
-    private ArrayList<String> likedBy;
-    private ArrayList<String> chatRoomsEmails;
+    private ArrayList<String> liked;
 
     public User() {
     }
 
-    public User(String email, String name, String age, String city, String profileImage) {
-        this(email, name, age, city, profileImage,
-                new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(),
-                new ArrayList<String>(), new ArrayList<String>());
-    }
-
     public User(String email, String name, String age, String city, String profileImage,
                 ArrayList<String> gallery, ArrayList<String> friends,
-                ArrayList<String> likes, ArrayList<String> likedBy,
-                ArrayList<String> chatRoomsEmails) {
+                ArrayList<String> liked) {
         this.email = email;
         this.name = name;
         this.age = age;
@@ -37,15 +27,18 @@ public class User {
         this.profileImage = profileImage;
         this.gallery = gallery;
         this.friends = friends;
-        this.likes = likes;
-        this.likedBy = likedBy;
-        this.chatRoomsEmails = chatRoomsEmails;
+        this.liked = liked;
     }
 
-    public void updateUserInfo(String name, String age, String country) {
+    public User(String email, String name, String age, String city, String profileImage) {
+        this(email, name, age, city, profileImage,
+                new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>());
+    }
+
+    public void updateUserInfo(String name, String age, String city) {
         this.name = name;
         this.age = age;
-        this.city = country;
+        this.city = city;
     }
 
     public String getEmail() {
@@ -80,16 +73,12 @@ public class User {
         return friends;
     }
 
-    public ArrayList<String> getLikes() {
-        return likes;
+    public ArrayList<String> getLiked() {
+        return liked;
     }
 
-    public ArrayList<String> getLikedBy() {
-        return likedBy;
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof User && email.equals(((User) obj).email);
     }
-
-    public ArrayList<String> getChatRooms() {
-        return chatRoomsEmails;
-    }
-
 }

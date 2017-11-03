@@ -1,6 +1,7 @@
 package com.ink_steel.inksteel.fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.HomeActivity;
+import com.ink_steel.inksteel.activities.LoginActivity;
 import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.model.User;
 import com.squareup.picasso.Picasso;
@@ -26,6 +28,7 @@ public class ProfileFragment extends Fragment {
     private LinearLayout layoutGroupBtn;
     private Button editProfileBtn, galleryFriendBtn;
     private User mCurrentUser;
+    private DatabaseManager manager;
 
     public ProfileFragment() {
     }
@@ -36,7 +39,8 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        mCurrentUser = DatabaseManager.getInstance().getCurrentUser();
+        manager = DatabaseManager.getInstance();
+        mCurrentUser = manager.getCurrentUser();
 
         imageView = view.findViewById(R.id.profile);
         username = view.findViewById(R.id.qwerty);
@@ -50,8 +54,9 @@ public class ProfileFragment extends Fragment {
         editProfileBtn = view.findViewById(R.id.btn_edit_profile);
         galleryFriendBtn = view.findViewById(R.id.btn_friend_gallery);
 
-        if (mCurrentUser != null)
+        if (mCurrentUser != null) {
             displayUserInfo();
+        }
 
         friendsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +79,16 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                manager.signOut();
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
+
         return view;
     }
 
@@ -82,19 +97,19 @@ public class ProfileFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            final int position = bundle.getInt("position");
-            emailTxt = "Email: " + FriendsFragment.mFriends.get(position).getEmail();
-            userNameTxt = "Username: " + FriendsFragment.mFriends.get(position).getName();
-            cityTxt = "Country: " + FriendsFragment.mFriends.get(position).getCity();
-            ageTxt = "Age: " + FriendsFragment.mFriends.get(position).getAge();
-            picture = FriendsFragment.mFriends.get(position).getProfileImage();
+            final User friend = (User) bundle.getSerializable("friend");
+            emailTxt = "Email: " + friend.getEmail();
+            userNameTxt = "Username: " + friend.getName();
+            cityTxt = "City: " + friend.getCity();
+            ageTxt = "Age: " + friend.getAge();
+            picture = friend.getProfileImage();
             galleryFriendBtn.setVisibility(View.VISIBLE);
             galleryFriendBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FullScreenImageFragment fragment = new FullScreenImageFragment();
+                    GalleryFragment fragment = new GalleryFragment();
                     Bundle bundle = new Bundle(1);
-                    bundle.putInt("position", position);
+                    bundle.putSerializable("friend", friend);
                     fragment.setArguments(bundle);
                     ((HomeActivity) getActivity()).replaceFragment(fragment);
                 }
@@ -102,7 +117,7 @@ public class ProfileFragment extends Fragment {
         } else {
             emailTxt = "Email: " + mCurrentUser.getEmail();
             userNameTxt = "Username: " + mCurrentUser.getName();
-            cityTxt = "Country: " + mCurrentUser.getCity();
+            cityTxt = "City: " + mCurrentUser.getCity();
             ageTxt = "Age: " + mCurrentUser.getAge();
             picture = mCurrentUser.getProfileImage();
             layoutGroupBtn.setVisibility(View.VISIBLE);
@@ -119,5 +134,4 @@ public class ProfileFragment extends Fragment {
                 .transform(new CropCircleTransformation())
                 .into(imageView);
     }
-
 }
