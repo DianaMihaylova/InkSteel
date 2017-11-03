@@ -1,5 +1,6 @@
 package com.ink_steel.inksteel.data;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
@@ -46,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DatabaseManager implements StudiosQueryTask.StudiosListener {
 
@@ -73,11 +75,17 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     private int reactionCount;
     private ListenerRegistration mPostsListenerRegistration;
 
+    private Activity mActivity;
+
     private boolean isInitialLoad = true;
     private Map<String, ChatRoom> mRooms = new HashMap<>();
     private ArrayList<Message> messages;
     private boolean isFirstTimeLoadMessage = true;
-    private int a = 0;
+    private AtomicInteger a;
+
+    public void setActivity(Activity activity) {
+        mActivity = activity;
+    }
 
     private DatabaseManager() {
         mAuth = FirebaseAuth.getInstance();
@@ -409,7 +417,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     private void registerPostListener(final PostReactionsListener listener) {
         mPostListenerRegistration = mFirestore.collection("posts")
                 .document(currentPost.getPostId())
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                .addSnapshotListener(mActivity, new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(DocumentSnapshot snapshot, FirebaseFirestoreException e) {
                         if (e != null)
@@ -428,7 +436,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     private void registerReactionsListener(final PostReactionsListener listener) {
         mReactionsListenerRegistration = mFirestore
                 .collection("posts").document(currentPost.getPostId()).collection("history")
-                .orderBy("time").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                .orderBy("time").addSnapshotListener(mActivity, new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots,
                                         FirebaseFirestoreException e) {
@@ -474,7 +482,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         Query postsQuery = mFirestore.collection("posts")
                 .orderBy("createdAt");
         mPostsListenerRegistration = postsQuery
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                .addSnapshotListener(mActivity, new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots,
                                         FirebaseFirestoreException e) {
@@ -561,14 +569,18 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
                 new Date().getTime());
         mFirestore.collection("chatRooms").document(chatId)
                 .collection("messages").add(message);
+        mFirestore.collection("chatRooms").document(chatId)
+                .update("lastMessage", message.getMessage(),
+                        "lastMessageTime", message.getTime(),
+                        "seen", false);
     }
 
-    public void loadChatMessages(String chatRoomId, final OnMessagesLoadedListener listener) {
+    public void loadChatMessages(final String chatRoomId, final OnMessagesLoadedListener listener) {
         if (messages == null) {
             messages = new ArrayList<>();
         }
         mFirestore.collection("chatRooms").document(chatRoomId).collection("messages")
-                .orderBy("time").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                .orderBy("time").addSnapshotListener(mActivity, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                 if (e != null) {
@@ -578,6 +590,9 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
                     if (change.getType() == DocumentChange.Type.ADDED) {
                         Message message = change.getDocument().toObject(Message.class);
                         messages.add(message);
+                        Log.d("message", message.getMessage());
+                        mFirestore.collection("chatRooms")
+                                .document(chatRoomId).update("seen", true);
                         if (!isFirstTimeLoadMessage) {
                             listener.onMessageAdded(message);
                         }
@@ -591,6 +606,10 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
 
     }
 
+    public void removeChatMsg() {
+        messages.clear();
+    }
+
     public ArrayList<Message> getMessages() {
         return messages;
     }
@@ -598,7 +617,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     public void loadChatRooms(final ChatRoomsLoadedListener listener) {
         if (mRooms == null)
             mRooms = Collections.synchronizedMap(new HashMap<String, ChatRoom>());
-        a = 0;
+        a = new AtomicInteger(0);
         chatRoomsQuery(listener, "email1");
         chatRoomsQuery(listener, "email2");
     }
@@ -616,8 +635,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
                                     mRooms.put(chatRoom.getOtherUser(query), chatRoom);
                                 }
                             }
-                            a++;
-                            if (a == 2) {
+                            if (a.incrementAndGet() == 2) {
                                 listener.onChatRoomsLoaded();
                             }
                         }
@@ -644,7 +662,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         final ChatRoom chatRoom = new ChatRoom(id, mCurrentUser.getEmail(),
                 mCurrentUser.getProfileImage(), mCurrentUser.getName(),
                 user.getEmail(), user.getProfileImage(), user.getName(),
-                message.getMessage(), message.getTime());
+                message.getMessage(), message.getTime(), false);
         reference.set(chatRoom).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

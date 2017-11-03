@@ -59,10 +59,11 @@ public class ExploreAdapter extends BaseAdapter {
         ((TextView) v.findViewById(R.id.user_city)).setText(country);
         ImageView imageView = v.findViewById(R.id.profile_pic);
 
-        Picasso.with(context)
-                .load(user.getProfileImage())
-                .transform(new CropCircleTransformation())
-                .into(imageView);
+        if (user.getProfileImage() != null && !user.getProfileImage().isEmpty())
+            Picasso.with(context)
+                    .load(user.getProfileImage())
+                    .transform(new CropCircleTransformation())
+                    .into(imageView);
 
         return v;
     }

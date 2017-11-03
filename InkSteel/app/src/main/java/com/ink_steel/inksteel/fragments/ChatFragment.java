@@ -99,8 +99,10 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
     @Override
     public void onChatRoomCreated(ChatRoom chatRoom) {
         mChatRoom = chatRoom;
-        if (mChatRoom != null)
+        if (mChatRoom != null) {
+            mManager.loadChatMessages(mChatRoom.getChatId(), this);
             displayChatRoom();
+        }
     }
 
     @Override
@@ -116,5 +118,11 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
         messages.add(message);
         recyclerView.scrollToPosition(messages.size() - 1);
         adapter.notifyItemInserted(messages.size() - 1);
+    }
+
+    @Override
+    public void onStop() {
+        mManager.removeChatMsg();
+        super.onStop();
     }
 }

@@ -12,13 +12,14 @@ public class ChatRoom {
     private String lastMessage;
     private long lastMessageTime;
     private String chatId;
+    private boolean seen;
 
     public ChatRoom() {
     }
 
     public ChatRoom(String chatId, String email1, String profilePicture1, String userName1,
                     String email2, String profilePicture2, String userName2,
-                    String lastMessage, long lastMessageTime) {
+                    String lastMessage, long lastMessageTime, boolean seen) {
         this.email1 = email1;
         this.profilePicture1 = profilePicture1;
         this.userName1 = userName1;
@@ -28,6 +29,11 @@ public class ChatRoom {
         this.lastMessage = lastMessage;
         this.lastMessageTime = lastMessageTime;
         this.chatId = chatId;
+        this.seen = seen;
+    }
+
+    public boolean isSeen() {
+        return seen;
     }
 
     public String getChatId() {

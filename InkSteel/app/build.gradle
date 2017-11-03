@@ -38,6 +38,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:11.4.2'
     implementation 'com.google.firebase:firebase-firestore:11.4.2'
     implementation 'com.google.firebase:firebase-storage:11.4.2'
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.4'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'jp.wasabeef:picasso-transformations:2.1.2'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.5.1'
