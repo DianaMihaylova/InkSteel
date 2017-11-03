@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.HomeActivity;
@@ -38,30 +39,6 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
     private Bitmap imageBitmap;
     private DatabaseManager mManager;
     private TextView mCity;
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK) {
-            Intent intent = CropImage.activity(data.getData())
-                    .setCropShape(CropImageView.CropShape.OVAL)
-                    .setFixAspectRatio(true).getIntent(getActivity());
-            startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
-        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            try {
-                CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                imageBitmap = MediaStore.Images.Media
-                        .getBitmap(getActivity().getContentResolver(), result.getUri());
-                Picasso.with(getActivity()).load(result.getUri())
-                        .transform(new CropCircleTransformation())
-                        .into(imageView);
-
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
-        }
-    }
 
     @Nullable
     @Override
@@ -105,6 +82,30 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK) {
+            Intent intent = CropImage.activity(data.getData())
+                    .setCropShape(CropImageView.CropShape.OVAL)
+                    .setFixAspectRatio(true).getIntent(getActivity());
+            startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            try {
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                imageBitmap = MediaStore.Images.Media
+                        .getBitmap(getActivity().getContentResolver(), result.getUri());
+                Picasso.with(getActivity()).load(result.getUri())
+                        .transform(new CropCircleTransformation())
+                        .into(imageView);
+
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        }
+    }
+
     private void updateUserInfoFromFragment() {
         String userName = name.getText().toString();
         String userAge = age.getText().toString();
@@ -124,7 +125,6 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
             mCity.setError(errorMessage);
             return;
         }
-
 
         mCurrentUser.updateUserInfo(userName, userAge, country);
         if (imageBitmap == null)
