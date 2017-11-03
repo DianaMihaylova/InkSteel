@@ -14,6 +14,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
 
@@ -22,7 +25,7 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
     private static final String API_KEY = "&key=AIzaSyACnb8t5MxO5woaX7nQpS3qMowHnSZznno";
 
     private static final String PHOTO_BASE_URL = "https://maps.googleapis.com/maps/api/place/" +
-            "photo?maxwidth=400&photoreference=";
+            "photo?maxwidth=600&photoreference=";
 
     private StudiosListener mListener;
     private Location mLocation;
@@ -84,10 +87,10 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
         }
     }
 
+
     private Studio getStudioFromJSONObject(JSONObject object) throws JSONException, IOException {
         String place_id, name, photoReference, imageUrl = null;
         float rating;
-        JSONArray photos;
 
         if (object.has("name"))
             name = object.getString("name");
@@ -100,8 +103,8 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
         else rating = 0;
 
         if (object.has("photos")) {
-            photos = object.getJSONArray("photos");
-            JSONObject photoObject = photos.getJSONObject(0);
+            JSONArray array = object.getJSONArray("photos");
+            JSONObject photoObject = array.getJSONObject(0);
             if (photoObject.has("photo_reference")) {
                 photoReference = photoObject.getString("photo_reference");
                 imageUrl = getPhotoUrl(photoReference);
@@ -118,6 +121,7 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
         Response response = client.newCall(request).execute();
         return response.request().httpUrl().toString();
     }
+
 
 }
 

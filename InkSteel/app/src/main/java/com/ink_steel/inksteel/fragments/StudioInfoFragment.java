@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,6 +24,8 @@ import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.model.Studio;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 public class StudioInfoFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -30,6 +33,8 @@ public class StudioInfoFragment extends Fragment implements
     private GoogleApiClient mClient;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
+    private int mI;
+    private ArrayList<String> mStrings;
 
     public StudioInfoFragment() {
     }
@@ -50,18 +55,16 @@ public class StudioInfoFragment extends Fragment implements
 
         mId = getArguments().getString("studioId");
 
-        ImageView imageView = view.findViewById(R.id.studio_image);
+        final ImageView imageView = view.findViewById(R.id.studio_image);
         mViewPager = view.findViewById(R.id.view_pager);
         mTabLayout = view.findViewById(R.id.tabs);
-
         mClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-
         DatabaseManager manager = DatabaseManager.getInstance();
-        Studio studio = manager.getStudioById(mId);
+        final Studio studio = manager.getStudioById(mId);
         Picasso.with(getActivity())
                 .load(studio.getImageUrl())
                 .into(imageView);
@@ -86,6 +89,7 @@ public class StudioInfoFragment extends Fragment implements
     public void onConnected(@Nullable Bundle bundle) {
         mViewPager.setAdapter(new StudioPagerAdapter(getChildFragmentManager()));
         mTabLayout.setupWithViewPager(mViewPager);
+//        mTabLayout.addTab(mTabLayout.newTab());
     }
 
     @Override
