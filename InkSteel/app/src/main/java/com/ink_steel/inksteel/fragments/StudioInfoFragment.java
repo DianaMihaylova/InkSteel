@@ -46,6 +46,7 @@ public class StudioInfoFragment extends Fragment implements
     private RatingBar mRating;
     private Studio mStudio;
     private DatabaseManager mManager;
+    private MapFragment mMapFragment;
 
     public StudioInfoFragment() {
     }
