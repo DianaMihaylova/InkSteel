@@ -25,6 +25,8 @@ public class HomeActivity extends Activity implements OnReplaceFragmentListener 
         manager.setActivity(this);
         startService(new Intent(this, NetworkService.class));
 
+        startService(new Intent(this, NetworkService.class));
+
         mManager = getFragmentManager();
         if (getIntent().getBooleanExtra(LoginActivity.IS_NEW_USER, false)) {
             displayFragment(new UserInfoFragment());

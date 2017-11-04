@@ -33,7 +33,7 @@ public class NetworkService extends Service {
     }
 
     private void listenForMessages() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null && user.getEmail() != null) {
             FirebaseFirestore.getInstance().collection("users")
                     .document(user.getEmail())
@@ -44,11 +44,12 @@ public class NetworkService extends Service {
                                             FirebaseFirestoreException e) {
                             if (e != null)
                                 return;
-//                            DocumentSnapshot snapshot = documentSnapshots.getDocuments().get(0);
 
                             for (DocumentSnapshot snapshot : documentSnapshots.getDocuments()) {
-                                showNotification(NetworkService.this,
-                                        snapshot.toObject(ChatRoom.class));
+                                ChatRoom chatRoom = snapshot.toObject(ChatRoom.class);
+                                if (!chatRoom.getLastMessageSender().equals(user.getEmail()))
+                                    showNotification(NetworkService.this,
+                                            snapshot.toObject(ChatRoom.class));
                             }
                         }
                     });

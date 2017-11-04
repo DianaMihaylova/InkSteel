@@ -15,13 +15,13 @@ import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.model.User;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class ExploreFragment extends Fragment implements DatabaseManager.UsersListener {
 
     private DatabaseManager mManager;
     private SwipeDeck cardStack;
     private ExploreAdapter mAdapter;
-    private User mCurrentUser;
     private ArrayList<User> mUsers;
     private Toast mToast;
 
@@ -35,7 +35,6 @@ public class ExploreFragment extends Fragment implements DatabaseManager.UsersLi
         View view = inflater.inflate(R.layout.fragment_explore, container, false);
 
         mManager = DatabaseManager.getInstance();
-        mCurrentUser = mManager.getCurrentUser();
         cardStack = view.findViewById(R.id.swipe_deck);
 
         mToast = Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT);
@@ -69,9 +68,6 @@ public class ExploreFragment extends Fragment implements DatabaseManager.UsersLi
                 User likedUser = mUsers.get(position);
                 String likedEmail = likedUser.getEmail();
                 mManager.addLike(likedEmail);
-                if (likedUser.getLiked().contains(mCurrentUser.getEmail())) {
-                    mManager.addFriend(likedEmail);
-                }
             }
 
             @Override
@@ -95,6 +91,7 @@ public class ExploreFragment extends Fragment implements DatabaseManager.UsersLi
         mAdapter = new ExploreAdapter(mUsers, getActivity());
         mManager.loadExplore(this);
         cardStack.setAdapter(mAdapter);
+
     }
 
     @Override
