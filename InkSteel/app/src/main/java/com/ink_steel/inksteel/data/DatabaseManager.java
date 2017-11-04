@@ -204,7 +204,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
 
 //    ------------------------------------ Gallery ------------------------------------
 
-    public void saveImage(Uri uri, final GalleryRecyclerViewAdapter mAdapter) {
+    public void saveImage(Uri uri, final GalleryImageAddListener listener) {
         mStorage.child(mCurrentUser.getEmail() + "/pics/"
                 + new Date().getTime() + ".jpeg")
                 .putFile(uri)
@@ -217,7 +217,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
                             mFirestore.collection("users")
                                     .document(mCurrentUser.getEmail())
                                     .update("gallery", mCurrentUser.getGallery());
-                            mAdapter.notifyDataSetChanged();
+                            listener.onGalleryImageAdded();
                         }
                     }
                 });
@@ -729,6 +729,11 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     public interface UsersListener {
         // all users loaded
         void onUsersLoaded();
+    }
+
+    public interface GalleryImageAddListener {
+        // when added a new image in gallery
+        void onGalleryImageAdded();
     }
 
     public interface PostSavedListener {

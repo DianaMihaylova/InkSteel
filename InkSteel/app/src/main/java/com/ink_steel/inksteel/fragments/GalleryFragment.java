@@ -20,9 +20,12 @@ import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.helpers.Listeners.GalleryImageLongClickListener;
 import com.ink_steel.inksteel.model.User;
 
+import java.util.ArrayList;
+
 import static android.app.Activity.RESULT_OK;
 
-public class GalleryFragment extends Fragment implements GalleryImageLongClickListener {
+public class GalleryFragment extends Fragment implements GalleryImageLongClickListener,
+        DatabaseManager.GalleryImageAddListener {
 
     private static final int CHOOSE_IMAGE = 1;
     private GalleryRecyclerViewAdapter mAdapter;
@@ -30,6 +33,7 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
     private DatabaseManager mUserManager;
     private boolean isFriendGallery;
     private User mFriend;
+    private ArrayList<String> mImages;
 
     public GalleryFragment() {
     }
@@ -42,6 +46,7 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
 
         mUserManager = DatabaseManager.getInstance();
         mCurrentUser = mUserManager.getCurrentUser();
+        mImages = new ArrayList<>();
 
         FloatingActionButton fab = view.findViewById(R.id.btn_fab);
 
@@ -53,15 +58,18 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             mFriend = (User) bundle.getSerializable("friend");
-            mAdapter = new GalleryRecyclerViewAdapter(mFriend.getGallery(), this);
+            if (mFriend != null) {
+                mImages.clear();
+                mImages.addAll(mFriend.getGallery());
+            }
             fab.setVisibility(View.INVISIBLE);
             isFriendGallery = true;
         } else {
-            if (mCurrentUser != null) {
-                mAdapter = new GalleryRecyclerViewAdapter(mCurrentUser.getGallery(), this);
-            }
+            mImages.clear();
+            mImages.addAll(mCurrentUser.getGallery());
         }
 
+        mAdapter = new GalleryRecyclerViewAdapter(mImages, this);
         mRecyclerView.setAdapter(mAdapter);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +94,7 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK) {
             Uri uri = data.getData();
-            mUserManager.saveImage(uri, mAdapter);
+            mUserManager.saveImage(uri, this);
         }
     }
 
@@ -124,6 +132,7 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
                     public void onClick(DialogInterface dialog, int which) {
                         String image = mCurrentUser.getGallery().get(position);
                         mCurrentUser.getGallery().remove(image);
+                        mImages.remove(image);
                         mAdapter.notifyDataSetChanged();
                         mUserManager.removeImage(image);
                     }
@@ -132,5 +141,12 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
         ad.setTitle(getString(R.string.warning_msg));
         ad.setIcon(R.drawable.warning_msg);
         ad.show();
+    }
+
+    @Override
+    public void onGalleryImageAdded() {
+        mImages.clear();
+        mImages.addAll(mUserManager.getCurrentUser().getGallery());
+        mAdapter.notifyDataSetChanged();
     }
 }
