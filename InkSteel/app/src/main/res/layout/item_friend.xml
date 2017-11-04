@@ -11,7 +11,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccentTransparent">
+        android:background="@color/colorPrimaryDarkTransparent">
 
         <TextView
             android:id="@+id/user_city"
@@ -64,7 +64,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/btn_custom"
             android:text="@string/send_a_message"
-            android:textSize="16sp"
+            android:textSize="14sp"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toStartOf="@+id/user_name"

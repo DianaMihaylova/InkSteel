@@ -81,7 +81,7 @@
             android:maxLines="1"
             android:textAlignment="center"
             style="@style/Text"
-            android:textSize="16sp"
+            android:textSize="12sp"
             card_view:layout_constraintBottom_toBottomOf="@+id/post_pic"
             card_view:layout_constraintLeft_toLeftOf="@+id/profile_pic"
             card_view:layout_constraintRight_toRightOf="@+id/profile_pic"

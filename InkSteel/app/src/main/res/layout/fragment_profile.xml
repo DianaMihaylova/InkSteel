@@ -4,25 +4,34 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
+              android:background="@color/colorBackgroundDark"
               tools:context="com.ink_steel.inksteel.fragments.ProfileFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        style="@style/FontText"
-        android:gravity="center"
-        android:text="@string/profile"
-        android:textSize="36sp"/>
-
-    <ImageView
-        android:id="@+id/profile"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
-        android:contentDescription="@string/user_s_profile_picture"
-        android:padding="16dp"
-        android:src="@drawable/tatto1"/>
+        android:layout_weight="5"
+        android:orientation="vertical"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            style="@style/FontText"
+            android:gravity="center"
+            android:text="@string/profile"
+            android:textColor="@android:color/black"
+            android:textSize="36sp"/>
+
+        <ImageView
+            android:id="@+id/profile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/user_s_profile_picture"
+            android:padding="16dp"
+            android:src="@drawable/tatto1"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/qwerty"

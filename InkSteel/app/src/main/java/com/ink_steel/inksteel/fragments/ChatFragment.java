@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCreatedListener,
-        DatabaseManager.OnMessagesLoadedListener, DatabaseManager.ChatListener {
+        DatabaseManager.ChatListener {
 
     private ImageView mImageView;
     private TextView mTextView;

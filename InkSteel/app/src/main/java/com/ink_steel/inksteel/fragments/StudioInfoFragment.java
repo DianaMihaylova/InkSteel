@@ -41,7 +41,6 @@ public class StudioInfoFragment extends Fragment implements
     private ImageButton mWebsite;
     private RatingBar mRating;
     private Studio mStudio;
-    private MapFragment mMapFragment;
     private DatabaseManager mManager;
     private MapFragment mMapFragment;
 

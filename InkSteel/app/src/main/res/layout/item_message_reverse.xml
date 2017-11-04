@@ -11,7 +11,7 @@
         android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#87f48fb1"
+        android:background="@color/colorAccentTransparent"
         app:layout_constraintBottom_toBottomOf="@+id/item_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/item_time"
@@ -25,6 +25,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:padding="8dp"
+        android:textSize="16sp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -35,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="8dp"
-        android:text="TextView"
+        android:text="@string/textview"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/item_message"
         app:layout_constraintTop_toTopOf="@+id/item_message"/>

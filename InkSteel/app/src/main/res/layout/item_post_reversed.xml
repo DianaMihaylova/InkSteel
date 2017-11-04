@@ -72,7 +72,7 @@
             android:layout_marginStart="8dp"
             android:gravity="bottom|center_horizontal"
             style="@style/Text"
-            android:textSize="16sp"
+            android:textSize="12sp"
             card_view:layout_constraintBottom_toBottomOf="@+id/post_pic"
             card_view:layout_constraintHorizontal_bias="0.485"
             card_view:layout_constraintLeft_toLeftOf="@+id/profile_pic"

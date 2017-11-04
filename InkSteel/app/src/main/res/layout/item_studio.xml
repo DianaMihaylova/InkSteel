@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/colorAccent"
     android:paddingBottom="8dp">
 
     <ImageView
@@ -23,7 +24,7 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/colorAccentTransparent"
+        android:background="@color/colorPrimaryDarkTransparent"
         app:layout_constraintBottom_toBottomOf="@+id/studio_iv"
         app:layout_constraintEnd_toEndOf="@+id/studio_iv"
         app:layout_constraintStart_toStartOf="@+id/studio_iv"/>
@@ -40,6 +41,7 @@
         android:maxLines="1"
         android:text="@string/studioname"
         style="@style/Text"
+        android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toStartOf="@+id/studio_read_more_tv"
         app:layout_constraintStart_toStartOf="@+id/studio_iv"
@@ -69,6 +71,7 @@
         android:text="@string/read_more"
         style="@style/Text"
         android:textSize="12sp"
+        android:textColor="@color/place_autocomplete_search_text"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/view"/>

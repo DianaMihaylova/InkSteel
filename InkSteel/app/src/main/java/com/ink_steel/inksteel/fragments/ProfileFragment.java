@@ -99,9 +99,9 @@ public class ProfileFragment extends Fragment {
         if (bundle != null) {
             final User friend = (User) bundle.getSerializable("friend");
             emailTxt = getString(R.string.email_dot) + friend.getEmail();
-            userNameTxt = getString(R.string.username_dot) + friend.getName();
-            cityTxt = getString(R.string.city_dot) + friend.getCity();
-            ageTxt = getString(R.string.age_dot) + friend.getAge();
+            userNameTxt = getString(R.string.username_dot) + "  " + friend.getName();
+            cityTxt = getString(R.string.city_dot) + "  " + friend.getCity();
+            ageTxt = getString(R.string.age_dot) + "  " + friend.getAge();
             picture = friend.getProfileImage();
             mGalleryFriendBtn.setVisibility(View.VISIBLE);
             mGalleryFriendBtn.setOnClickListener(new View.OnClickListener() {
@@ -115,10 +115,10 @@ public class ProfileFragment extends Fragment {
                 }
             });
         } else {
-            emailTxt = getString(R.string.email_dot) + mCurrentUser.getEmail();
-            userNameTxt = getString(R.string.username_dot) + mCurrentUser.getName();
-            cityTxt = getString(R.string.city_dot) + mCurrentUser.getCity();
-            ageTxt = getString(R.string.age_dot) + mCurrentUser.getAge();
+            emailTxt = getString(R.string.email_dot) + "  " + mCurrentUser.getEmail();
+            userNameTxt = getString(R.string.username_dot) + "  " + mCurrentUser.getName();
+            cityTxt = getString(R.string.city_dot) + "  " + mCurrentUser.getCity();
+            ageTxt = getString(R.string.age_dot) + "  " + mCurrentUser.getAge();
             picture = mCurrentUser.getProfileImage();
             mLayoutGroupBtn.setVisibility(View.VISIBLE);
             mEditProfileBtn.setVisibility(View.VISIBLE);

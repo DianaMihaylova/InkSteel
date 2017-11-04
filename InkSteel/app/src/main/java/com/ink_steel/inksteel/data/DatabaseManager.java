@@ -37,8 +37,10 @@ import com.ink_steel.inksteel.model.User;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeSet;
 import java.util.UUID;
 
@@ -66,8 +68,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     private TreeSet<Post> mPosts = new TreeSet<>();
     private String reaction;
     private int reactionCount;
-    private ListenerRegistration mPostsListenerRegistration;
-
+    //    -- Chat --
     private Activity mActivity;
     private boolean isInitialLoad = true;
     private ListenerRegistration chatRoomsRegistration;
@@ -76,6 +77,9 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     private boolean isChatRoomsInitialLoad;
     private ArrayList<Message> chatMessages;
     private boolean isChatMessagesInitialLoad;
+    //    -- Studios --
+    private HashMap<String, Studio> mStudios;
+    private StudiosQueryTask.StudiosListener mListener;
 
     public void setActivity(Activity activity) {
         mActivity = activity;
@@ -290,7 +294,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         }
     }
 
-    public void addFriend(String email) {
+    private void addFriend(String email) {
         mCurrentUser.getFriends().add(email);
         mFirestore.collection("users")
                 .document(mCurrentUser.getEmail())
@@ -349,7 +353,6 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
                         }
                     }
                 });
-
     }
 
     private void savePostToFirestore(final PostSavedListener listener,
@@ -470,16 +473,15 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         return post;
     }
 
-    public TreeSet<Post> getPosts() {
-        return mPosts;
+    public ArrayList<Post> getPosts() {
+        return new ArrayList<>(mPosts);
     }
 
     // get all posts real time
     public void registerPostsListener(final PostsListener listener) {
         Query postsQuery = mFirestore.collection("posts")
                 .orderBy("createdAt");
-        mPostsListenerRegistration = postsQuery
-                .addSnapshotListener(mActivity, new EventListener<QuerySnapshot>() {
+        postsQuery.addSnapshotListener(mActivity, new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots,
                                         FirebaseFirestoreException e) {
@@ -506,11 +508,6 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
 
                     }
                 });
-    }
-
-    public void unregisterPostsListener() {
-        if (mPostsListenerRegistration != null)
-            mPostsListenerRegistration.remove();
     }
 
     public void saveUserReaction(String newReaction) {
@@ -584,8 +581,8 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         listener.onChatRoomCreated(chatRoom1);
     }
 
-    public TreeSet<ChatRoom> getUserChatRooms() {
-        return mUserChatRooms;
+    public ArrayList<ChatRoom> getUserChatRooms() {
+        return new ArrayList<>(mUserChatRooms);
     }
 
     public void getUserChatRooms(final UserChatRoomsListener listener) {
@@ -680,8 +677,8 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         return null;
     }
 
-    public ArrayList<Message> getChatMessages() {
-        return chatMessages;
+    public List<Message> getChatMessages() {
+        return Collections.unmodifiableList(chatMessages);
     }
 
     public void unregisterChatRoomsListener() {
@@ -700,71 +697,72 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     }
 
     public interface ChatListener {
+        // new message
         void onMessageAdded(Message message);
 
+        // history message
         void onMessagesLoaded();
     }
 
     public interface UserChatRoomsListener {
+        // all chatRooms loaded
         void onChatRoomsLoaded();
 
+        // chatRoom is changed
         void onChatRoomChanged(ChatRoom a);
     }
-
 
     public interface UserManagerListener {
         // already signed in or just signing in
         void onUserLogInError(String error);
-
         // new user
         void onUserSignUpError(String error);
-
         // user loaded
         void onUserInfoLoaded();
     }
 
     public interface UserInfoListener {
+        // after registration or when change information
         void onUserInfoSaved();
     }
 
-    // all users loaded
     public interface UsersListener {
+        // all users loaded
         void onUsersLoaded();
     }
 
-    // post saved to database
     public interface PostSavedListener {
+        // post saved to database
         void onPostSaved();
     }
 
-    // posts added / changed
     public interface PostsListener {
+        // posts added
         void onPostAdded(Post post);
 
+        // posts changed
         void onPostsLoaded();
     }
 
-    // reactions added / changed
     public interface PostReactionsListener {
+        // reactions changed
         void onPostReactionsChanged();
 
+        // reactions added
         void onReactionAdded(Reaction reaction);
     }
 
-    public interface OnMessagesLoadedListener {
-        void onMessagesLoaded();
-
-        void onMessageAdded(Message message);
-    }
-
     public interface ChatRoomCreatedListener {
+        // created chatRoom
         void onChatRoomCreated(ChatRoom chatRoom);
     }
 
-//    Studios
+    public interface StudioListener {
+        // studio information loaded
+        void onStudioInfoLoaded(Studio studio);
+    }
 
-    private HashMap<String, Studio> mStudios;
-    private StudiosQueryTask.StudiosListener mListener;
+//    ------------------------------------ Studios ------------------------------------
 
     public Studio getStudioById(String id) {
         return mStudios.get(id);
@@ -818,9 +816,4 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     public void onStudiosLoaded() {
         mListener.onStudiosLoaded();
     }
-
-    public interface StudioListener {
-        void onStudioInfoLoaded(Studio studio);
-    }
-
 }

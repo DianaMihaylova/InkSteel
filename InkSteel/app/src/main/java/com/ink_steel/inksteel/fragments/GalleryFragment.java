@@ -78,7 +78,7 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), CHOOSE_IMAGE);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), CHOOSE_IMAGE);
     }
 
     @Override

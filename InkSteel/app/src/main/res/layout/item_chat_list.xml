@@ -23,7 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:text="@string/username"
-        style="@style/FontText"
+        style="@style/Text"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/item_chat_image"
         app:layout_constraintTop_toTopOf="@+id/item_chat_image"/>
 
@@ -37,6 +38,8 @@
         android:maxLines="1"
         android:text="@string/last_message"
         style="@style/Text"
+        android:textStyle="normal"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/item_chat_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/item_chat_username"/>
@@ -48,7 +51,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/_16_34_1_nov"
-        android:textSize="10sp"
+        android:textSize="12sp"
         style="@style/Text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
