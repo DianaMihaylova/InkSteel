@@ -61,6 +61,11 @@ public class FeedFragment extends Fragment implements PostClickListener,
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onPostClick(int position) {
         ((HomeActivity) getActivity())
                 .replaceFragment(PostInfoFragment.newInstance(mPosts.get(position).getPostId()));

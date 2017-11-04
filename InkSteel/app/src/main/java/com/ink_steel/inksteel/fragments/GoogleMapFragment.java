@@ -22,6 +22,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     private com.google.android.gms.maps.MapFragment mMapFragment;
     private GoogleMap mMap;
     private Studio mStudio;
+    private String mId;
 
     public GoogleMapFragment() {
     }
@@ -41,7 +42,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
 
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-        String id = getArguments().getString("studioId");
+        mId = getArguments().getString("studioId");
 
         mMapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mMapFragment != null)
@@ -54,7 +55,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         DatabaseManager manager = DatabaseManager.getInstance();
-        mStudio = manager.getCurrentStudio();
+        mStudio = manager.getStudioById(mId);
         LatLng position = mStudio.getGooglePlace().getLatLng();
         mMap.addMarker(new MarkerOptions()
                 .position(position)

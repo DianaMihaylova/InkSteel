@@ -99,8 +99,16 @@ public class StudiosFragment extends Fragment implements StudiosQueryTask.Studio
     @Override
     public void onStudioLoaded(Studio studio) {
         mStudios.add(studio);
+        Log.d("Studios", mStudios.size() + " -----");
         mAdapter.notifyDataSetChanged();
         mManager.getStudioInfoById(studio.getPlaceId(), mGeoDataClient);
+    }
+
+    @Override
+    public void onStudiosLoaded() {
+        mStudios.addAll(mManager.getStudios());
+        mAdapter.notifyDataSetChanged();
+        Log.d("Studios", mStudios.size() + "");
     }
 
     @Override
@@ -109,7 +117,6 @@ public class StudiosFragment extends Fragment implements StudiosQueryTask.Studio
     }
 
     Location location;
-
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         getStudios();
@@ -117,8 +124,8 @@ public class StudiosFragment extends Fragment implements StudiosQueryTask.Studio
 
     private void getStudios() {
         try {
-            FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(getActivity());
-
+            FusedLocationProviderClient client =
+                    LocationServices.getFusedLocationProviderClient(getActivity());
             client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task1) {
