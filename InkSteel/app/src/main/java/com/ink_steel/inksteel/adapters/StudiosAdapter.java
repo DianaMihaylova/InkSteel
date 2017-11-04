@@ -1,6 +1,7 @@
 package com.ink_steel.inksteel.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,8 +65,12 @@ public class StudiosAdapter extends RecyclerView.Adapter<StudiosAdapter.PostsVie
         }
 
         void bind(Studio studio) {
-
-            Picasso.with(itemView.getContext()).load(studio.getImageUrl()).into(image);
+            String url = studio.getImageUrl();
+            if (url != null)
+                Picasso.with(itemView.getContext()).load(studio.getImageUrl()).into(image);
+            else {
+                image.setImageResource(R.drawable.placeholder);
+            }
             title.setText(studio.getName());
             rating.setRating(studio.getRating());
         }

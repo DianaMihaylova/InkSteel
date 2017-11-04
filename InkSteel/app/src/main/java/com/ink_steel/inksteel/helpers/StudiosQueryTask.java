@@ -60,6 +60,8 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
 
     public interface StudiosListener {
         void onStudioLoaded(Studio studio);
+
+        void onStudiosLoaded();
     }
 
     @Override

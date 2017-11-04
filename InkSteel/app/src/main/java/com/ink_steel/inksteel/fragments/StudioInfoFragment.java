@@ -93,9 +93,12 @@ public class StudioInfoFragment extends Fragment implements
                 .build();
         mManager = DatabaseManager.getInstance();
         mStudio = mManager.getStudioById(mId);
-        Picasso.with(getActivity())
+        String url = mStudio.getImageUrl();
+        if (url != null)
+            Picasso.with(getActivity())
                 .load(mStudio.getImageUrl())
                 .into(imageView);
+        else imageView.setImageResource(R.drawable.placeholder);
         mMapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mMapFragment != null)
             mMapFragment.getMapAsync(this);

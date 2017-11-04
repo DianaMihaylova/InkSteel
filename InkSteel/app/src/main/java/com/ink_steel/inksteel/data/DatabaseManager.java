@@ -39,10 +39,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class DatabaseManager implements StudiosQueryTask.StudiosListener {
 
@@ -767,18 +765,24 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
 
     private HashMap<String, Studio> mStudios;
     private StudiosQueryTask.StudiosListener mListener;
-    private Studio currentStudio;
 
     public Studio getStudioById(String id) {
         return mStudios.get(id);
     }
 
     public void getNearbyStudios(StudiosQueryTask.StudiosListener listener, Location location) {
-        if (mStudios == null)
+        if (mStudios == null) {
             mStudios = new HashMap<>();
-        mListener = listener;
-        StudiosQueryTask task = new StudiosQueryTask(this, location);
-        task.execute();
+            mListener = listener;
+            StudiosQueryTask task = new StudiosQueryTask(this, location);
+            task.execute();
+        } else {
+            listener.onStudiosLoaded();
+        }
+    }
+
+    public ArrayList<Studio> getStudios() {
+        return new ArrayList<>(mStudios.values());
     }
 
     public void getStudioInfoById(final String studioId, GeoDataClient client, final StudioListener listener) {
@@ -803,22 +807,16 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     public void getStudioInfoById(final String studioId, GeoDataClient client) {
         getStudioInfoById(studioId, client, null);
     }
-
-    public void setCurrentStudio(Studio currentStudio) {
-        this.currentStudio = currentStudio;
-    }
-
     @Override
     public void onStudioLoaded(Studio studio) {
-        Log.d("studio", "in onStudioLoaded " + studio.getPlaceId());
         mStudios.put(studio.getPlaceId(), studio);
         if (mListener != null)
             mListener.onStudioLoaded(studio);
     }
 
-
-    public Studio getCurrentStudio() {
-        return currentStudio;
+    @Override
+    public void onStudiosLoaded() {
+        mListener.onStudiosLoaded();
     }
 
     public interface StudioListener {

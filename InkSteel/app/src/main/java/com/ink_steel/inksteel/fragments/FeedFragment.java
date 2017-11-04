@@ -63,7 +63,6 @@ public class FeedFragment extends Fragment implements PostClickListener,
 
     @Override
     public void onStart() {
-//        mPosts.addAll(mManager.getPosts());
         super.onStart();
     }
 
