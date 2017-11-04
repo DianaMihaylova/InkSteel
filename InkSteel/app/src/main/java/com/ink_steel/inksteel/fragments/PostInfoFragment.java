@@ -91,7 +91,7 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
         isFullScreen = false;
         mCs = new ConstraintSet();
         mCl = view.findViewById(R.id.post_cl);
-        mPicasso = new Picasso.Builder(getActivity()).indicatorsEnabled(true).build();
+        mPicasso = new Picasso.Builder(getActivity()).build();
 
         mManager = DatabaseManager.getInstance();
         currentPost = mManager.getPost(this, postId);

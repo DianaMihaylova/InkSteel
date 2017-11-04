@@ -45,7 +45,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.PostsVie
         if (username.equals(messages.get(position).getUserName())) {
             return R.layout.item_message_reverse;
         }
-        return R.layout.message;
+        return R.layout.item_message;
     }
 
     @Override

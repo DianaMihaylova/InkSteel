@@ -57,16 +57,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
     class PostsViewHolder extends RecyclerView.ViewHolder {
 
         ImageView profilePic, postPic;
-        TextView summary, postText;
+        TextView userName, postText;
 
         PostsViewHolder(final View itemView) {
             super(itemView);
-
             profilePic = itemView.findViewById(R.id.profile_pic);
             postPic = itemView.findViewById(R.id.post_pic);
-            summary = itemView.findViewById(R.id.user_tv);
+            userName = itemView.findViewById(R.id.user_tv);
             postText = itemView.findViewById(R.id.date_tv);
-
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -76,12 +74,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
         }
 
         void bind(Post post) {
-            summary.setText(post.getUserEmail());
-
+            userName.setText(post.getUserEmail());
             SimpleDateFormat format = new SimpleDateFormat("hh:mm, dd MMM",
                     Locale.getDefault());
             Date date = new Date(post.getCreatedAt());
-
             postText.setText(format.format(date));
             Picasso.with(context)
                     .load(post.getUrlProfileImage())

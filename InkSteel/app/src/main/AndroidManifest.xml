@@ -26,20 +26,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"/>
+
         <activity android:name=".activities.HomeActivity"/>
 
-        <!--<receiver-->
-        <!--android:name=".helpers.NetworkStateReceiver"-->
-        <!--android:label="NetworkChangeReceiver">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>-->
-        <!--</intent-filter>-->
-        <!--</receiver>-->
-
-        <service android:name=".helpers.NetworkService"/>
+        <service
+            android:name=".helpers.NetworkService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.ink_steel.inksteel.DIRECT_REPLY"/>
+            </intent-filter>
+        </service>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
