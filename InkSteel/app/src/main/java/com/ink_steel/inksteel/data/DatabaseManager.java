@@ -658,18 +658,19 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     public void addMessage(Message message, ChatRoom chatRoom) {
         mFirestore.collection("chatRooms").document(chatRoom.getChatId())
                 .collection("messages").add(message);
+        boolean seen = mCurrentUser.getName().equals(message.getUserName());
         mFirestore.collection("users").document(mCurrentUser.getEmail())
                 .collection("chatRooms").document(chatRoom.getChatId())
                 .update("lastMessage", message.getMessage(),
                         "lastMessageTime", message.getTime(),
                         "lastMessageSender", mCurrentUser.getEmail(),
-                        "seen", false);
+                        "seen", seen);
         mFirestore.collection("users").document(chatRoom.getEmail())
                 .collection("chatRooms").document(chatRoom.getChatId())
                 .update("lastMessage", message.getMessage(),
                         "lastMessageTime", message.getTime(),
                         "lastMessageSender", mCurrentUser.getEmail(),
-                        "seen", false);
+                        "seen", !seen);
     }
 
     public ChatRoom isChatRoomCreated(String email) {
