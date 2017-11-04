@@ -22,13 +22,13 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHolder> {
 
-    private Context context;
-    private List<Post> posts;
+    private Context mContext;
+    private List<Post> mPosts;
     private PostClickListener mListener;
 
     public PostsAdapter(Context context, List<Post> posts, PostClickListener listener) {
-        this.context = context;
-        this.posts = posts;
+        mContext = context;
+        mPosts = posts;
         mListener = listener;
     }
 
@@ -41,7 +41,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
 
     @Override
     public void onBindViewHolder(PostsViewHolder holder, int position) {
-        holder.bind(posts.get(position));
+        holder.bind(mPosts.get(position));
     }
 
     @Override
@@ -51,7 +51,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
 
     @Override
     public int getItemCount() {
-        return posts.size();
+        return mPosts.size();
     }
 
     class PostsViewHolder extends RecyclerView.ViewHolder {
@@ -79,11 +79,11 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
                     Locale.getDefault());
             Date date = new Date(post.getCreatedAt());
             postText.setText(format.format(date));
-            Picasso.with(context)
+            Picasso.with(mContext)
                     .load(post.getUrlProfileImage())
                     .transform(new CropCircleTransformation())
                     .into(profilePic);
-            Picasso.with(context)
+            Picasso.with(mContext)
                     .load(post.getUrlThumbnailImage())
                     .into(postPic);
         }

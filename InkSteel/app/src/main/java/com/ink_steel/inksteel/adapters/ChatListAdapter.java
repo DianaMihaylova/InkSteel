@@ -21,14 +21,14 @@ import java.util.Locale;
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.PostsViewHolder> {
 
     private List<ChatRoom> mChatRooms;
-    private String email;
+    private String mEmail;
     private ChatListClickListener mListener;
 
     public ChatListAdapter(ChatListClickListener listener, List<ChatRoom> chatRooms,
                            String currentUserEmail) {
         mChatRooms = chatRooms;
         mListener = listener;
-        email = currentUserEmail;
+        mEmail = currentUserEmail;
     }
 
     @Override

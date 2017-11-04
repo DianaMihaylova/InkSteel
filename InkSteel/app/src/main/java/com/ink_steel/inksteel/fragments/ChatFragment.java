@@ -29,10 +29,10 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
     private ImageView mImageView;
     private TextView mTextView;
     private DatabaseManager mManager;
-    private ArrayList<Message> messages;
-    private MessageAdapter adapter;
-    private RecyclerView recyclerView;
-    private ImageButton msgbtn;
+    private ArrayList<Message> mMessages;
+    private MessageAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private ImageButton mMsgbtn;
     private ChatRoom mChatRoom;
 
     public ChatFragment() {
@@ -55,7 +55,7 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
 
         mImageView = view.findViewById(R.id.asdfg);
         mTextView = view.findViewById(R.id.qwerty);
-        msgbtn = view.findViewById(R.id.chat_send_btn);
+        mMsgbtn = view.findViewById(R.id.chat_send_btn);
         final EditText messageEt = view.findViewById(R.id.chat_message_et);
 
         String email = getArguments().getString("email");
@@ -68,7 +68,7 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
             loadChatRoomMessages();
         }
 
-        msgbtn.setOnClickListener(new View.OnClickListener() {
+        mMsgbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String msg = messageEt.getText().toString();
@@ -81,12 +81,12 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
             }
         });
 
-        messages = new ArrayList<>();
-        recyclerView = view.findViewById(R.id.chat_rv);
-        adapter = new MessageAdapter(getActivity(), messages,
+        mMessages = new ArrayList<>();
+        mRecyclerView = view.findViewById(R.id.chat_rv);
+        mAdapter = new MessageAdapter(getActivity(), mMessages,
                 mManager.getCurrentUser().getName());
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return view;
     }
@@ -107,16 +107,16 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
 
     @Override
     public void onMessagesLoaded() {
-        messages.addAll(mManager.getChatMessages());
-        recyclerView.scrollToPosition(messages.size() - 1);
-        adapter.notifyDataSetChanged();
+        mMessages.addAll(mManager.getChatMessages());
+        mRecyclerView.scrollToPosition(mMessages.size() - 1);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onMessageAdded(Message message) {
-        messages.add(message);
-        recyclerView.scrollToPosition(messages.size() - 1);
-        adapter.notifyItemInserted(messages.size() - 1);
+        mMessages.add(message);
+        mRecyclerView.scrollToPosition(mMessages.size() - 1);
+        mAdapter.notifyItemInserted(mMessages.size() - 1);
     }
 
     @Override

@@ -44,7 +44,7 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
     private ConstraintSet mCs;
     private ConstraintLayout mCl;
     private TextView mPostDescription;
-    private Post currentPost;
+    private Post mCurrentPost;
     private DatabaseManager mManager;
     private Picasso mPicasso;
 
@@ -94,7 +94,7 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
         mPicasso = new Picasso.Builder(getActivity()).build();
 
         mManager = DatabaseManager.getInstance();
-        currentPost = mManager.getPost(this, postId);
+        mCurrentPost = mManager.getPost(this, postId);
         displayPost(true);
 
         mCollapse.setOnClickListener(this);
@@ -151,19 +151,19 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
 
 
     private void displayPost(boolean isInitial) {
-        if (currentPost != null) {
+        if (mCurrentPost != null) {
 
-            mReactionUserEmail.setText(currentPost.getUserEmail());
+            mReactionUserEmail.setText(mCurrentPost.getUserEmail());
 
-            mPicasso.load(currentPost.getUrlProfileImage())
+            mPicasso.load(mCurrentPost.getUrlProfileImage())
                     .into(mPostUserProfileImage);
-            mPicasso.load(currentPost.getUrlImage())
+            mPicasso.load(mCurrentPost.getUrlImage())
                     .into(mPostImage);
 
-            String description = currentPost.getDescription();
+            String description = mCurrentPost.getDescription();
             if (!description.isEmpty()) {
                 mPostDescription.setVisibility(View.VISIBLE);
-                mPostDescription.setText(currentPost.getDescription());
+                mPostDescription.setText(mCurrentPost.getDescription());
             } else {
                 mPostDescription.setVisibility(View.INVISIBLE);
             }
@@ -182,10 +182,10 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
 
     private void updateReactions() {
 
-        mLikeCount.setText(String.valueOf(currentPost.getReactions().get(0)));
-        mBlushCount.setText(String.valueOf(currentPost.getReactions().get(1)));
-        mDevilCount.setText(String.valueOf(currentPost.getReactions().get(2)));
-        mDazedCount.setText(String.valueOf(currentPost.getReactions().get(3)));
+        mLikeCount.setText(String.valueOf(mCurrentPost.getReactions().get(0)));
+        mBlushCount.setText(String.valueOf(mCurrentPost.getReactions().get(1)));
+        mDevilCount.setText(String.valueOf(mCurrentPost.getReactions().get(2)));
+        mDazedCount.setText(String.valueOf(mCurrentPost.getReactions().get(3)));
     }
 
     @Override
@@ -193,16 +193,16 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
         String reaction = "";
         switch (v.getId()) {
             case R.id.reaction_like:
-                reaction = "like";
+                reaction = getString(R.string.like);
                 break;
             case R.id.reaction_blush:
-                reaction = "blush";
+                reaction = getString(R.string.blush);
                 break;
             case R.id.reaction_devil:
-                reaction = "devil";
+                reaction = getString(R.string.devil);
                 break;
             case R.id.reaction_dazed:
-                reaction = "dazed";
+                reaction = getString(R.string.dazed);
                 break;
             case R.id.collapse_btn:
                 toggleReactionsRecycler();
@@ -210,7 +210,7 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
             case R.id.next: {
                 Post post = mManager.getNextPost(this);
                 if (post != null) {
-                    currentPost = post;
+                    mCurrentPost = post;
                     displayPost(false);
                 }
             }
@@ -218,7 +218,7 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
             case R.id.previous: {
                 Post post = mManager.getPreviousPost(this);
                 if (post != null) {
-                    currentPost = post;
+                    mCurrentPost = post;
                     displayPost(false);
                 }
             }

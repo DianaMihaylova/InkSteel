@@ -66,7 +66,6 @@ public class LoginFragment extends Fragment {
 
     private void goToRegister() {
         RegisterFragment fragment = new RegisterFragment();
-
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_placeholder, fragment)

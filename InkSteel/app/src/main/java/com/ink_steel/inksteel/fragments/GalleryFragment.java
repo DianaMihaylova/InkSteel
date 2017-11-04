@@ -29,7 +29,7 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
     private User mCurrentUser;
     private DatabaseManager mUserManager;
     private boolean isFriendGallery;
-    private User friend;
+    private User mFriend;
 
     public GalleryFragment() {
     }
@@ -52,8 +52,8 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            friend = (User) bundle.getSerializable("friend");
-            mAdapter = new GalleryRecyclerViewAdapter(friend.getGallery(), this);
+            mFriend = (User) bundle.getSerializable("friend");
+            mAdapter = new GalleryRecyclerViewAdapter(mFriend.getGallery(), this);
             fab.setVisibility(View.INVISIBLE);
             isFriendGallery = true;
         } else {
@@ -78,7 +78,7 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), CHOOSE_IMAGE);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), CHOOSE_IMAGE);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
         if (isFriendGallery) {
             isLongClick = false;
             ((HomeActivity) getActivity())
-                    .replaceFragment(FullScreenImageFragment.newInstance(position, friend));
+                    .replaceFragment(FullScreenImageFragment.newInstance(position, mFriend));
         } else {
             if (isLongClick) {
                 showAlert(position);
@@ -111,15 +111,15 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
 
     private void showAlert(final int position) {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getActivity());
-        alertBuilder.setMessage("Do you want to delete the image?")
+        alertBuilder.setMessage(R.string.do_you_want)
                 .setCancelable(true)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 })
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String image = mCurrentUser.getGallery().get(position);
@@ -129,7 +129,7 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
                     }
                 });
         AlertDialog ad = alertBuilder.create();
-        ad.setTitle("WARNING MESSAGE");
+        ad.setTitle(getString(R.string.warning_msg));
         ad.setIcon(R.drawable.warning_msg);
         ad.show();
     }

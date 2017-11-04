@@ -18,22 +18,22 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class ExploreAdapter extends BaseAdapter {
 
-    private List<User> users;
-    private Context context;
+    private List<User> mUsers;
+    private Context mContext;
 
     public ExploreAdapter(List<User> users, Context context) {
-        this.users = users;
-        this.context = context;
+        mUsers = users;
+        mContext = context;
     }
 
     @Override
     public int getCount() {
-        return users.size();
+        return mUsers.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return users.get(position);
+        return mUsers.get(position);
     }
 
     @Override
@@ -53,14 +53,14 @@ public class ExploreAdapter extends BaseAdapter {
 
         User user = (User) getItem(position);
 
-        String username = "Username:\n" + user.getName();
-        String country = "City:\n" + user.getCity();
+        String username = mContext.getString(R.string.user_name) + user.getName();
+        String city = mContext.getString(R.string.user_city) + user.getCity();
         ((TextView) v.findViewById(R.id.user_name)).setText(username);
-        ((TextView) v.findViewById(R.id.user_city)).setText(country);
+        ((TextView) v.findViewById(R.id.user_city)).setText(city);
         ImageView imageView = v.findViewById(R.id.profile_pic);
 
         if (user.getProfileImage() != null && !user.getProfileImage().isEmpty())
-            Picasso.with(context)
+            Picasso.with(mContext)
                     .load(user.getProfileImage())
                     .transform(new CropCircleTransformation())
                     .into(imageView);

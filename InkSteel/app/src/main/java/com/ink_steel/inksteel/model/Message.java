@@ -1,6 +1,7 @@
 package com.ink_steel.inksteel.model;
 
 public class Message {
+
     private String userName;
     private String message;
     private long time;

@@ -14,12 +14,12 @@ import java.util.ArrayList;
 
 public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecyclerViewAdapter.GalleryViewHolders> {
 
-    private ArrayList<String> gallery;
-    private GalleryImageLongClickListener listener;
+    private ArrayList<String> mGallery;
+    private GalleryImageLongClickListener mListener;
 
     public GalleryRecyclerViewAdapter(ArrayList<String> gallery, GalleryImageLongClickListener listener) {
-        this.gallery = gallery;
-        this.listener = listener;
+        mGallery = gallery;
+        mListener = listener;
     }
 
     @Override
@@ -31,12 +31,12 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
 
     @Override
     public void onBindViewHolder(GalleryViewHolders holder, int position) {
-        holder.bind(gallery.get(position), position);
+        holder.bind(mGallery.get(position), position);
     }
 
     @Override
     public int getItemCount() {
-        return gallery.size();
+        return mGallery.size();
     }
 
     class GalleryViewHolders extends RecyclerView.ViewHolder {
@@ -54,16 +54,17 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
                     .resize(200, 200)
                     .centerCrop()
                     .into(image);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onGalleryImageLongClick(pos, false);
+                    mListener.onGalleryImageLongClick(pos, false);
                 }
             });
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    listener.onGalleryImageLongClick(pos, true);
+                    mListener.onGalleryImageLongClick(pos, true);
                     return true;
                 }
             });

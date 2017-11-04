@@ -48,14 +48,14 @@ public class LoginActivity extends AppCompatActivity implements DatabaseManager.
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(LoginActivity.this);
         alertBuilder.setMessage(error)
                 .setCancelable(false)
-                .setPositiveButton("BACK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.back, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
         AlertDialog ad = alertBuilder.create();
-        ad.setTitle("WARNING MESSAGE");
+        ad.setTitle(getString(R.string.warning_msg));
         ad.setIcon(R.drawable.warning_msg);
         ad.show();
     }
@@ -68,10 +68,11 @@ public class LoginActivity extends AppCompatActivity implements DatabaseManager.
     @Override
     public void onUserInfoLoaded() {
         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-        if (mUserManager.getCurrentUser().getName().isEmpty())
+        if (mUserManager.getCurrentUser().getName().isEmpty()) {
             intent.putExtra(IS_NEW_USER, true);
-        else
+        } else {
             intent.putExtra(IS_NEW_USER, false);
+        }
         startActivity(intent);
     }
 
@@ -90,5 +91,4 @@ public class LoginActivity extends AppCompatActivity implements DatabaseManager.
     public enum ButtonType {
         LOGIN, REGISTER
     }
-
 }

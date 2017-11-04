@@ -15,30 +15,30 @@ import java.util.ArrayList;
 
 public class FullScreenViewAdapter extends PagerAdapter {
 
-    private Context context;
-    private ArrayList<String> gallery;
+    private Context mContext;
+    private ArrayList<String> mGallery;
 
     public FullScreenViewAdapter(Context context, ArrayList<String> gallery) {
-        this.context = context;
-        this.gallery = gallery;
+        mContext = context;
+        mGallery = gallery;
     }
 
     @Override
     public int getCount() {
-        return gallery.size();
+        return mGallery.size();
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService
+        LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
 
         View view = layoutInflater.inflate(R.layout.item_image_fullscreen, container, false);
 
         ImageView imageView = view.findViewById(R.id.selected_image);
 
-        Picasso.with(context)
-                .load(gallery.get(position))
+        Picasso.with(mContext)
+                .load(mGallery.get(position))
                 .into(imageView);
 
         container.addView(view);
