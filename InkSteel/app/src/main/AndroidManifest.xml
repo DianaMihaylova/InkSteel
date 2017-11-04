@@ -31,13 +31,15 @@
             android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"/>
         <activity android:name=".activities.HomeActivity"/>
 
-        <receiver
-            android:name=".helpers.NetworkStateReceiver"
-            android:label="NetworkChangeReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
-            </intent-filter>
-        </receiver>
+        <!--<receiver-->
+        <!--android:name=".helpers.NetworkStateReceiver"-->
+        <!--android:label="NetworkChangeReceiver">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>-->
+        <!--</intent-filter>-->
+        <!--</receiver>-->
+
+        <service android:name=".helpers.NetworkService"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

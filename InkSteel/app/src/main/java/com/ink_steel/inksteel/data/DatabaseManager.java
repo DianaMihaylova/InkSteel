@@ -283,9 +283,13 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
 
     public void addLike(String email) {
         mCurrentUser.getLiked().add(email);
+        User user = mUsers.get(email);
         mFirestore.collection("users")
                 .document(mCurrentUser.getEmail())
                 .update("liked", mCurrentUser.getLiked());
+        if (user.getLiked().contains(mCurrentUser.getEmail())) {
+            addFriend(email);
+        }
     }
 
     public void addFriend(String email) {

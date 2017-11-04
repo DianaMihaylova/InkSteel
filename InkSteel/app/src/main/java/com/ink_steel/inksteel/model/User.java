@@ -1,9 +1,11 @@
 package com.ink_steel.inksteel.model;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User implements Serializable {
+public class User implements Serializable, Comparable<User> {
 
     private String email;
     private String name;
@@ -79,5 +81,10 @@ public class User implements Serializable {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof User && email.equals(((User) obj).email);
+    }
+
+    @Override
+    public int compareTo(@NonNull User o) {
+        return email.compareTo(o.email);
     }
 }

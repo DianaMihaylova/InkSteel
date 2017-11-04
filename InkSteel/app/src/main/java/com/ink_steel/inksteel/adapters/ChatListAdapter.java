@@ -1,5 +1,6 @@
 package com.ink_steel.inksteel.adapters;
 
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,6 +75,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.PostsV
             userName.setText(chatRoom.getEmail());
             Picasso.with(itemView.getContext())
                     .load(chatRoom.getProfilePicture()).into(image);
+            if (!chatRoom.isSeen())
+                lastMsg.setTypeface(null, Typeface.BOLD);
             lastMsg.setText(chatRoom.getLastMessage());
             SimpleDateFormat format = new SimpleDateFormat("hh:mm, dd MMM",
                     Locale.getDefault());
