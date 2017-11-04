@@ -4,14 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
     tools:context="com.ink_steel.inksteel.fragments.FeedFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/feed_rv"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -25,7 +23,7 @@
         android:layout_marginBottom="24dp"
         android:layout_marginRight="24dp"
         android:src="@drawable/ic_add_black_48dp"
-        app:backgroundTint="?android:attr/colorPrimary"
+        app:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:rippleColor="@color/cardview_shadow_end_color"/>

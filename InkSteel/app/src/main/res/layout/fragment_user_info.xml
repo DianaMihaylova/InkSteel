@@ -3,7 +3,6 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@android:color/black"
               android:orientation="vertical">
 
     <ImageView
@@ -24,19 +23,17 @@
         android:layout_marginTop="16dp"
         android:gravity="bottom|center"
         android:hint="@string/username"
-        android:fontFamily="cursive"
+        style="@style/FontText"
         android:textSize="34sp"
-        android:textColor="@color/colorAccent"
         android:inputType="textPersonName"/>
 
     <EditText
         android:id="@+id/user_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="City"
-        android:fontFamily="cursive"
+        android:hint="@string/city"
         android:textSize="34sp"
-        android:textColor="@color/colorAccent"
+        style="@style/FontText"
         android:layout_marginLeft="64dp"
         android:gravity="bottom|center"
         android:layout_marginRight="64dp"/>
@@ -50,9 +47,8 @@
         android:layout_marginBottom="16dp"
         android:gravity="bottom|center"
         android:hint="@string/age"
-        android:fontFamily="cursive"
         android:textSize="34sp"
-        android:textColor="@color/colorAccent"
+        style="@style/FontText"
         android:inputType="textPersonName"/>
 
     <Button
@@ -61,9 +57,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:fontFamily="serif"
         android:textSize="24sp"
-        android:textColor="@color/colorAccent"
+        android:fontFamily="serif"
         android:background="@drawable/btn_border_style"
         android:text="@string/save"/>
 

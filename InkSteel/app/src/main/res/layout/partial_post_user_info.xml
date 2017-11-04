@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#25ffffff"
+    android:background="@color/colorPrimary"
     android:padding="8dp">
 
     <ImageView
@@ -25,11 +25,12 @@
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:gravity="center"
-        android:textColor="#afffffff"
+        style="@style/FontText"
+        android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="@+id/post_info_user_picture"
         app:layout_constraintStart_toEndOf="@+id/post_info_user_picture"
         app:layout_constraintTop_toTopOf="@+id/post_info_user_picture"
-        tools:text="TextView"/>
+        tools:text="@string/textview"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/post_info_description"
@@ -37,18 +38,17 @@
         android:layout_height="0dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
-        android:background="@color/cardview_shadow_start_color"
+        android:background="@color/colorAccent"
         android:gravity="center"
         android:maxLength="20"
         android:maxLines="1"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:textColor="@android:color/white"
         app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toBottomOf="@+id/post_info_username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/post_info_username"
         app:layout_constraintTop_toTopOf="@+id/post_info_username"
-        tools:text="TextView"/>
+        tools:text="@string/textview"/>
 
 </android.support.constraint.ConstraintLayout>

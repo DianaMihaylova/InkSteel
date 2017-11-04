@@ -24,4 +24,15 @@
     <string name="confirm_password">Confirm password</string>
     <string name="send_a_message">Send a message</string>
     <string name="click_the_skull_to_explore_again"><![CDATA[Click the skull to explore again ----->]]></string>
+    <string name="app_logo">app logo</string>
+    <string name="add_image">add image</string>
+    <string name="add_description_if_you_like_20_chars">Add description, if you like (20 chars)</string>
+    <string name="click_to_explore_again"><![CDATA[Click to explore again ->]]></string>
+    <string name="friends">Friends</string>
+    <string name="log_out">Log out</string>
+    <string name="last_message">Last Message</string>
+    <string name="_16_34_1_nov">16:34, 1 Nov</string>
+    <string name="user_city">UserCity</string>
+    <string name="textview">TextView</string>
+    <string name="reacted_with">reacted with</string>
 </resources>

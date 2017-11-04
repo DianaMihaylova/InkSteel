@@ -7,12 +7,14 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:elevation="8dp"
-    card_view:cardBackgroundColor="@color/colorPrimaryDark"
+    card_view:cardBackgroundColor="@color/colorAccent"
     card_view:cardCornerRadius="16dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layout_margin="3dp">
 
         <ImageView
             android:id="@+id/profile_pic"
@@ -38,10 +40,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:fontFamily="cursive"
             android:textSize="36sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
+            style="@style/FontText"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintHorizontal_bias="0.137"
             card_view:layout_constraintLeft_toLeftOf="parent"
@@ -55,14 +55,12 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="28dp"
             android:layout_marginLeft="28dp"
-            android:fontFamily="cursive"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
+            style="@style/FontText"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintRight_toRightOf="parent"
             card_view:layout_constraintVertical_weight="2"
-            tools:text="UserCity"/>
+            tools:text="@string/user_city"/>
 
     </android.support.constraint.ConstraintLayout>
 

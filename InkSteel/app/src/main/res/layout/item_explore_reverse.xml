@@ -7,12 +7,14 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:elevation="8dp"
-    card_view:cardBackgroundColor="@color/place_autocomplete_search_text"
+    card_view:cardBackgroundColor="@color/colorAccent"
     card_view:cardCornerRadius="16dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:layout_margin="3dp">
 
         <ImageView
             android:id="@+id/profile_pic"
@@ -35,16 +37,14 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="cursive"
-            android:textColor="@color/colorAccent"
+            style="@style/FontText"
             android:textSize="36sp"
-            android:textStyle="bold"
             card_view:layout_constraintEnd_toStartOf="@+id/user_city"
             card_view:layout_constraintHorizontal_bias="0.097"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintVertical_weight="2"
-            tools:text="Username"/>
+            tools:text="@string/username"/>
 
         <TextView
             android:id="@+id/user_city"
@@ -53,14 +53,12 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="cursive"
-            android:textColor="@color/colorAccent"
             android:textSize="24sp"
-            android:textStyle="bold"
+            style="@style/FontText"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintVertical_weight="2"
-            tools:text="UserCity"/>
+            tools:text="@string/user_city"/>
 
     </android.support.constraint.ConstraintLayout>
 

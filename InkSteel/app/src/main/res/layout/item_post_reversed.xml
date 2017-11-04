@@ -7,12 +7,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    card_view:cardBackgroundColor="@color/colorPrimaryDark"
+    card_view:cardBackgroundColor="@color/colorAccent"
     card_view:cardCornerRadius="16dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layout_margin="3dp">
 
         <ImageView
             android:id="@+id/profile_pic"
@@ -37,11 +39,10 @@
             android:layout_height="0dp"
             android:layout_marginEnd="0dp"
             android:layout_marginRight="0dp"
-            android:textColor="@android:color/black"
             android:layout_marginTop="8dp"
             android:gravity="end"
             android:textSize="12sp"
-            android:fontFamily="serif"
+            style="@style/DateText"
             card_view:layout_constraintBottom_toTopOf="@+id/profile_pic"
             card_view:layout_constraintRight_toRightOf="@+id/profile_pic"
             card_view:layout_constraintTop_toTopOf="@+id/post_pic"
@@ -70,16 +71,15 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:gravity="bottom|center_horizontal"
-            android:textColor="@android:color/black"
-            android:fontFamily="cursive"
             android:textSize="20sp"
+            style="@style/FontText"
             card_view:layout_constraintBottom_toBottomOf="@+id/post_pic"
             card_view:layout_constraintHorizontal_bias="0.485"
             card_view:layout_constraintLeft_toLeftOf="@+id/profile_pic"
             card_view:layout_constraintRight_toRightOf="@+id/profile_pic"
             card_view:layout_constraintTop_toBottomOf="@+id/profile_pic"
             card_view:layout_constraintVertical_weight="2"
-            tools:text="TextView"/>
+            tools:text="@string/textview"/>
 
         <ImageView
             android:id="@+id/imageView4"

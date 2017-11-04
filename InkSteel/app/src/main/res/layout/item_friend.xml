@@ -6,13 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    card_view:cardBackgroundColor="@color/place_autocomplete_search_text"
     card_view:cardCornerRadius="16dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/place_autocomplete_search_text">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/user_city"
@@ -20,12 +18,10 @@
             android:layout_height="0dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="cursive"
             android:gravity="end"
-            android:text="TextView"
-            android:textColor="@color/cardview_light_background"
+            android:text="@string/textview"
             android:textSize="18sp"
-            android:textStyle="bold"
+            style="@style/Text"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintVertical_weight="2"/>
@@ -48,15 +44,13 @@
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:fontFamily="cursive"
             android:gravity="bottom|center_horizontal"
-            android:textColor="@color/cardview_light_background"
             android:textSize="24sp"
-            android:textStyle="bold"
+            style="@style/FontText"
             card_view:layout_constraintStart_toEndOf="@+id/imageView4"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintVertical_weight="2"
-            tools:text="TextView"/>
+            tools:text="@string/textview"/>
 
         <ImageView
             android:id="@+id/imageView4"
@@ -80,10 +74,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/btn_custom"
-            android:fontFamily="serif"
             android:text="@string/send_a_message"
             android:textSize="16sp"
-            android:textStyle="bold"
+            style="@style/Text"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintHorizontal_bias="0.643"

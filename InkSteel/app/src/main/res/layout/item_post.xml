@@ -7,12 +7,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    card_view:cardBackgroundColor="@color/colorPrimaryDark"
+    card_view:cardBackgroundColor="@color/colorAccent"
     card_view:cardCornerRadius="16dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layout_margin="3dp">
 
         <ImageView
             android:id="@+id/profile_pic"
@@ -50,9 +52,6 @@
             android:id="@+id/imageView12"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
             android:src="@drawable/triangle"
             card_view:layout_constraintBottom_toBottomOf="@+id/post_pic"
             card_view:layout_constraintLeft_toLeftOf="@+id/post_pic"
@@ -62,15 +61,10 @@
             android:id="@+id/date_tv"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
             android:layout_marginStart="8dp"
-            android:textColor="@android:color/black"
+            style="@style/DateText"
             android:layout_marginTop="8dp"
-            android:textSize="12sp"
-            android:fontFamily="serif"
             card_view:layout_constraintBottom_toTopOf="@+id/profile_pic"
-            card_view:layout_constraintHorizontal_bias="1.0"
             card_view:layout_constraintLeft_toLeftOf="@+id/profile_pic"
             card_view:layout_constraintRight_toRightOf="@+id/profile_pic"
             card_view:layout_constraintTop_toTopOf="@+id/post_pic"
@@ -85,17 +79,15 @@
             android:ellipsize="end"
             android:gravity="bottom|center_horizontal"
             android:maxLines="1"
-            android:textColor="@android:color/black"
             android:textAlignment="center"
-            android:fontFamily="cursive"
+            style="@style/FontText"
             android:textSize="20sp"
             card_view:layout_constraintBottom_toBottomOf="@+id/post_pic"
-            card_view:layout_constraintHorizontal_bias="0.0"
             card_view:layout_constraintLeft_toLeftOf="@+id/profile_pic"
             card_view:layout_constraintRight_toRightOf="@+id/profile_pic"
             card_view:layout_constraintTop_toBottomOf="@+id/profile_pic"
             card_view:layout_constraintVertical_weight="2"
-            tools:text="TextView"/>
+            tools:text="@string/textview"/>
 
     </android.support.constraint.ConstraintLayout>
 
