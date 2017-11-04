@@ -36,7 +36,6 @@ public class Reaction {
         return initial;
     }
 
-
     @Exclude
     public int getReactionIcon() {
         switch (type) {

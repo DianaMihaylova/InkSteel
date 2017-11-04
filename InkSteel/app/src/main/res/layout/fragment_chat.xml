@@ -37,8 +37,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        style="@style/Text"
-        android:textSize="24sp"
+        style="@style/FontText"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/asdfg"
@@ -52,14 +52,13 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/colorPrimary"
         android:ems="10"
-        android:hint="Message"
+        android:hint="@string/message"
         android:inputType="textPersonName"
         android:maxLines="1"
         android:padding="8dp"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
+        style="@style/Text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/chat_send_btn"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -73,7 +72,7 @@
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@+id/chat_message_et"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@android:drawable/presence_online"
+        android:src="@drawable/btn_send_msg"
         android:layout_marginRight="8dp"/>
 
     <android.support.v7.widget.RecyclerView

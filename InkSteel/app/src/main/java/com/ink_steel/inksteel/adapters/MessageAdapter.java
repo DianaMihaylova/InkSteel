@@ -17,14 +17,14 @@ import java.util.Locale;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.PostsViewHolder> {
 
-    private Context context;
-    private List<Message> messages;
-    private String username;
+    private Context mContext;
+    private List<Message> mMessages;
+    private String mUsername;
 
     public MessageAdapter(Context context, List<Message> messages, String username) {
-        this.context = context;
-        this.messages = messages;
-        this.username = username;
+        mContext = context;
+        mMessages = messages;
+        mUsername = username;
     }
 
     @Override
@@ -36,13 +36,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.PostsVie
 
     @Override
     public void onBindViewHolder(PostsViewHolder holder, int position) {
-        holder.bind(messages.get(position));
+        holder.bind(mMessages.get(position));
     }
 
     @Override
     public int getItemViewType(int position) {
 
-        if (username.equals(messages.get(position).getUserName())) {
+        if (mUsername.equals(mMessages.get(position).getUserName())) {
             return R.layout.item_message_reverse;
         }
         return R.layout.item_message;
@@ -50,7 +50,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.PostsVie
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        return mMessages.size();
     }
 
     class PostsViewHolder extends RecyclerView.ViewHolder {
@@ -62,7 +62,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.PostsVie
 
             messageTv = itemView.findViewById(R.id.item_message);
             time = itemView.findViewById(R.id.item_time);
-
         }
 
         void bind(Message message) {

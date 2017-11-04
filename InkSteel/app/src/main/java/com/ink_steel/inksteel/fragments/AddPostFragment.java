@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,6 @@ public class AddPostFragment extends Fragment implements DatabaseManager.PostSav
     private CropImageView mCropImageView;
     private Button mAddImageButton;
     private EditText mDescriptionEditText;
-
     private Uri mUri;
     private Button mSaveButton;
 
@@ -44,7 +42,7 @@ public class AddPostFragment extends Fragment implements DatabaseManager.PostSav
 
         mCropImageView = view.findViewById(R.id.crop_iv);
         mAddImageButton = view.findViewById(R.id.add_image_b);
-        Button cancelButton = view.findViewById(R.id.cancel_b);
+        Button mCancelButton = view.findViewById(R.id.cancel_b);
         mSaveButton = view.findViewById(R.id.save_b);
         mDescriptionEditText = view.findViewById(R.id.description_et);
 
@@ -56,7 +54,7 @@ public class AddPostFragment extends Fragment implements DatabaseManager.PostSav
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"),
+                startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)),
                         IMAGE_CHOOSER_REQUEST_CODE);
             }
         });
@@ -69,7 +67,7 @@ public class AddPostFragment extends Fragment implements DatabaseManager.PostSav
             }
         });
 
-        cancelButton.setOnClickListener(new View.OnClickListener() {
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((HomeActivity) getActivity()).replaceFragment(new ScreenSlidePageFragment());

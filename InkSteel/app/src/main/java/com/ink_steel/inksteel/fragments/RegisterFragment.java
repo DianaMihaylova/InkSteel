@@ -81,15 +81,15 @@ public class RegisterFragment extends Fragment {
 
     private boolean areFieldsValid() {
         if (mUserEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(mUserEmail).matches()) {
-            mUserEmailEt.setError("Invalid email!");
+            mUserEmailEt.setError(getString(R.string.invalid_email));
             return false;
         }
         if (mPassword.length() < 6) {
-            mUserPasswordEt.setError("Password too short! Minimum length - 6 characters.");
+            mUserPasswordEt.setError(getString(R.string.pass_short));
             return false;
         }
         if (!mPassword.equals(mConfirmPassword)) {
-            mConfirmPasswordEt.setError("Passwords don't match!");
+            mConfirmPasswordEt.setError(getString(R.string.pass_not_match));
             return false;
         }
         return true;

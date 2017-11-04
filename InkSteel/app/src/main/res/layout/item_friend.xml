@@ -10,7 +10,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryTransparent">
 
         <TextView
             android:id="@+id/user_city"
@@ -20,7 +21,7 @@
             android:layout_marginTop="8dp"
             android:gravity="end"
             android:text="@string/textview"
-            android:textSize="18sp"
+            android:textSize="12sp"
             style="@style/Text"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
@@ -40,33 +41,21 @@
 
         <TextView
             android:id="@+id/user_name"
+            style="@style/FontText"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginEnd="84dp"
             android:layout_marginTop="16dp"
             android:gravity="bottom|center_horizontal"
-            android:textSize="24sp"
-            style="@style/FontText"
-            card_view:layout_constraintStart_toEndOf="@+id/imageView4"
+            android:textSize="30sp"
+            card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintVertical_weight="2"
             tools:text="@string/textview"/>
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="0dp"
-            android:layout_marginEnd="0dp"
-            android:layout_marginRight="0dp"
-            android:rotation="180"
-            android:src="@drawable/triangle"
-            card_view:layout_constraintBottom_toBottomOf="@+id/user_image"
-            card_view:layout_constraintRight_toRightOf="@+id/user_image"
-            card_view:layout_constraintTop_toTopOf="parent"/>
-
         <Button
             android:id="@+id/btn_msg"
+            style="@style/Text"
             android:layout_width="153dp"
             android:layout_height="42dp"
             android:layout_marginBottom="8dp"
@@ -76,11 +65,9 @@
             android:background="@drawable/btn_custom"
             android:text="@string/send_a_message"
             android:textSize="16sp"
-            style="@style/Text"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintHorizontal_bias="0.643"
-            card_view:layout_constraintStart_toEndOf="@+id/imageView4"
+            card_view:layout_constraintStart_toStartOf="@+id/user_name"
             card_view:layout_constraintTop_toBottomOf="@+id/user_name"/>
 
     </android.support.constraint.ConstraintLayout>

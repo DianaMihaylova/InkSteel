@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.google.firebase.firestore.Exclude;
 
 public class ChatRoom implements Comparable<ChatRoom> {
+
     private String email;
     private String userName;
     private String profilePicture;

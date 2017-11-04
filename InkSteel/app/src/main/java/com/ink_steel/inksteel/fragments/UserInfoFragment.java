@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.HomeActivity;
@@ -33,10 +32,10 @@ import static android.app.Activity.RESULT_OK;
 public class UserInfoFragment extends Fragment implements DatabaseManager.UserInfoListener {
 
     private static final int CHOOSE_IMAGE = 1;
-    private EditText name, age;
-    private ImageView imageView;
+    private EditText mName, mAge;
+    private ImageView mImageView;
     private User mCurrentUser;
-    private Bitmap imageBitmap;
+    private Bitmap mImageBitmap;
     private DatabaseManager mManager;
     private TextView mCity;
 
@@ -47,12 +46,12 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
 
         View view = inflater.inflate(R.layout.fragment_user_info, container, false);
 
-        name = view.findViewById(R.id.qwerty);
-        age = view.findViewById(R.id.user_age);
-        imageView = view.findViewById(R.id.profile_picture);
+        mName = view.findViewById(R.id.qwerty);
+        mAge = view.findViewById(R.id.user_age);
+        mImageView = view.findViewById(R.id.profile_picture);
         mCity = view.findViewById(R.id.user_city);
         Button saveBtn = view.findViewById(R.id.button_save);
-        imageView.setDrawingCacheEnabled(true);
+        mImageView.setDrawingCacheEnabled(true);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,14 +66,13 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
             displayUserInfo();
         }
 
-
-        imageView.setOnClickListener(new View.OnClickListener() {
+        mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"),
+                startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)),
                         CHOOSE_IMAGE);
             }
         });
@@ -94,11 +92,11 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
         } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             try {
                 CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                imageBitmap = MediaStore.Images.Media
+                mImageBitmap = MediaStore.Images.Media
                         .getBitmap(getActivity().getContentResolver(), result.getUri());
                 Picasso.with(getActivity()).load(result.getUri())
                         .transform(new CropCircleTransformation())
-                        .into(imageView);
+                        .into(mImageView);
 
             } catch (IOException ioe) {
                 ioe.printStackTrace();
@@ -107,37 +105,36 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
     }
 
     private void updateUserInfoFromFragment() {
-        String userName = name.getText().toString();
-        String userAge = age.getText().toString();
+        String userName = mName.getText().toString();
+        String userAge = mAge.getText().toString();
         String country = mCity.getText().toString();
 
-        String errorMessage = "Field can't be empty";
+        String errorMessage = getString(R.string.empty_field_error);
 
         if (userName.isEmpty()) {
-            name.setError(errorMessage);
+            mName.setError(errorMessage);
             return;
         }
         if (userAge.isEmpty()) {
-            age.setError(errorMessage);
+            mAge.setError(errorMessage);
             return;
         }
         if (country.isEmpty()) {
             mCity.setError(errorMessage);
             return;
         }
-
         mCurrentUser.updateUserInfo(userName, userAge, country);
-        if (imageBitmap == null)
+        if (mImageBitmap == null)
             mManager.updateUserInfo(this);
         else
-            mManager.updateUserInfo(this, imageBitmap);
+            mManager.updateUserInfo(this, mImageBitmap);
     }
 
     private void displayUserInfo() {
         if (mCurrentUser != null) {
-            name.setText(mCurrentUser.getName());
+            mName.setText(mCurrentUser.getName());
             mCity.setText(mCurrentUser.getCity());
-            age.setText(mCurrentUser.getAge());
+            mAge.setText(mCurrentUser.getAge());
             loadImage(mCurrentUser.getProfileImage());
         }
     }
@@ -147,7 +144,7 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
             Picasso.with(getActivity())
                     .load(Uri.parse(uri))
                     .transform(new CropCircleTransformation())
-                    .into(imageView);
+                    .into(mImageView);
         }
     }
 

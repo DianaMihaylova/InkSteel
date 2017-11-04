@@ -23,12 +23,12 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class ProfileFragment extends Fragment {
 
-    private ImageView imageView;
-    private TextView username, email, age, city;
-    private LinearLayout layoutGroupBtn;
-    private Button editProfileBtn, galleryFriendBtn;
+    private ImageView mImageView;
+    private TextView mUsername, mEmail, mAge, mCity;
+    private LinearLayout mLayoutGroupBtn;
+    private Button mEditProfileBtn, mGalleryFriendBtn;
     private User mCurrentUser;
-    private DatabaseManager manager;
+    private DatabaseManager mManager;
 
     public ProfileFragment() {
     }
@@ -39,20 +39,20 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        manager = DatabaseManager.getInstance();
-        mCurrentUser = manager.getCurrentUser();
+        mManager = DatabaseManager.getInstance();
+        mCurrentUser = mManager.getCurrentUser();
 
-        imageView = view.findViewById(R.id.profile);
-        username = view.findViewById(R.id.qwerty);
-        email = view.findViewById(R.id.user_email);
-        age = view.findViewById(R.id.user_age);
-        city = view.findViewById(R.id.user_city);
-        layoutGroupBtn = view.findViewById(R.id.layout_btn);
+        mImageView = view.findViewById(R.id.profile);
+        mUsername = view.findViewById(R.id.qwerty);
+        mEmail = view.findViewById(R.id.user_email);
+        mAge = view.findViewById(R.id.user_age);
+        mCity = view.findViewById(R.id.user_city);
+        mLayoutGroupBtn = view.findViewById(R.id.layout_btn);
         Button galleryBtn = view.findViewById(R.id.btn_gallery);
         Button friendsBtn = view.findViewById(R.id.btn_msg);
         ImageButton logoutBtn = view.findViewById(R.id.btn_logout);
-        editProfileBtn = view.findViewById(R.id.btn_edit_profile);
-        galleryFriendBtn = view.findViewById(R.id.btn_friend_gallery);
+        mEditProfileBtn = view.findViewById(R.id.btn_edit_profile);
+        mGalleryFriendBtn = view.findViewById(R.id.btn_friend_gallery);
 
         if (mCurrentUser != null) {
             displayUserInfo();
@@ -72,7 +72,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        editProfileBtn.setOnClickListener(new View.OnClickListener() {
+        mEditProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((HomeActivity) getActivity()).replaceFragment(new UserInfoFragment());
@@ -82,7 +82,7 @@ public class ProfileFragment extends Fragment {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                manager.signOut();
+                mManager.signOut();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
                 getActivity().finish();
@@ -98,13 +98,13 @@ public class ProfileFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             final User friend = (User) bundle.getSerializable("friend");
-            emailTxt = "Email: " + friend.getEmail();
-            userNameTxt = "Username: " + friend.getName();
-            cityTxt = "City: " + friend.getCity();
-            ageTxt = "Age: " + friend.getAge();
+            emailTxt = getString(R.string.email_dot) + friend.getEmail();
+            userNameTxt = getString(R.string.username_dot) + friend.getName();
+            cityTxt = getString(R.string.city_dot) + friend.getCity();
+            ageTxt = getString(R.string.age_dot) + friend.getAge();
             picture = friend.getProfileImage();
-            galleryFriendBtn.setVisibility(View.VISIBLE);
-            galleryFriendBtn.setOnClickListener(new View.OnClickListener() {
+            mGalleryFriendBtn.setVisibility(View.VISIBLE);
+            mGalleryFriendBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     GalleryFragment fragment = new GalleryFragment();
@@ -115,23 +115,23 @@ public class ProfileFragment extends Fragment {
                 }
             });
         } else {
-            emailTxt = "Email: " + mCurrentUser.getEmail();
-            userNameTxt = "Username: " + mCurrentUser.getName();
-            cityTxt = "City: " + mCurrentUser.getCity();
-            ageTxt = "Age: " + mCurrentUser.getAge();
+            emailTxt = getString(R.string.email_dot) + mCurrentUser.getEmail();
+            userNameTxt = getString(R.string.username_dot) + mCurrentUser.getName();
+            cityTxt = getString(R.string.city_dot) + mCurrentUser.getCity();
+            ageTxt = getString(R.string.age_dot) + mCurrentUser.getAge();
             picture = mCurrentUser.getProfileImage();
-            layoutGroupBtn.setVisibility(View.VISIBLE);
-            editProfileBtn.setVisibility(View.VISIBLE);
+            mLayoutGroupBtn.setVisibility(View.VISIBLE);
+            mEditProfileBtn.setVisibility(View.VISIBLE);
         }
 
-        email.setText(emailTxt);
-        username.setText(userNameTxt);
-        city.setText(cityTxt);
-        age.setText(ageTxt);
+        mEmail.setText(emailTxt);
+        mUsername.setText(userNameTxt);
+        mCity.setText(cityTxt);
+        mAge.setText(ageTxt);
 
         Picasso.with(getActivity())
                 .load(picture)
                 .transform(new CropCircleTransformation())
-                .into(imageView);
+                .into(mImageView);
     }
 }

@@ -1,14 +1,11 @@
 package com.ink_steel.inksteel.fragments;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v13.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -32,7 +29,6 @@ import com.ink_steel.inksteel.helpers.Listeners.OnReplaceFragmentListener;
 import com.ink_steel.inksteel.helpers.Listeners.StudioClickListener;
 import com.ink_steel.inksteel.helpers.StudiosQueryTask;
 import com.ink_steel.inksteel.model.Studio;
-import com.ink_steel.inksteel.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +82,6 @@ public class StudiosFragment extends Fragment implements StudiosQueryTask.Studio
         return v;
     }
 
-
     @Override
     public void onStart() {
         if (!mClient.isConnected()) {
@@ -103,7 +98,6 @@ public class StudiosFragment extends Fragment implements StudiosQueryTask.Studio
 
     @Override
     public void onStudioLoaded(Studio studio) {
-        Log.d("studio", "in onStudioLoaded " + studio.getPlaceId());
         mStudios.add(studio);
         mAdapter.notifyDataSetChanged();
         mManager.getStudioInfoById(studio.getPlaceId(), mGeoDataClient);
@@ -134,23 +128,19 @@ public class StudiosFragment extends Fragment implements StudiosQueryTask.Studio
                         location.setLatitude(42.698334);
                         location.setLongitude(23.319941);
                     }
-
                     mManager.getNearbyStudios(StudiosFragment.this, location);
                 }
             });
         } catch (SecurityException e) {
-            Log.d("omg", "omg");
+
         }
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
-
 }

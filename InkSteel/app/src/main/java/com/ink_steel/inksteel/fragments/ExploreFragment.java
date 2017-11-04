@@ -15,12 +15,11 @@ import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.model.User;
 
 import java.util.ArrayList;
-import java.util.TreeSet;
 
 public class ExploreFragment extends Fragment implements DatabaseManager.UsersListener {
 
     private DatabaseManager mManager;
-    private SwipeDeck cardStack;
+    private SwipeDeck mCardStack;
     private ExploreAdapter mAdapter;
     private ArrayList<User> mUsers;
     private Toast mToast;
@@ -35,7 +34,7 @@ public class ExploreFragment extends Fragment implements DatabaseManager.UsersLi
         View view = inflater.inflate(R.layout.fragment_explore, container, false);
 
         mManager = DatabaseManager.getInstance();
-        cardStack = view.findViewById(R.id.swipe_deck);
+        mCardStack = view.findViewById(R.id.swipe_deck);
 
         mToast = Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT);
 
@@ -54,7 +53,7 @@ public class ExploreFragment extends Fragment implements DatabaseManager.UsersLi
     }
 
     public void setCardStackEvent() {
-        cardStack.setEventCallback(new SwipeDeck.SwipeEventCallback() {
+        mCardStack.setEventCallback(new SwipeDeck.SwipeEventCallback() {
             @Override
             public void cardSwipedLeft(int position) {
                 mToast.setText("U N L I K E");
@@ -90,8 +89,7 @@ public class ExploreFragment extends Fragment implements DatabaseManager.UsersLi
         mUsers = new ArrayList<>();
         mAdapter = new ExploreAdapter(mUsers, getActivity());
         mManager.loadExplore(this);
-        cardStack.setAdapter(mAdapter);
-
+        mCardStack.setAdapter(mAdapter);
     }
 
     @Override

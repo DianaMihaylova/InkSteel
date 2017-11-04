@@ -20,13 +20,13 @@ import java.util.ArrayList;
 
 public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendViewHolder> {
 
-    private Context context;
-    private ArrayList<User> users;
+    private Context mContext;
+    private ArrayList<User> mUsers;
     private FriendClickListener mListener;
 
     public FriendAdapter(Context context, ArrayList<User> users, FriendClickListener listener) {
-        this.context = context;
-        this.users = users;
+        mContext = context;
+        mUsers = users;
         mListener = listener;
     }
 
@@ -38,12 +38,12 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
 
     @Override
     public void onBindViewHolder(FriendAdapter.FriendViewHolder holder, int position) {
-        holder.bind(users.get(position));
+        holder.bind(mUsers.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return users.size();
+        return mUsers.size();
     }
 
     class FriendViewHolder extends RecyclerView.ViewHolder {
@@ -72,7 +72,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
                 public void onClick(View view) {
                     ((HomeActivity) itemView.getContext())
                             .replaceFragment(ChatFragment
-                                    .newInstance(users.get(getAdapterPosition()).getEmail()));
+                                    .newInstance(mUsers.get(getAdapterPosition()).getEmail()));
                 }
             });
         }
@@ -81,7 +81,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
             userName.setText(user.getName());
             userCity.setText(user.getCity());
 
-            Picasso.with(context)
+            Picasso.with(mContext)
                     .load(user.getProfileImage())
                     .into(profilePic);
         }

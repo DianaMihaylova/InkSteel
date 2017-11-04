@@ -24,11 +24,10 @@ public class ChatListFragment extends Fragment implements Listeners.ChatListClic
 
     private DatabaseManager mManager;
     private ChatListAdapter mAdapter;
+    private LinkedList<ChatRoom> mChatRooms;
 
     public ChatListFragment() {
     }
-
-    private LinkedList<ChatRoom> mChatRooms;
 
     @Nullable
     @Override
@@ -79,7 +78,6 @@ public class ChatListFragment extends Fragment implements Listeners.ChatListClic
     public void onChatRoomChanged(ChatRoom a) {
         mChatRooms.clear();
         mChatRooms.addAll(mManager.getUserChatRooms());
-
         mAdapter.notifyDataSetChanged();
     }
 

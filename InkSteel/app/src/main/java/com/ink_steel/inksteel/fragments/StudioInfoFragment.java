@@ -1,24 +1,20 @@
 package com.ink_steel.inksteel.fragments;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -42,14 +38,7 @@ public class StudioInfoFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         OnMapReadyCallback, DatabaseManager.StudioListener {
 
-    private String mId;
     private GoogleApiClient mClient;
-    private ViewPager mViewPager;
-    private TabLayout mTabLayout;
-    private int mI;
-    private ArrayList<String> mStrings;
-    private com.google.android.gms.maps.MapFragment mMapFragment;
-    private GoogleMap mMap;
     private TextView mName;
     private TextView mAddress;
     private ImageButton mNumber;
@@ -76,7 +65,7 @@ public class StudioInfoFragment extends Fragment implements
         View view = inflater.inflate(R.layout.fragment_studio_text_info,
                 container, false);
 
-        mId = getArguments().getString("studioId");
+        String mId = getArguments().getString("studioId");
 
         mName = view.findViewById(R.id.studio_text_title);
         mAddress = view.findViewById(R.id.studio_text_address);
@@ -96,7 +85,7 @@ public class StudioInfoFragment extends Fragment implements
         Picasso.with(getActivity())
                 .load(mStudio.getImageUrl())
                 .into(imageView);
-        mMapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        MapFragment mMapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mMapFragment != null)
             mMapFragment.getMapAsync(this);
         return view;
@@ -123,17 +112,15 @@ public class StudioInfoFragment extends Fragment implements
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        GoogleMap mMap = googleMap;
         LatLng position = mStudio.getGooglePlace().getLatLng();
         mMap.addMarker(new MarkerOptions()
                 .position(position)
@@ -155,7 +142,7 @@ public class StudioInfoFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:" + mStudio.getGooglePlace().getPhoneNumber()));
+                intent.setData(Uri.parse(getString(R.string.tel) + mStudio.getGooglePlace().getPhoneNumber()));
             }
         });
 

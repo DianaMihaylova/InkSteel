@@ -14,6 +14,7 @@ import com.ink_steel.inksteel.helpers.Listeners.OnReplaceFragmentListener;
 import com.ink_steel.inksteel.helpers.NetworkService;
 
 public class HomeActivity extends Activity implements OnReplaceFragmentListener {
+
     private FragmentManager mManager;
 
     @Override
@@ -25,15 +26,12 @@ public class HomeActivity extends Activity implements OnReplaceFragmentListener 
         manager.setActivity(this);
         startService(new Intent(this, NetworkService.class));
 
-        startService(new Intent(this, NetworkService.class));
-
         mManager = getFragmentManager();
         if (getIntent().getBooleanExtra(LoginActivity.IS_NEW_USER, false)) {
             displayFragment(new UserInfoFragment());
         } else {
             displayFragment(new ScreenSlidePageFragment());
         }
-
     }
 
     private void displayFragment(Fragment fragment) {
@@ -47,5 +45,4 @@ public class HomeActivity extends Activity implements OnReplaceFragmentListener 
     public void replaceFragment(Fragment fragment) {
         displayFragment(fragment);
     }
-
 }

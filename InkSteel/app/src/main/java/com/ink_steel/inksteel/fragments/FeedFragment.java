@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,12 +61,6 @@ public class FeedFragment extends Fragment implements PostClickListener,
     }
 
     @Override
-    public void onStart() {
-//        mPosts.addAll(mManager.getPosts());
-        super.onStart();
-    }
-
-    @Override
     public void onPostClick(int position) {
         ((HomeActivity) getActivity())
                 .replaceFragment(PostInfoFragment.newInstance(mPosts.get(position).getPostId()));
@@ -77,7 +70,6 @@ public class FeedFragment extends Fragment implements PostClickListener,
     public void onPostAdded(Post post) {
         mPosts.add(0, post);
         mAdapter.notifyItemInserted(0);
-
     }
 
     @Override
@@ -86,4 +78,3 @@ public class FeedFragment extends Fragment implements PostClickListener,
         mAdapter.notifyDataSetChanged();
     }
 }
-
