@@ -16,7 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/tattoo3"
-        android:background="@color/colorAccent"
         android:padding="3dp"
         android:contentDescription="@string/studio_image"/>
 
@@ -24,7 +23,7 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/colorPrimaryTransparent"
+        android:background="@color/colorAccentTransparent"
         app:layout_constraintBottom_toBottomOf="@+id/studio_iv"
         app:layout_constraintEnd_toEndOf="@+id/studio_iv"
         app:layout_constraintStart_toStartOf="@+id/studio_iv"/>

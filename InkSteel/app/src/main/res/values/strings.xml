@@ -56,6 +56,7 @@
     <string name="feed">FEED</string>
     <string name="explore">EXPLORE</string>
     <string name="studios">STUDIOS</string>
+    <string name="chat_fragment">CHAT</string>
     <string name="tel">tel:</string>
     <string name="empty_field_error">Field can\'t be empty</string>
 </resources>

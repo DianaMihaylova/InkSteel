@@ -27,7 +27,7 @@ public class ScreenSlidePageFragment extends Fragment {
         final Fragment[] fragments = {new ProfileFragment(), new FeedFragment(),
                 new ExploreFragment(), new ChatListFragment(), new StudiosFragment()};
         final String[] tabTitle = {"", getString(R.string.feed), getString(R.string.explore),
-                getString(R.string.chat), getString(R.string.studios)};
+                getString(R.string.chat_fragment), getString(R.string.studios)};
 
         final ViewPager viewPager = view.findViewById(R.id.viewPager);
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {

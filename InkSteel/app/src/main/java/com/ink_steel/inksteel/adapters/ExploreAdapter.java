@@ -53,8 +53,8 @@ public class ExploreAdapter extends BaseAdapter {
 
         User user = (User) getItem(position);
 
-        String username = mContext.getString(R.string.user_name) + user.getName();
-        String city = mContext.getString(R.string.user_city) + user.getCity();
+        String username = mContext.getString(R.string.user_name) + "\n" + user.getName();
+        String city = mContext.getString(R.string.user_city) + "\n" + user.getCity();
         ((TextView) v.findViewById(R.id.user_name)).setText(username);
         ((TextView) v.findViewById(R.id.user_city)).setText(city);
         ImageView imageView = v.findViewById(R.id.profile_pic);
