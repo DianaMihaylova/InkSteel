@@ -66,12 +66,11 @@ public class ChatRoom implements Comparable<ChatRoom> {
     @Exclude
     @Override
     public int compareTo(@NonNull ChatRoom chatRoom) {
-        if (chatId.equals(chatRoom.chatId))
-            return 0;
-        if (!seen && !chatRoom.seen) {
+        if (chatId.equals(chatRoom.chatId)) return 0;
+        if (!seen && !chatRoom.seen)
             return (int) (lastMessageTime - chatRoom.lastMessageTime);
-        } else if (!seen)
-            return 1;
+        if (!seen) return 1;
         return (int) (lastMessageTime - chatRoom.lastMessageTime);
+
     }
 }

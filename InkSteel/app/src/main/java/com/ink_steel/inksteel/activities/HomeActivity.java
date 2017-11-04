@@ -12,18 +12,21 @@ import com.ink_steel.inksteel.fragments.ScreenSlidePageFragment;
 import com.ink_steel.inksteel.fragments.UserInfoFragment;
 import com.ink_steel.inksteel.helpers.Listeners.OnReplaceFragmentListener;
 import com.ink_steel.inksteel.helpers.NetworkService;
+import com.ink_steel.inksteel.model.ChatRoom;
 
-public class HomeActivity extends Activity implements OnReplaceFragmentListener {
+public class HomeActivity extends Activity implements OnReplaceFragmentListener, DatabaseManager.UserChatRoomsListener {
 
     private FragmentManager mManager;
+    private DatabaseManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        DatabaseManager manager = DatabaseManager.getInstance();
+        manager = DatabaseManager.getInstance();
         manager.setActivity(this);
+        manager.getUserChatRooms(this);
         startService(new Intent(this, NetworkService.class));
 
         mManager = getFragmentManager();
@@ -44,5 +47,15 @@ public class HomeActivity extends Activity implements OnReplaceFragmentListener 
     @Override
     public void replaceFragment(Fragment fragment) {
         displayFragment(fragment);
+    }
+
+    @Override
+    public void onChatRoomsLoaded() {
+        manager.unregisterChatRoomsListener();
+    }
+
+    @Override
+    public void onChatRoomChanged(ChatRoom a) {
+
     }
 }

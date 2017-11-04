@@ -18,13 +18,14 @@ import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.helpers.Listeners;
 import com.ink_steel.inksteel.model.ChatRoom;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class ChatListFragment extends Fragment implements Listeners.ChatListClickListener, DatabaseManager.UserChatRoomsListener {
 
     private DatabaseManager mManager;
     private ChatListAdapter mAdapter;
-    private LinkedList<ChatRoom> mChatRooms;
+    private ArrayList<ChatRoom> mChatRooms;
 
     public ChatListFragment() {
     }
@@ -48,7 +49,7 @@ public class ChatListFragment extends Fragment implements Listeners.ChatListClic
             }
         });
 
-        mChatRooms = new LinkedList<>();
+        mChatRooms = mManager.getUserChatRooms();
 
         RecyclerView recyclerView = view.findViewById(R.id.chat_list_rv);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -83,7 +84,7 @@ public class ChatListFragment extends Fragment implements Listeners.ChatListClic
 
     @Override
     public void onStop() {
-        mManager.unregisterChatRoomsListener();
+//        mManager.unregisterChatRoomsListener();
         super.onStop();
     }
 }

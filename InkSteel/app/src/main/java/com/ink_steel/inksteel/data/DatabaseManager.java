@@ -602,8 +602,8 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
                     switch (change.getType()) {
                         case ADDED:
                             mUserChatRooms.add(change.getDocument().toObject(ChatRoom.class));
-                            break;
-                        case MODIFIED:
+//                            break;
+//                        case MODIFIED:
                             if (mUserChatRooms.contains(chatRoom))
                                 mUserChatRooms.remove(chatRoom);
                             mUserChatRooms.add(chatRoom);
