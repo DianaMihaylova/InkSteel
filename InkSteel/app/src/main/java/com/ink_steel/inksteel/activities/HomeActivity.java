@@ -11,6 +11,7 @@ import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.fragments.ScreenSlidePageFragment;
 import com.ink_steel.inksteel.fragments.UserInfoFragment;
 import com.ink_steel.inksteel.helpers.Listeners.OnReplaceFragmentListener;
+import com.ink_steel.inksteel.helpers.NetworkService;
 
 public class HomeActivity extends Activity implements OnReplaceFragmentListener {
     private FragmentManager mManager;
@@ -22,6 +23,7 @@ public class HomeActivity extends Activity implements OnReplaceFragmentListener 
 
         DatabaseManager manager = DatabaseManager.getInstance();
         manager.setActivity(this);
+        startService(new Intent(this, NetworkService.class));
 
         mManager = getFragmentManager();
         if (getIntent().getBooleanExtra(LoginActivity.IS_NEW_USER, false)) {
