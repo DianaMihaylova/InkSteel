@@ -128,4 +128,14 @@
         app:layout_constraintStart_toStartOf="@+id/studio_text_website"
         app:layout_constraintTop_toTopOf="@+id/studio_text_phone"/>
 
+    <View
+        android:id="@+id/view4"
+        style="?android:attr/dividerHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/map"/>
+
 </android.support.constraint.ConstraintLayout>
