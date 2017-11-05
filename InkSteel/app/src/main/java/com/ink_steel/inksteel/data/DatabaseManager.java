@@ -26,7 +26,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.ink_steel.inksteel.adapters.GalleryRecyclerViewAdapter;
 import com.ink_steel.inksteel.helpers.StudiosQueryTask;
 import com.ink_steel.inksteel.model.ChatRoom;
 import com.ink_steel.inksteel.model.Message;
@@ -69,7 +68,6 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     private String reaction;
     private int reactionCount;
     //    -- Chat --
-    private Activity mActivity;
     private boolean isInitialLoad = true;
     private ListenerRegistration chatRoomsRegistration;
     private ListenerRegistration chatRegistration;
@@ -80,10 +78,6 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     //    -- Studios --
     private HashMap<String, Studio> mStudios;
     private StudiosQueryTask.StudiosListener mListener;
-
-    public void setActivity(Activity activity) {
-        mActivity = activity;
-    }
 
     private DatabaseManager() {
         mAuth = FirebaseAuth.getInstance();
@@ -370,11 +364,11 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         });
     }
 
-    public Post getPost(PostReactionsListener listener, String postId) {
+    public Post getPost(Activity activity, PostReactionsListener listener, String postId) {
         boolean found = false;
         for (Post post : mPosts) {
             if (post.getPostId().equals(postId)) {
-                setPost(listener, post);
+                setPost(activity, listener, post);
                 found = true;
                 break;
             }
@@ -382,14 +376,14 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         return found ? currentPost : null;
     }
 
-    private void setPost(PostReactionsListener listener, Post post) {
+    private void setPost(Activity activity, PostReactionsListener listener, Post post) {
         currentPost = post;
         unregisterPostListeners();
         reaction = null;
         reactionCount = 0;
         hasUserReacted();
-        registerPostListener(listener);
-        registerReactionsListener(listener);
+        registerPostListener(activity, listener);
+        registerReactionsListener(activity, listener);
     }
 
     private void unregisterPostListeners() {
@@ -414,10 +408,10 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     }
 
     // get the post's reaction's count real time
-    private void registerPostListener(final PostReactionsListener listener) {
+    private void registerPostListener(Activity activity, final PostReactionsListener listener) {
         mPostListenerRegistration = mFirestore.collection("posts")
                 .document(currentPost.getPostId())
-                .addSnapshotListener(mActivity, new EventListener<DocumentSnapshot>() {
+                .addSnapshotListener(activity, new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(DocumentSnapshot snapshot, FirebaseFirestoreException e) {
                         if (e != null)
@@ -433,10 +427,10 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     }
 
     // get the post's reaction real time changes
-    private void registerReactionsListener(final PostReactionsListener listener) {
+    private void registerReactionsListener(Activity activity, final PostReactionsListener listener) {
         mReactionsListenerRegistration = mFirestore
                 .collection("posts").document(currentPost.getPostId()).collection("history")
-                .orderBy("time").addSnapshotListener(mActivity, new EventListener<QuerySnapshot>() {
+                .orderBy("time").addSnapshotListener(activity, new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots,
                                         FirebaseFirestoreException e) {
@@ -457,19 +451,19 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         reactionCount = currentPost.getReactionCount(reaction);
     }
 
-    public Post getNextPost(PostReactionsListener listener) {
+    public Post getNextPost(Activity activity, PostReactionsListener listener) {
         Post post = mPosts.higher(currentPost);
         if (post == null)
             return null;
-        setPost(listener, post);
+        setPost(activity, listener, post);
         return post;
     }
 
-    public Post getPreviousPost(PostReactionsListener listener) {
+    public Post getPreviousPost(Activity activity, PostReactionsListener listener) {
         Post post = mPosts.lower(currentPost);
         if (post == null)
             return null;
-        setPost(listener, post);
+        setPost(activity, listener, post);
         return post;
     }
 
@@ -478,10 +472,10 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     }
 
     // get all posts real time
-    public void registerPostsListener(final PostsListener listener) {
+    public void registerPostsListener(Activity activity, final PostsListener listener) {
         Query postsQuery = mFirestore.collection("posts")
                 .orderBy("createdAt");
-        postsQuery.addSnapshotListener(mActivity, new EventListener<QuerySnapshot>() {
+        postsQuery.addSnapshotListener(activity, new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots,
                                         FirebaseFirestoreException e) {
@@ -582,7 +576,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     }
 
     public ArrayList<ChatRoom> getUserChatRooms() {
-        return new ArrayList<>(mUserChatRooms);
+        return new ArrayList<>(mUserChatRooms.descendingSet());
     }
 
     public void getUserChatRooms(final UserChatRoomsListener listener) {
@@ -602,15 +596,22 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
                     switch (change.getType()) {
                         case ADDED:
                             mUserChatRooms.add(change.getDocument().toObject(ChatRoom.class));
+//                            listener.onChatRoomChanged(chatRoom);
 //                            break;
 //                        case MODIFIED:
-                            if (mUserChatRooms.contains(chatRoom))
+                            if (!mUserChatRooms.add(chatRoom)) {
                                 mUserChatRooms.remove(chatRoom);
-                            mUserChatRooms.add(chatRoom);
+                                mUserChatRooms.add(chatRoom);
+                            }
                             listener.onChatRoomChanged(chatRoom);
                             break;
                     }
                 }
+//                for (DocumentSnapshot snapshot:documentSnapshots.getDocuments()) {
+//                    ChatRoom chatRoom = snapshot.toObject(ChatRoom.class);
+//                    mUserChatRooms.add(chatRoom);
+//                    listener.onChatRoomChanged(chatRoom);
+//                }
                 if (isChatRoomsInitialLoad) {
                     listener.onChatRoomsLoaded();
                     isChatRoomsInitialLoad = false;
@@ -619,18 +620,21 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
                 });
     }
 
-
-    public void getChatMessagesById(String chatId, final ChatListener listener) {
+    public void getChatMessagesById(final String chatId, final ChatListener listener) {
 
         if (chatMessages == null) {
             chatMessages = new ArrayList<>();
             isChatMessagesInitialLoad = true;
         }
+
+        makeMessageSeen(chatId);
+
         chatRegistration = mFirestore.collection("chatRooms").document(chatId)
                 .collection("messages").orderBy("time")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                    public void onEvent(QuerySnapshot documentSnapshots,
+                                        FirebaseFirestoreException e) {
                         if (e != null)
                             return;
                 for (DocumentChange change : documentSnapshots.getDocumentChanges()) {
@@ -650,18 +654,34 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         });
     }
 
-    public void addMessage(Message message, ChatRoom chatRoom) {
-        mFirestore.collection("chatRooms").document(chatRoom.getChatId())
+    private void makeMessageSeen(String chatId) {
+        mFirestore.collection("users").document(mCurrentUser.getEmail())
+                .collection("chatRooms").document(chatId).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    ChatRoom chatRoom = documentSnapshot.toObject(ChatRoom.class);
+                    if (!chatRoom.isSeen()) {
+                        documentSnapshot.getReference().update("seen", true);
+                    }
+                }
+            }
+        });
+    }
+
+    public void addMessage(Message message, String chatRoomId, String otherUserEmail) {
+        mFirestore.collection("chatRooms").document(chatRoomId)
                 .collection("messages").add(message);
         boolean seen = mCurrentUser.getName().equals(message.getUserName());
         mFirestore.collection("users").document(mCurrentUser.getEmail())
-                .collection("chatRooms").document(chatRoom.getChatId())
+                .collection("chatRooms").document(chatRoomId)
                 .update("lastMessage", message.getMessage(),
                         "lastMessageTime", message.getTime(),
                         "lastMessageSender", mCurrentUser.getEmail(),
                         "seen", seen);
-        mFirestore.collection("users").document(chatRoom.getEmail())
-                .collection("chatRooms").document(chatRoom.getChatId())
+        mFirestore.collection("users").document(otherUserEmail)
+                .collection("chatRooms").document(chatRoomId)
                 .update("lastMessage", message.getMessage(),
                         "lastMessageTime", message.getTime(),
                         "lastMessageSender", mCurrentUser.getEmail(),

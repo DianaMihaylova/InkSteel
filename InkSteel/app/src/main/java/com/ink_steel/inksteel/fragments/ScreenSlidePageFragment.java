@@ -52,7 +52,8 @@ public class ScreenSlidePageFragment extends Fragment {
 
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.profile);
+        TabLayout.Tab tab = tabLayout.getTabAt(0);
+        if (tab != null) tab.setIcon(R.drawable.notification_icon);
 
         return view;
     }

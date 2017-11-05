@@ -41,7 +41,7 @@ public class FeedFragment extends Fragment implements PostClickListener,
         mAdapter = new PostsAdapter(getActivity().getApplicationContext(), mPosts, this);
 
         mManager = DatabaseManager.getInstance();
-        mManager.registerPostsListener(this);
+        mManager.registerPostsListener(getActivity(), this);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

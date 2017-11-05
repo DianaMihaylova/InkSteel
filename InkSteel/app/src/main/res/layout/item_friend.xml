@@ -62,7 +62,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/btn_custom"
+            android:background="@drawable/custom_button_blue"
             android:text="@string/send_a_message"
             android:textSize="14sp"
             card_view:layout_constraintBottom_toBottomOf="parent"

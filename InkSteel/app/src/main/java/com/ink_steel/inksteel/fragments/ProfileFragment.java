@@ -23,6 +23,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class ProfileFragment extends Fragment {
 
+    public static final String IS_SIGN_OUT = "isSignOut";
     private ImageView mImageView;
     private TextView mUsername, mEmail, mAge, mCity;
     private LinearLayout mLayoutGroupBtn;
@@ -84,6 +85,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View view) {
                 mManager.signOut();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
+                intent.putExtra(IS_SIGN_OUT, true);
                 startActivity(intent);
                 getActivity().finish();
             }

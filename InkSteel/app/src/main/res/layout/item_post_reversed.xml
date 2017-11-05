@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/add_post_cv"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    card_view:cardBackgroundColor="@color/colorAccent"
+    card_view:cardBackgroundColor="@color/colorPrimary"
     card_view:cardCornerRadius="16dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:layout_margin="3dp">
+        android:layout_margin="3dp"
+        android:background="@android:color/white">
 
         <ImageView
             android:id="@+id/profile_pic"
@@ -31,10 +30,11 @@
             card_view:layout_constraintRight_toRightOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/date_tv"
             card_view:layout_constraintVertical_weight="3"
-            card_view:srcCompat="@drawable/googleg_standard_color_18"/>
+            card_view:srcCompat="@drawable/googleg_standard_color_18" />
 
         <TextView
             android:id="@+id/date_tv"
+            style="@style/DateText"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="0dp"
@@ -42,36 +42,35 @@
             android:layout_marginTop="8dp"
             android:gravity="end"
             android:textSize="12sp"
-            style="@style/DateText"
             card_view:layout_constraintBottom_toTopOf="@+id/profile_pic"
             card_view:layout_constraintRight_toRightOf="@+id/profile_pic"
             card_view:layout_constraintTop_toTopOf="@+id/post_pic"
             card_view:layout_constraintVertical_weight="2"
-            tools:text="16:44 - 18.10.2017"/>
+            tools:text="16:44 - 18.10.2017" />
 
         <ImageView
             android:id="@+id/post_pic"
             android:layout_width="0dp"
             android:layout_height="170dp"
-            android:scaleType="centerCrop"
+            android:background="@color/colorPrimary"
             android:paddingRight="3dp"
-            android:background="@color/colorAccent"
+            android:scaleType="centerCrop"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintDimensionRatio="w,4:3"
             card_view:layout_constraintHorizontal_weight="3"
             card_view:layout_constraintLeft_toLeftOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
-            card_view:srcCompat="@drawable/tatto2"/>
+            card_view:srcCompat="@drawable/tatto2" />
 
         <TextView
             android:id="@+id/user_tv"
+            style="@style/Text"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:gravity="bottom|center_horizontal"
-            style="@style/Text"
             android:textSize="12sp"
             card_view:layout_constraintBottom_toBottomOf="@+id/post_pic"
             card_view:layout_constraintHorizontal_bias="0.485"
@@ -79,7 +78,7 @@
             card_view:layout_constraintRight_toRightOf="@+id/profile_pic"
             card_view:layout_constraintTop_toBottomOf="@+id/profile_pic"
             card_view:layout_constraintVertical_weight="2"
-            tools:text="@string/textview"/>
+            tools:text="@string/textview" />
 
         <ImageView
             android:id="@+id/imageView4"
@@ -89,10 +88,10 @@
             android:layout_marginEnd="0dp"
             android:layout_marginRight="0dp"
             android:rotation="180"
-            android:src="@drawable/triangle"
+            android:src="@drawable/triangle_reversed"
             card_view:layout_constraintBottom_toBottomOf="@+id/post_pic"
             card_view:layout_constraintRight_toRightOf="@+id/post_pic"
-            card_view:layout_constraintTop_toTopOf="parent"/>
+            card_view:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

@@ -34,16 +34,13 @@
         <activity android:name=".activities.HomeActivity"/>
 
         <service
-            android:name=".helpers.NetworkService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.ink_steel.inksteel.DIRECT_REPLY"/>
-            </intent-filter>
-        </service>
+            android:name=".services.ChatNotificationService"
+            android:exported="false"/>
+        <service android:name=".services.NotificationReplyService" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCuBkUIdyvqanz381pa3YoYrJ7uj21AEBg"/>
+            android:value="@string/api_key"/>
 
     </application>
 

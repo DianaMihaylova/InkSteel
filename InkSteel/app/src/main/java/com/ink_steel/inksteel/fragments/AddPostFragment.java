@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class AddPostFragment extends Fragment implements DatabaseManager.PostSav
     private EditText mDescriptionEditText;
     private Uri mUri;
     private Button mSaveButton;
+    private Snackbar mSnackbar;
 
     public AddPostFragment() {
     }
@@ -45,6 +47,8 @@ public class AddPostFragment extends Fragment implements DatabaseManager.PostSav
         Button mCancelButton = view.findViewById(R.id.cancel_b);
         mSaveButton = view.findViewById(R.id.save_b);
         mDescriptionEditText = view.findViewById(R.id.description_et);
+        View layoutCOntainer = getActivity().findViewById(R.id.activity_home_container);
+        mSnackbar = Snackbar.make(layoutCOntainer, "Saving...", Snackbar.LENGTH_INDEFINITE);
 
         final DatabaseManager manager = DatabaseManager.getInstance();
 
@@ -62,6 +66,7 @@ public class AddPostFragment extends Fragment implements DatabaseManager.PostSav
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mSnackbar.show();
                 manager.savePost(AddPostFragment.this, mCropImageView.getCroppedImage(), mUri,
                         mDescriptionEditText.getText().toString());
             }
@@ -102,6 +107,7 @@ public class AddPostFragment extends Fragment implements DatabaseManager.PostSav
 
     @Override
     public void onPostSaved() {
+        mSnackbar.dismiss();
         ((HomeActivity) getActivity()).replaceFragment(new ScreenSlidePageFragment());
     }
 }

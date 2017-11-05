@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +35,7 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
     private boolean isFriendGallery;
     private User mFriend;
     private ArrayList<String> mImages;
+    private Snackbar mSnackbar;
 
     public GalleryFragment() {
     }
@@ -44,10 +46,12 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
 
         View view = inflater.inflate(R.layout.fragment_gallery, container, false);
 
+        View layoutContainer = getActivity().findViewById(R.id.activity_home_container);
+        mSnackbar = Snackbar.make(layoutContainer, "Saving...", Snackbar.LENGTH_INDEFINITE);
+
         mUserManager = DatabaseManager.getInstance();
         mCurrentUser = mUserManager.getCurrentUser();
         mImages = new ArrayList<>();
-
         FloatingActionButton fab = view.findViewById(R.id.btn_fab);
 
         RecyclerView mRecyclerView = view.findViewById(R.id.image_recycler_view);
@@ -95,6 +99,7 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
         if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK) {
             Uri uri = data.getData();
             mUserManager.saveImage(uri, this);
+            mSnackbar.show();
         }
     }
 
@@ -148,5 +153,6 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
         mImages.clear();
         mImages.addAll(mUserManager.getCurrentUser().getGallery());
         mAdapter.notifyDataSetChanged();
+        mSnackbar.dismiss();
     }
 }

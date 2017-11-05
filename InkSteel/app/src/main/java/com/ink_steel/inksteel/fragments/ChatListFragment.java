@@ -19,7 +19,6 @@ import com.ink_steel.inksteel.helpers.Listeners;
 import com.ink_steel.inksteel.model.ChatRoom;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class ChatListFragment extends Fragment implements Listeners.ChatListClickListener, DatabaseManager.UserChatRoomsListener {
 
@@ -54,8 +53,6 @@ public class ChatListFragment extends Fragment implements Listeners.ChatListClic
         RecyclerView recyclerView = view.findViewById(R.id.chat_list_rv);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
-                DividerItemDecoration.VERTICAL));
         mAdapter = new ChatListAdapter(this, mChatRooms, mManager.getCurrentUser().getEmail());
         recyclerView.setAdapter(mAdapter);
 

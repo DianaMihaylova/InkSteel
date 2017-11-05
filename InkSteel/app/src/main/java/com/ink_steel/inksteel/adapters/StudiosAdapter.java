@@ -46,7 +46,7 @@ public class StudiosAdapter extends RecyclerView.Adapter<StudiosAdapter.PostsVie
     class PostsViewHolder extends RecyclerView.ViewHolder {
 
         ImageView image;
-        TextView title, readMore;
+        TextView title, readMore, openNow;
         RatingBar rating;
 
         PostsViewHolder(final View itemView) {
@@ -56,6 +56,7 @@ public class StudiosAdapter extends RecyclerView.Adapter<StudiosAdapter.PostsVie
             title = itemView.findViewById(R.id.studio_name_tv);
             rating = itemView.findViewById(R.id.studio_rb);
             readMore = itemView.findViewById(R.id.studio_read_more_tv);
+            openNow = itemView.findViewById(R.id.studio_open_now);
             readMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -71,6 +72,8 @@ public class StudiosAdapter extends RecyclerView.Adapter<StudiosAdapter.PostsVie
             else {
                 image.setImageResource(R.drawable.placeholder);
             }
+            if (studio.isOpenNow())
+                openNow.setVisibility(View.VISIBLE);
             title.setText(studio.getName());
             rating.setRating(studio.getRating());
         }

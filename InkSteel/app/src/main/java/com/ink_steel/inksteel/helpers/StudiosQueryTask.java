@@ -2,7 +2,6 @@ package com.ink_steel.inksteel.helpers;
 
 import android.location.Location;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.ink_steel.inksteel.model.Studio;
 import com.squareup.okhttp.OkHttpClient;
@@ -49,7 +48,6 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
             extractStudiosFromJSON(response.body().string());
         } catch (IOException e) {
             e.printStackTrace();
-            Log.d("Error", e.getLocalizedMessage());
         }
 
         return null;
@@ -82,7 +80,6 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("Error", e.getLocalizedMessage());
         }
     }
 
@@ -90,6 +87,7 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
     private Studio getStudioFromJSONObject(JSONObject object) throws JSONException, IOException {
         String place_id, name, photoReference, imageUrl = null;
         float rating;
+        boolean isOpenNow = false;
 
         if (object.has("name"))
             name = object.getString("name");
@@ -101,6 +99,13 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
             rating = (float) object.getDouble("rating");
         else rating = 0;
 
+        if (object.has("opening_hours")) {
+            JSONObject openingHours = object.getJSONObject("opening_hours");
+            if (openingHours.has("open_now")) {
+                isOpenNow = openingHours.getBoolean("open_now");
+            }
+        }
+
         if (object.has("photos")) {
             JSONArray array = object.getJSONArray("photos");
             JSONObject photoObject = array.getJSONObject(0);
@@ -110,7 +115,7 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
             }
         }
 
-        return new Studio(name, rating, place_id, imageUrl);
+        return new Studio(name, rating, place_id, imageUrl, isOpenNow);
     }
 
     private String getPhotoUrl(String photo) throws IOException {

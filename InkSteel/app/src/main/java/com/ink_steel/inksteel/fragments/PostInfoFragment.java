@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -47,6 +48,7 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
     private Post mCurrentPost;
     private DatabaseManager mManager;
     private Picasso mPicasso;
+    private Snackbar mSnackbar;
 
     public PostInfoFragment() {
     }
@@ -84,6 +86,9 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
         ImageButton dazedBtn = mReactionsView.findViewById(R.id.reaction_dazed);
         mCollapse = mReactionsView.findViewById(R.id.collapse_btn);
 
+        View layoutContainer = getActivity().findViewById(R.id.activity_home_container);
+        Snackbar.make(layoutContainer, "Loading...", Snackbar.LENGTH_SHORT).show();
+
         mCollapse.setImageResource(R.drawable.ic_expand_more);
         String postId = getArguments().getString("postId");
         mReactions = new LinkedList<>();
@@ -94,7 +99,7 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
         mPicasso = new Picasso.Builder(getActivity()).build();
 
         mManager = DatabaseManager.getInstance();
-        mCurrentPost = mManager.getPost(this, postId);
+        mCurrentPost = mManager.getPost(getActivity(), this, postId);
         displayPost(true);
 
         mCollapse.setOnClickListener(this);
@@ -208,7 +213,7 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
                 toggleReactionsRecycler();
                 break;
             case R.id.next: {
-                Post post = mManager.getNextPost(this);
+                Post post = mManager.getNextPost(getActivity(), this);
                 if (post != null) {
                     mCurrentPost = post;
                     displayPost(false);
@@ -216,7 +221,7 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
             }
                 break;
             case R.id.previous: {
-                Post post = mManager.getPreviousPost(this);
+                Post post = mManager.getPreviousPost(getActivity(), this);
                 if (post != null) {
                     mCurrentPost = post;
                     displayPost(false);

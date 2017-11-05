@@ -26,13 +26,13 @@ import java.util.Date;
 public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCreatedListener,
         DatabaseManager.ChatListener {
 
+    public static final String EMAIL = "email";
     private ImageView mImageView;
     private TextView mTextView;
     private DatabaseManager mManager;
     private ArrayList<Message> mMessages;
     private MessageAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    private ImageButton mMsgbtn;
     private ChatRoom mChatRoom;
 
     public ChatFragment() {
@@ -41,7 +41,7 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
     public static ChatFragment newInstance(String email) {
         ChatFragment chatFragment = new ChatFragment();
         Bundle bundle = new Bundle(1);
-        bundle.putString("email", email);
+        bundle.putString(EMAIL, email);
         chatFragment.setArguments(bundle);
         return chatFragment;
     }
@@ -55,10 +55,10 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
 
         mImageView = view.findViewById(R.id.asdfg);
         mTextView = view.findViewById(R.id.qwerty);
-        mMsgbtn = view.findViewById(R.id.chat_send_btn);
+        ImageButton mMsgbtn = view.findViewById(R.id.chat_send_btn);
         final EditText messageEt = view.findViewById(R.id.chat_message_et);
 
-        String email = getArguments().getString("email");
+        String email = getArguments().getString(EMAIL);
         mManager = DatabaseManager.getInstance();
         mChatRoom = mManager.isChatRoomCreated(email);
         if (mChatRoom == null)
@@ -75,7 +75,7 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
                 if (!msg.isEmpty()) {
                     Message message = new Message(mManager.getCurrentUser().getName(), msg,
                             new Date().getTime());
-                    mManager.addMessage(message, mChatRoom);
+                    mManager.addMessage(message, mChatRoom.getChatId(), mChatRoom.getEmail());
                     messageEt.setText("");
                 }
             }
@@ -83,8 +83,7 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
 
         mMessages = new ArrayList<>();
         mRecyclerView = view.findViewById(R.id.chat_rv);
-        mAdapter = new MessageAdapter(getActivity(), mMessages,
-                mManager.getCurrentUser().getName());
+        mAdapter = new MessageAdapter(mMessages, mManager.getCurrentUser().getName());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 

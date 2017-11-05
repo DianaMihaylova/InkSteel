@@ -17,12 +17,10 @@ import java.util.Locale;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.PostsViewHolder> {
 
-    private Context mContext;
     private List<Message> mMessages;
     private String mUsername;
 
-    public MessageAdapter(Context context, List<Message> messages, String username) {
-        mContext = context;
+    public MessageAdapter(List<Message> messages, String username) {
         mMessages = messages;
         mUsername = username;
     }
@@ -66,7 +64,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.PostsVie
 
         void bind(Message message) {
             messageTv.setText(message.getMessage());
-            SimpleDateFormat format = new SimpleDateFormat("hh:mm, dd MMM",
+            SimpleDateFormat format = new SimpleDateFormat("hh:mm",
                     Locale.getDefault());
             Date date = new Date(message.getTime());
             time.setText(format.format(date));

@@ -13,8 +13,8 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:layout_margin="3dp">
+        android:layout_margin="3dp"
+        android:background="@android:color/white">
 
         <ImageView
             android:id="@+id/profile_pic"
@@ -31,22 +31,22 @@
             card_view:layout_constraintRight_toLeftOf="@+id/post_pic"
             card_view:layout_constraintTop_toBottomOf="@+id/date_tv"
             card_view:layout_constraintVertical_weight="3"
-            card_view:srcCompat="@mipmap/ic_launcher_round"/>
+            card_view:srcCompat="@mipmap/ic_launcher_round" />
 
         <ImageView
             android:id="@+id/post_pic"
             android:layout_width="0dp"
             android:layout_height="170dp"
-            android:scaleType="centerCrop"
             android:background="@color/colorAccent"
             android:paddingLeft="3dp"
+            android:scaleType="centerCrop"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintDimensionRatio="w,4:3"
             card_view:layout_constraintHorizontal_weight="3"
             card_view:layout_constraintLeft_toRightOf="@+id/profile_pic"
             card_view:layout_constraintRight_toRightOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
-            card_view:srcCompat="@drawable/tatto2"/>
+            card_view:srcCompat="@drawable/tatto2" />
 
         <ImageView
             android:id="@+id/imageView12"
@@ -55,24 +55,25 @@
             android:src="@drawable/triangle"
             card_view:layout_constraintBottom_toBottomOf="@+id/post_pic"
             card_view:layout_constraintLeft_toLeftOf="@+id/post_pic"
-            card_view:layout_constraintTop_toTopOf="parent"/>
+            card_view:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/date_tv"
+            style="@style/DateText"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
-            style="@style/DateText"
             android:layout_marginTop="8dp"
             card_view:layout_constraintBottom_toTopOf="@+id/profile_pic"
             card_view:layout_constraintLeft_toLeftOf="@+id/profile_pic"
             card_view:layout_constraintRight_toRightOf="@+id/profile_pic"
             card_view:layout_constraintTop_toTopOf="@+id/post_pic"
             card_view:layout_constraintVertical_weight="2"
-            tools:text="16:59 - 18.10.2017"/>
+            tools:text="16:59 - 18.10.2017" />
 
         <TextView
             android:id="@+id/user_tv"
+            style="@style/Text"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="8dp"
@@ -80,14 +81,13 @@
             android:gravity="bottom|center_horizontal"
             android:maxLines="1"
             android:textAlignment="center"
-            style="@style/Text"
             android:textSize="12sp"
             card_view:layout_constraintBottom_toBottomOf="@+id/post_pic"
             card_view:layout_constraintLeft_toLeftOf="@+id/profile_pic"
             card_view:layout_constraintRight_toRightOf="@+id/profile_pic"
             card_view:layout_constraintTop_toBottomOf="@+id/profile_pic"
             card_view:layout_constraintVertical_weight="2"
-            tools:text="@string/textview"/>
+            tools:text="@string/textview" />
 
     </android.support.constraint.ConstraintLayout>
 

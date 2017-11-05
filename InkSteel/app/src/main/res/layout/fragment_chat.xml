@@ -19,15 +19,13 @@
         android:id="@+id/asdfg"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_margin="8dp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/view"
-        app:srcCompat="@drawable/pierce1"/>
+        app:srcCompat="@drawable/pierce1"
+        android:contentDescription="@string/user_profile_image" />
 
     <TextView
         android:id="@+id/qwerty"
@@ -37,43 +35,46 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        style="@style/FontText"
-        android:textSize="26sp"
+        style="@style/Text"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/asdfg"
         app:layout_constraintTop_toTopOf="@+id/view"/>
 
-
     <EditText
         android:id="@+id/chat_message_et"
+        style="@style/Text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:background="@color/colorPrimary"
         android:ems="10"
         android:hint="@string/message"
-        android:inputType="textPersonName"
+        android:inputType="textMultiLine"
         android:maxLines="1"
         android:padding="8dp"
-        style="@style/Text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/chat_send_btn"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:textColorHint="@color/colorBackgroundDark"
+        app:layout_constraintBottom_toBottomOf="@+id/chat_send_btn"
+        app:layout_constraintEnd_toStartOf="@id/chat_send_btn"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/chat_send_btn"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:background="@android:color/transparent"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="@+id/chat_message_et"
+        android:src="@drawable/ic_send"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/btn_send_msg"
-        android:layout_marginRight="8dp"/>
+        app:layout_constraintLeft_toRightOf="@id/chat_message_et"
+        android:contentDescription="@string/send_button" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/chat_rv"

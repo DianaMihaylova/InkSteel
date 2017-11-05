@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
     private Bitmap mImageBitmap;
     private DatabaseManager mManager;
     private TextView mCity;
-
+private Snackbar mSnackbar;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -53,9 +54,13 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
         Button saveBtn = view.findViewById(R.id.button_save);
         mImageView.setDrawingCacheEnabled(true);
 
+        View layoutContainer = getActivity().findViewById(R.id.activity_home_container);
+        mSnackbar.make(layoutContainer, "Saving...", Snackbar.LENGTH_INDEFINITE);
+
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mSnackbar.show();
                 updateUserInfoFromFragment();
             }
         });
@@ -150,6 +155,7 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
 
     @Override
     public void onUserInfoSaved() {
+        mSnackbar.dismiss();
         ((HomeActivity) getActivity()).replaceFragment(new ScreenSlidePageFragment());
     }
 }

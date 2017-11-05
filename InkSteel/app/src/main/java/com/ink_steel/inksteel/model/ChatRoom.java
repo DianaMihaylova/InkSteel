@@ -65,6 +65,12 @@ public class ChatRoom implements Comparable<ChatRoom> {
 
     @Exclude
     @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ChatRoom && chatId.equals(((ChatRoom) obj).chatId);
+    }
+
+    @Exclude
+    @Override
     public int compareTo(@NonNull ChatRoom chatRoom) {
         if (chatId.equals(chatRoom.chatId)) return 0;
         if (!seen && !chatRoom.seen)

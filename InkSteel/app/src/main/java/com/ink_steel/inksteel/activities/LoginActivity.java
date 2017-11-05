@@ -3,28 +3,39 @@ package com.ink_steel.inksteel.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.fragments.LoginFragment;
 import com.ink_steel.inksteel.helpers.Listeners.OnLoginActivityButtonClickListener;
 
+import static com.ink_steel.inksteel.fragments.ProfileFragment.IS_SIGN_OUT;
+
 public class LoginActivity extends AppCompatActivity implements DatabaseManager.UserManagerListener,
         OnLoginActivityButtonClickListener {
 
     public static final String IS_NEW_USER = "isNewUser";
     private DatabaseManager mUserManager;
+    private Snackbar mSnackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        View container = findViewById(R.id.activity_login_container);
+        mSnackbar = Snackbar.make(container, "Loading...", Snackbar.LENGTH_INDEFINITE);
+        Intent intent = getIntent();
+        if (intent.hasExtra(IS_SIGN_OUT) && !intent.getBooleanExtra(IS_SIGN_OUT, false)) {
+            mSnackbar.show();
+        }
+
         mUserManager = DatabaseManager.getInstance();
         mUserManager.checkIfSignedIn(this);
-
         LoginFragment fragment = new LoginFragment();
         getFragmentManager()
                 .beginTransaction()
@@ -36,6 +47,7 @@ public class LoginActivity extends AppCompatActivity implements DatabaseManager.
     @Override
     public void onUserLogInError(String error) {
         showAlert(error);
+        mSnackbar.dismiss();
     }
 
     @Override
@@ -63,6 +75,7 @@ public class LoginActivity extends AppCompatActivity implements DatabaseManager.
     @Override
     public void onUserSignUpError(String error) {
         showAlert(error);
+        mSnackbar.dismiss();
     }
 
     @Override
@@ -73,6 +86,7 @@ public class LoginActivity extends AppCompatActivity implements DatabaseManager.
         } else {
             intent.putExtra(IS_NEW_USER, false);
         }
+        mSnackbar.dismiss();
         startActivity(intent);
     }
 
@@ -86,6 +100,7 @@ public class LoginActivity extends AppCompatActivity implements DatabaseManager.
                 mUserManager.signUpUser(this, email, password);
                 break;
         }
+        mSnackbar.dismiss();
     }
 
     public enum ButtonType {

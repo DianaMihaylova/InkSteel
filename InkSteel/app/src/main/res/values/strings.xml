@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">InkSteel</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="username">Username (Required)</string>
+    <string name="api_key">AIzaSyCuBkUIdyvqanz381pa3YoYrJ7uj21AEBg</string>
+    <string name="username">Username</string>
     <string name="age">Age</string>
     <string name="city">City</string>
     <string name="cancel">Cancel</string>
@@ -22,7 +21,7 @@
     <string name="send_a_message">Send a message</string>
     <string name="app_logo">app logo</string>
     <string name="add_image">add image</string>
-    <string name="add_description_if_you_like_20_chars">Add description, if you like (20 chars)</string>
+    <string name="add_description_if_you_like_20_chars">Add short description</string>
     <string name="click_to_explore_again"><![CDATA[Click to explore again ->]]></string>
     <string name="friends">Friends</string>
     <string name="log_out">Log out</string>
@@ -57,4 +56,11 @@
     <string name="chat_fragment">CHAT</string>
     <string name="tel">tel:</string>
     <string name="empty_field_error">Field can\'t be empty</string>
+    <string name="reply">Reply</string>
+    <string name="new_message">New Message from</string>
+    <string name="channel_id">messages_chanel</string>
+    <string name="reply_hint">Reply to the message</string>
+    <string name="send_button">Send button</string>
+    <string name="user_profile_image">user profile image</string>
+    <string name="open_now">OPEN NOW</string>
 </resources>

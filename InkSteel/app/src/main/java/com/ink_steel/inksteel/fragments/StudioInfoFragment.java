@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,7 @@ public class StudioInfoFragment extends Fragment implements
     private RatingBar mRating;
     private Studio mStudio;
     private DatabaseManager mManager;
-    private MapFragment mMapFragment;
+    private Snackbar mSnackbar;
 
     public StudioInfoFragment() {
     }
@@ -59,7 +60,7 @@ public class StudioInfoFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_studio_text_info,
+        View view = inflater.inflate(R.layout.fragment_studio_info,
                 container, false);
 
         String mId = getArguments().getString("studioId");
@@ -69,6 +70,8 @@ public class StudioInfoFragment extends Fragment implements
         mNumber = view.findViewById(R.id.studio_text_phone);
         mWebsite = view.findViewById(R.id.studio_text_website);
         mRating = view.findViewById(R.id.studio_text_rating);
+
+        View layoutContainer = getActivity().findViewById(R.id.activity_home_container);
 
         ImageView imageView = view.findViewById(R.id.studio_text_image);
 
@@ -85,7 +88,6 @@ public class StudioInfoFragment extends Fragment implements
                 .load(mStudio.getImageUrl())
                 .into(imageView);
         else imageView.setImageResource(R.drawable.placeholder);
-        mMapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         MapFragment mMapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mMapFragment != null)
             mMapFragment.getMapAsync(this);
@@ -121,12 +123,11 @@ public class StudioInfoFragment extends Fragment implements
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        GoogleMap mMap = googleMap;
         LatLng position = mStudio.getGooglePlace().getLatLng();
-        mMap.addMarker(new MarkerOptions()
+        googleMap.addMarker(new MarkerOptions()
                 .position(position)
                 .title(mStudio.getName()));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 12));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 12));
     }
 
     @Override

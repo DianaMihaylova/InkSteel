@@ -4,27 +4,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/colorAccent"
-    android:paddingBottom="8dp">
+    android:background="@color/colorPrimaryDark"
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/studio_iv"
         android:layout_width="0dp"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
+        android:layout_margin="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/tattoo3"
-        android:padding="3dp"
         android:contentDescription="@string/studio_image"/>
 
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/colorPrimaryDarkTransparent"
+        android:background="#aaffffff"
         app:layout_constraintBottom_toBottomOf="@+id/studio_iv"
         app:layout_constraintEnd_toEndOf="@+id/studio_iv"
         app:layout_constraintStart_toStartOf="@+id/studio_iv"/>
@@ -53,13 +52,14 @@
         android:layout_width="wrap_content"
         android:layout_height="13dp"
         android:layout_margin="8dp"
-        android:isIndicator="false"
         android:numStars="5"
         android:progressTint="@color/fbutton_color_sun_flower"
         android:rating="5"
         android:stepSize="0.5"
+        android:isIndicator="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:targetApi="lollipop" />
 
     <TextView
         android:id="@+id/studio_read_more_tv"
@@ -75,5 +75,18 @@
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/view"/>
+
+    <TextView
+        android:id="@+id/studio_open_now"
+        style="@style/Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccentTransparent"
+        android:padding="8dp"
+        android:text="@string/open_now"
+        android:textSize="14sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

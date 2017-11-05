@@ -1,5 +1,6 @@
 package com.ink_steel.inksteel.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ public class ExploreFragment extends Fragment implements DatabaseManager.UsersLi
     public ExploreFragment() {
     }
 
+    @SuppressLint("ShowToast")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

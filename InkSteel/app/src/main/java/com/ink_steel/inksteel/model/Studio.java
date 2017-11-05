@@ -11,21 +11,18 @@ public class Studio {
     private float rating;
     private String imageUrl;
     private Place googlePlace;
-    private ArrayList<String> photosUrl;
+    private boolean isOpenNow;
 
-    public Studio(String name, float rating, String id, String imageUrl) {
+    public Studio(String name, float rating, String id, String imageUrl, boolean isOpenNow) {
         this.name = name;
         this.rating = rating;
         this.placeId = id;
         this.imageUrl = imageUrl;
+        this.isOpenNow = isOpenNow;
     }
 
-    public void addPhotoUrl(String url) {
-        photosUrl.add(url);
-    }
-
-    public ArrayList<String> getPhotosUrl() {
-        return photosUrl;
+    public boolean isOpenNow() {
+        return isOpenNow;
     }
 
     public String getPlaceId() {
