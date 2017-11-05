@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.RemoteInput;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,7 +33,7 @@ public class NotificationReplyService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        IntentFilter filter = new IntentFilter(NotificationReplyReceiver.REPLY_ACTION);
+        IntentFilter filter = new IntentFilter(NotificationReplyReceiver.ACTION_REPLY);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         mReceiver = new NotificationReplyReceiver();
         registerReceiver(mReceiver, filter);
@@ -62,13 +63,14 @@ public class NotificationReplyService extends IntentService {
             DatabaseManager manager = DatabaseManager.getInstance();
             manager.addMessage(new Message(user.getEmail(),
                     message, new Date().getTime()), chatId, otherUserEmail);
+            Log.d("noti", otherUserEmail);
             sendBroadcast(notificationId, chatId);
         }
     }
 
     private void sendBroadcast(int notificationId, String chatId) {
         Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(NotificationReplyReceiver.REPLY_ACTION);
+        broadcastIntent.setAction(NotificationReplyReceiver.ACTION_REPLY);
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
         broadcastIntent.putExtra(NOTIFICATION_ID, notificationId);
         broadcastIntent.putExtra(CHAT_ID, chatId);

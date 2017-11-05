@@ -97,8 +97,8 @@ public class ProfileFragment extends Fragment {
     private void displayUserInfo() {
         String emailTxt, userNameTxt, cityTxt, ageTxt, picture;
 
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
+        Bundle bundle = getArguments();
+        if (bundle != null ) {
             final User friend = (User) bundle.getSerializable("friend");
             emailTxt = getString(R.string.email_dot) + friend.getEmail();
             userNameTxt = getString(R.string.username_dot) + "  " + friend.getName();
@@ -133,6 +133,7 @@ public class ProfileFragment extends Fragment {
 
         Picasso.with(getActivity())
                 .load(picture)
+                .placeholder(R.drawable.placeholder_posts)
                 .transform(new CropCircleTransformation())
                 .into(mImageView);
     }

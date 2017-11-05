@@ -32,7 +32,8 @@
             card_view:layout_constraintRight_toRightOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintVertical_bias="1.0"
-            card_view:srcCompat="@drawable/tatto1"/>
+            card_view:srcCompat="@drawable/tatto1"
+            android:contentDescription="@string/user_profile_image" />
 
         <TextView
             android:id="@+id/user_name"

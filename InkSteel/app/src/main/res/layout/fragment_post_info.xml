@@ -29,7 +29,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_info"
         app:layout_constraintVertical_weight="2"
-        app:srcCompat="@drawable/logo"/>
+        app:srcCompat="@drawable/logo"
+        android:contentDescription="@string/post_image" />
 
     <View
         android:id="@+id/previous"

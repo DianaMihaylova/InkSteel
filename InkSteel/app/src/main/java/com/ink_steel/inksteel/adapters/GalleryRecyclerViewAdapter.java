@@ -25,8 +25,7 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
     @Override
     public GalleryViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_gallery_image, parent, false);
-        GalleryViewHolders vh = new GalleryViewHolders(v);
-        return vh;
+        return new GalleryViewHolders(v);
     }
 
     @Override

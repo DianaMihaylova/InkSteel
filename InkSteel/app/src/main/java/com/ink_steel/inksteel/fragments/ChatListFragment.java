@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -53,7 +52,7 @@ public class ChatListFragment extends Fragment implements Listeners.ChatListClic
         RecyclerView recyclerView = view.findViewById(R.id.chat_list_rv);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new ChatListAdapter(this, mChatRooms, mManager.getCurrentUser().getEmail());
+        mAdapter = new ChatListAdapter(this, mChatRooms);
         recyclerView.setAdapter(mAdapter);
 
         return view;
@@ -73,15 +72,11 @@ public class ChatListFragment extends Fragment implements Listeners.ChatListClic
     }
 
     @Override
-    public void onChatRoomChanged(ChatRoom a) {
+    public void onChatRoomChanged() {
         mChatRooms.clear();
         mChatRooms.addAll(mManager.getUserChatRooms());
         mAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onStop() {
-//        mManager.unregisterChatRoomsListener();
-        super.onStop();
-    }
+
 }

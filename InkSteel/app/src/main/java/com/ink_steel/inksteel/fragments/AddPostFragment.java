@@ -31,7 +31,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class AddPostFragment extends Fragment implements DatabaseManager.PostSavedListener {
 
-    public static final int IMAGE_CHOOSER_REQUEST_CODE = 1;
+    private static final int IMAGE_CHOOSER_REQUEST_CODE = 1;
     private CropImageView mCropImageView;
     private Button mAddImageButton;
     private EditText mDescriptionEditText;

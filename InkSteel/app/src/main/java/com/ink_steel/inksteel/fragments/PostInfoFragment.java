@@ -27,7 +27,7 @@ import java.util.List;
 
 public class PostInfoFragment extends Fragment implements View.OnClickListener, DatabaseManager.PostReactionsListener {
 
-    boolean isCollapsed;
+    private boolean isCollapsed;
     private ReactionsAdapter mAdapter;
     private boolean isFullScreen;
     private TextView mLikeCount;
@@ -48,7 +48,6 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
     private Post mCurrentPost;
     private DatabaseManager mManager;
     private Picasso mPicasso;
-    private Snackbar mSnackbar;
 
     public PostInfoFragment() {
     }
@@ -161,8 +160,10 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
             mReactionUserEmail.setText(mCurrentPost.getUserEmail());
 
             mPicasso.load(mCurrentPost.getUrlProfileImage())
+                    .placeholder(R.drawable.placeholder_posts)
                     .into(mPostUserProfileImage);
             mPicasso.load(mCurrentPost.getUrlImage())
+                    .placeholder(R.drawable.placeholder_posts)
                     .into(mPostImage);
 
             String description = mCurrentPost.getDescription();

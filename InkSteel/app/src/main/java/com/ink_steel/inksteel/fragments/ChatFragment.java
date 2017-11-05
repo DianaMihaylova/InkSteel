@@ -26,7 +26,7 @@ import java.util.Date;
 public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCreatedListener,
         DatabaseManager.ChatListener {
 
-    public static final String EMAIL = "email";
+    private static final String EMAIL = "email";
     private ImageView mImageView;
     private TextView mTextView;
     private DatabaseManager mManager;
@@ -124,7 +124,7 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
         super.onStop();
     }
 
-    public void loadChatRoomMessages() {
+    private void loadChatRoomMessages() {
         mManager.getChatMessagesById(mChatRoom.getChatId(), this);
     }
 }

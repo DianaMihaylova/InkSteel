@@ -3,7 +3,6 @@ package com.ink_steel.inksteel.model;
 import android.support.annotation.NonNull;
 
 import com.google.firebase.firestore.Exclude;
-import com.ink_steel.inksteel.R;
 
 import java.util.ArrayList;
 import java.util.Collections;

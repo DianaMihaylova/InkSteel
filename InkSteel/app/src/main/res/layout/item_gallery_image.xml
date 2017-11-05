@@ -9,4 +9,5 @@
     android:adjustViewBounds="true"
     android:padding="3dp"
     android:scaleType="centerCrop"
-    app:srcCompat="@drawable/tattoo3"/>
+    app:srcCompat="@drawable/tattoo3"
+    android:contentDescription="@string/studio_image" />

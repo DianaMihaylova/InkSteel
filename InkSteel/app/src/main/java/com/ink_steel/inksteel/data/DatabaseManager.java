@@ -555,15 +555,15 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     // create chat room for current user and given user's email
     public void createChatRoom(String email, ChatRoomCreatedListener listener) {
         DocumentReference reference = mFirestore.collection("chatRooms").document();
-        Message message = new Message(mCurrentUser.getName(), "Chat room created!",
+        Message message = new Message(mCurrentUser.getEmail(), "Chat room created!",
                 new Date().getTime());
         User user = mUsers.get(email);
         ChatRoom chatRoom1 = new ChatRoom(reference.getId(), email, user.getProfileImage(),
-                user.getName(), message.getMessage(), message.getTime(), message.getUserName(),
+                user.getName(), message.getMessage(), message.getTime(), message.getUserEmail(),
                 false);
         ChatRoom chatRoom2 = new ChatRoom(reference.getId(), mCurrentUser.getEmail(),
                 mCurrentUser.getProfileImage(), mCurrentUser.getName(), message.getMessage(),
-                message.getTime(), message.getUserName(), false);
+                message.getTime(), message.getUserEmail(), false);
         reference.collection("messages").add(message);
 
         mFirestore.collection("users").document(email).collection("chatRooms")
@@ -596,22 +596,15 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
                     switch (change.getType()) {
                         case ADDED:
                             mUserChatRooms.add(change.getDocument().toObject(ChatRoom.class));
-//                            listener.onChatRoomChanged(chatRoom);
-//                            break;
-//                        case MODIFIED:
+
                             if (!mUserChatRooms.add(chatRoom)) {
                                 mUserChatRooms.remove(chatRoom);
                                 mUserChatRooms.add(chatRoom);
                             }
-                            listener.onChatRoomChanged(chatRoom);
+                            listener.onChatRoomChanged();
                             break;
                     }
                 }
-//                for (DocumentSnapshot snapshot:documentSnapshots.getDocuments()) {
-//                    ChatRoom chatRoom = snapshot.toObject(ChatRoom.class);
-//                    mUserChatRooms.add(chatRoom);
-//                    listener.onChatRoomChanged(chatRoom);
-//                }
                 if (isChatRoomsInitialLoad) {
                     listener.onChatRoomsLoaded();
                     isChatRoomsInitialLoad = false;
@@ -626,9 +619,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
             chatMessages = new ArrayList<>();
             isChatMessagesInitialLoad = true;
         }
-
         makeMessageSeen(chatId);
-
         chatRegistration = mFirestore.collection("chatRooms").document(chatId)
                 .collection("messages").orderBy("time")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -673,7 +664,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     public void addMessage(Message message, String chatRoomId, String otherUserEmail) {
         mFirestore.collection("chatRooms").document(chatRoomId)
                 .collection("messages").add(message);
-        boolean seen = mCurrentUser.getName().equals(message.getUserName());
+        boolean seen = mCurrentUser.getEmail().equals(message.getUserEmail());
         mFirestore.collection("users").document(mCurrentUser.getEmail())
                 .collection("chatRooms").document(chatRoomId)
                 .update("lastMessage", message.getMessage(),
@@ -729,7 +720,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         void onChatRoomsLoaded();
 
         // chatRoom is changed
-        void onChatRoomChanged(ChatRoom a);
+        void onChatRoomChanged();
     }
 
     public interface UserManagerListener {

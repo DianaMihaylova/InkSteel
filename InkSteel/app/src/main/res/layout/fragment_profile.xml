@@ -125,7 +125,8 @@
             android:background="@drawable/custom_button_blue"
             android:src="@android:drawable/ic_lock_power_off"
             android:text="@string/log_out"
-            style="@style/Text"/>
+            style="@style/Text"
+            android:contentDescription="@string/user_profile_image" />
 
     </LinearLayout>
 

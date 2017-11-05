@@ -10,7 +10,7 @@ import static com.ink_steel.inksteel.helpers.NotificationUtil.NOTIFICATION_ID;
 
 
 public class NotificationReplyReceiver extends BroadcastReceiver {
-    public static final String REPLY_ACTION  = "com.ink_steel.inksteel.DIRECT_REPLY";
+    public static final String ACTION_REPLY = "com.ink_steel.inksteel.DIRECT_REPLY";
 
     @Override
     public void onReceive(Context context, Intent intent) {

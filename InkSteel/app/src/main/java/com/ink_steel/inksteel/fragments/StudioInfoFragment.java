@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +34,7 @@ public class StudioInfoFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         OnMapReadyCallback, DatabaseManager.StudioListener {
 
+    private static final String STUDIO_ID = "studioId";
     private GoogleApiClient mClient;
     private TextView mName;
     private TextView mAddress;
@@ -43,7 +43,6 @@ public class StudioInfoFragment extends Fragment implements
     private RatingBar mRating;
     private Studio mStudio;
     private DatabaseManager mManager;
-    private Snackbar mSnackbar;
 
     public StudioInfoFragment() {
     }
@@ -51,7 +50,7 @@ public class StudioInfoFragment extends Fragment implements
     public static StudioInfoFragment newInstance(String studioId) {
         StudioInfoFragment studioInfoFragment = new StudioInfoFragment();
         Bundle bundle = new Bundle(1);
-        bundle.putString("studioId", studioId);
+        bundle.putString(STUDIO_ID, studioId);
         studioInfoFragment.setArguments(bundle);
         return studioInfoFragment;
     }
@@ -63,15 +62,13 @@ public class StudioInfoFragment extends Fragment implements
         View view = inflater.inflate(R.layout.fragment_studio_info,
                 container, false);
 
-        String mId = getArguments().getString("studioId");
+        String mId = getArguments().getString(STUDIO_ID);
 
         mName = view.findViewById(R.id.studio_text_title);
         mAddress = view.findViewById(R.id.studio_text_address);
         mNumber = view.findViewById(R.id.studio_text_phone);
         mWebsite = view.findViewById(R.id.studio_text_website);
         mRating = view.findViewById(R.id.studio_text_rating);
-
-        View layoutContainer = getActivity().findViewById(R.id.activity_home_container);
 
         ImageView imageView = view.findViewById(R.id.studio_text_image);
 

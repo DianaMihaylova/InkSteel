@@ -82,9 +82,11 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
             Picasso.with(mContext)
                     .load(post.getUrlProfileImage())
                     .transform(new CropCircleTransformation())
+                    .placeholder(R.drawable.placeholder_posts)
                     .into(profilePic);
             Picasso.with(mContext)
                     .load(post.getUrlThumbnailImage())
+                    .placeholder(R.drawable.placeholder_posts)
                     .into(postPic);
         }
     }

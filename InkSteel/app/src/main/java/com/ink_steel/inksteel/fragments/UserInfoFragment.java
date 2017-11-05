@@ -45,7 +45,7 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
     private Bitmap mImageBitmap;
     private DatabaseManager mManager;
     private TextView mCity;
-private Snackbar mSnackbar;
+    private Snackbar mSnackbar;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -61,7 +61,7 @@ private Snackbar mSnackbar;
         mImageView.setDrawingCacheEnabled(true);
 
         View layoutContainer = getActivity().findViewById(R.id.activity_home_container);
-        mSnackbar.make(layoutContainer, "Saving...", Snackbar.LENGTH_INDEFINITE);
+        mSnackbar = Snackbar.make(layoutContainer, "Saving...", Snackbar.LENGTH_INDEFINITE);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override

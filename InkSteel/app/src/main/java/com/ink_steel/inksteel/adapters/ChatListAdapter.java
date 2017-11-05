@@ -21,14 +21,11 @@ import java.util.Locale;
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.PostsViewHolder> {
 
     private List<ChatRoom> mChatRooms;
-    private String mEmail;
     private ChatListClickListener mListener;
 
-    public ChatListAdapter(ChatListClickListener listener, List<ChatRoom> chatRooms,
-                           String currentUserEmail) {
+    public ChatListAdapter(ChatListClickListener listener, List<ChatRoom> chatRooms) {
         mChatRooms = chatRooms;
         mListener = listener;
-        mEmail = currentUserEmail;
     }
 
     @Override
@@ -74,7 +71,9 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.PostsV
 
             userName.setText(chatRoom.getEmail());
             Picasso.with(itemView.getContext())
-                    .load(chatRoom.getProfilePicture()).into(image);
+                    .load(chatRoom.getProfilePicture())
+                    .placeholder(R.drawable.placeholder_posts)
+                    .into(image);
             if (!chatRoom.isSeen())
                 lastMsg.setTypeface(null, Typeface.BOLD);
             lastMsg.setText(chatRoom.getLastMessage());

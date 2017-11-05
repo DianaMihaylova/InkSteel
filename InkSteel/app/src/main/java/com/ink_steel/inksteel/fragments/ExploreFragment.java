@@ -54,7 +54,7 @@ public class ExploreFragment extends Fragment implements DatabaseManager.UsersLi
         return view;
     }
 
-    public void setCardStackEvent() {
+    private void setCardStackEvent() {
         mCardStack.setEventCallback(new SwipeDeck.SwipeEventCallback() {
             @Override
             public void cardSwipedLeft(int position) {

@@ -1,6 +1,5 @@
 package com.ink_steel.inksteel.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +39,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.PostsVie
     @Override
     public int getItemViewType(int position) {
 
-        if (mUsername.equals(mMessages.get(position).getUserName())) {
+        if (mUsername.equals(mMessages.get(position).getUserEmail())) {
             return R.layout.item_message_reverse;
         }
         return R.layout.item_message;

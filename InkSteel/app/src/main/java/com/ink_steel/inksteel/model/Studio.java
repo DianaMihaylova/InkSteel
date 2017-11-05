@@ -2,8 +2,6 @@ package com.ink_steel.inksteel.model;
 
 import com.google.android.gms.location.places.Place;
 
-import java.util.ArrayList;
-
 public class Studio {
 
     private String placeId;

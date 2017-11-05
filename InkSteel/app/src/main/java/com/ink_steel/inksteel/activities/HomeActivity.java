@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -13,33 +12,30 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.view.View;
-import android.support.annotation.NonNull;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.fragments.ScreenSlidePageFragment;
 import com.ink_steel.inksteel.fragments.UserInfoFragment;
 import com.ink_steel.inksteel.helpers.Listeners.OnReplaceFragmentListener;
-import com.ink_steel.inksteel.helpers.NetworkService;
-import com.ink_steel.inksteel.helpers.PermissionUtil;
-import com.ink_steel.inksteel.receivers.NetworkReceiver;
+import com.ink_steel.inksteel.receivers.NetworkInfoReceiver;
 import com.ink_steel.inksteel.services.ChatNotificationService;
-import com.ink_steel.inksteel.model.ChatRoom;
 
-public class HomeActivity extends Activity implements OnReplaceFragmentListener, DatabaseManager.UserChatRoomsListener, NetworkReceiver.InternetConnectionListener {
+public class HomeActivity extends Activity implements OnReplaceFragmentListener,
+        DatabaseManager.UserChatRoomsListener, NetworkInfoReceiver.InternetConnectionListener {
 
     private FragmentManager mFragmentManager;
     private DatabaseManager mDatabaseManager;
     private BroadcastReceiver mReceiver;
-    private Snackbar mSnackbar;
+    private Snackbar mSnackBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        mReceiver = new NetworkReceiver(this);
+        mReceiver = new NetworkInfoReceiver(this);
         View view = findViewById(R.id.activity_home_container);
-        mSnackbar = Snackbar.make(view, "No internet connection",
+        mSnackBar = Snackbar.make(view, "No internet connection",
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction("CONNECT", new View.OnClickListener() {
             @Override
@@ -92,7 +88,7 @@ public class HomeActivity extends Activity implements OnReplaceFragmentListener,
     }
 
     @Override
-    public void onChatRoomChanged(ChatRoom a) {
+    public void onChatRoomChanged() {
 
     }
 
@@ -102,9 +98,9 @@ public class HomeActivity extends Activity implements OnReplaceFragmentListener,
         boolean isConnected = info != null &&
                 info.isConnectedOrConnecting();
         if (!isConnected) {
-            mSnackbar.show();
+            mSnackBar.show();
         } else {
-            mSnackbar.dismiss();
+            mSnackBar.dismiss();
         }
     }
 }

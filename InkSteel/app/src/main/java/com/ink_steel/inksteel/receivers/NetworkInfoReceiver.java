@@ -7,7 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 
-public class NetworkReceiver extends BroadcastReceiver {
+public class NetworkInfoReceiver extends BroadcastReceiver {
 
     public interface InternetConnectionListener {
         void onNetworkStateChanged(NetworkInfo info);
@@ -15,7 +15,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 
     private InternetConnectionListener mListener;
 
-    public NetworkReceiver(InternetConnectionListener listener) {
+    public NetworkInfoReceiver(InternetConnectionListener listener) {
         mListener = listener;
     }
 

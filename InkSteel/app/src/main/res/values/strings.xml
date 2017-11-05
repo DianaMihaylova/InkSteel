@@ -10,9 +10,7 @@
     <string name="profile">Profile</string>
     <string name="email">Email</string>
     <string name="edit_profile">Edit Profile</string>
-    <string name="chat">chat</string>
     <string name="gallery">gallery</string>
-    <string name="action_settings">Settings</string>
     <string name="register">Register</string>
     <string name="log_in">Log in</string>
     <string name="password">Password</string>
@@ -38,7 +36,6 @@
     <string name="warning_msg">WARNING MESSAGE</string>
     <string name="user_name">Username:</string>
     <string name="do_you_want">Do you want to delete the image?</string>
-    <string name="yes">Yes</string>
     <string name="like">like</string>
     <string name="blush">blush</string>
     <string name="devil">devil</string>
@@ -63,4 +60,11 @@
     <string name="send_button">Send button</string>
     <string name="user_profile_image">user profile image</string>
     <string name="open_now">OPEN NOW</string>
+    <string name="call">call</string>
+    <string name="browse">browse</string>
+    <string name="post_image">post image</string>
+    <string name="image_full">image_full</string>
+    <string name="triangle">triangle</string>
+    <string name="collapse">collapse</string>
+    <string name="reaction">reaction</string>
 </resources>

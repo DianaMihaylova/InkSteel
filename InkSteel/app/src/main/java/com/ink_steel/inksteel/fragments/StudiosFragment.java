@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -36,9 +35,10 @@ import com.ink_steel.inksteel.helpers.PermissionUtil;
 import com.ink_steel.inksteel.helpers.StudiosQueryTask;
 import com.ink_steel.inksteel.model.Studio;
 
-import static com.ink_steel.inksteel.helpers.PermissionUtil.PermissionType;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.ink_steel.inksteel.helpers.PermissionUtil.PermissionType;
 
 public class StudiosFragment extends Fragment implements StudiosQueryTask.StudiosListener,
         StudioClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -49,6 +49,7 @@ public class StudiosFragment extends Fragment implements StudiosQueryTask.Studio
     private GoogleApiClient mClient;
     private DatabaseManager mManager;
     private GeoDataClient mGeoDataClient;
+    private Location location;
 
     public StudiosFragment() {
     }
@@ -81,9 +82,6 @@ public class StudiosFragment extends Fragment implements StudiosQueryTask.Studio
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-
-//        if (mClient.isConnected())
-//            getStudios();
 
         mGeoDataClient = Places.getGeoDataClient(getActivity(), null);
 
@@ -127,7 +125,6 @@ public class StudiosFragment extends Fragment implements StudiosQueryTask.Studio
         mListener.replaceFragment(StudioInfoFragment.newInstance(mStudios.get(position).getPlaceId()));
     }
 
-    Location location;
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
