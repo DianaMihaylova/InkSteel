@@ -13,7 +13,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@android:color/white"
         android:layout_margin="3dp">
 
         <ImageView

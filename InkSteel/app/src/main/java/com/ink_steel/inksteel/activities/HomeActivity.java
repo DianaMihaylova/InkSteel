@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -13,18 +12,15 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.view.View;
-import android.support.annotation.NonNull;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.fragments.ScreenSlidePageFragment;
 import com.ink_steel.inksteel.fragments.UserInfoFragment;
 import com.ink_steel.inksteel.helpers.Listeners.OnReplaceFragmentListener;
-import com.ink_steel.inksteel.helpers.NetworkService;
-import com.ink_steel.inksteel.helpers.PermissionUtil;
+import com.ink_steel.inksteel.model.ChatRoom;
 import com.ink_steel.inksteel.receivers.NetworkReceiver;
 import com.ink_steel.inksteel.services.ChatNotificationService;
-import com.ink_steel.inksteel.model.ChatRoom;
 
 public class HomeActivity extends Activity implements OnReplaceFragmentListener, DatabaseManager.UserChatRoomsListener, NetworkReceiver.InternetConnectionListener {
 
