@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +76,8 @@ public class RegisterFragment extends Fragment {
         mPassword = mUserPasswordEt.getText().toString();
         mConfirmPassword = mConfirmPasswordEt.getText().toString();
         if (areFieldsValid()) {
+            Snackbar.make(getActivity().findViewById(R.id.activity_login_container),
+                    "Loading...", Snackbar.LENGTH_LONG).show();
             mLoginActivity.onButtonClick(REGISTER, mUserEmail, mPassword);
         }
     }

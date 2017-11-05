@@ -43,14 +43,16 @@ public class NotificationReplyService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent != null) {
             Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
-            CharSequence answer = remoteInput.getCharSequence(MESSAGE);
-            if (answer != null) {
-                String message = answer.toString();
-                String chatId = intent.getStringExtra(CHAT_ID);
-                String otherUserEmail = intent.getStringExtra(OTHER_USER_EMAIL);
-                int notificationId = intent.getIntExtra(NOTIFICATION_ID, 0);
-                if (!chatId.isEmpty() && !chatId.isEmpty() && !message.isEmpty()) {
-                    sendMessage(chatId, message, otherUserEmail, notificationId);
+            if (remoteInput != null) {
+                CharSequence answer = remoteInput.getCharSequence(MESSAGE);
+                if (answer != null) {
+                    String message = answer.toString();
+                    String chatId = intent.getStringExtra(CHAT_ID);
+                    String otherUserEmail = intent.getStringExtra(OTHER_USER_EMAIL);
+                    int notificationId = intent.getIntExtra(NOTIFICATION_ID, 0);
+                    if (!chatId.isEmpty() && !chatId.isEmpty() && !message.isEmpty()) {
+                        sendMessage(chatId, message, otherUserEmail, notificationId);
+                    }
                 }
             }
         }

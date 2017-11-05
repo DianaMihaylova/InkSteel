@@ -312,22 +312,21 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         if (mUsers == null) {
             mUsers = new HashMap<>();
         }
-        mFirestore.collection("users").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot snapshot : task.getResult()) {
-                                if (snapshot.exists()) {
-                                    User user = snapshot.toObject(User.class);
-                                    mUsers.put(user.getEmail(), user);
-                                }
-                            }
-                            if (listener != null)
-                                getExploreUsers(listener);
-                        }
+        mFirestore.collection("users").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                for (DocumentSnapshot snapshot : documentSnapshots) {
+                    if (snapshot.exists()) {
+                        User user = snapshot.toObject(User.class);
+                        if (mUsers.containsKey(user.getEmail()))
+                            mUsers.remove(user.getEmail());
+                        mUsers.put(user.getEmail(), user);
                     }
-                });
+                }
+                if (listener != null)
+                    getExploreUsers(listener);
+            }
+        });
     }
 
     public void loadExplore(UsersListener listener) {

@@ -125,8 +125,8 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK) {
             Uri uri = data.getData();
-            mUserManager.saveImage(uri, this);
             mSnackbar.show();
+            mUserManager.saveImage(uri, this);
         }
     }
 

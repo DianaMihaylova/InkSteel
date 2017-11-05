@@ -30,7 +30,8 @@ public class LoginActivity extends AppCompatActivity implements DatabaseManager.
         View container = findViewById(R.id.activity_login_container);
         mSnackbar = Snackbar.make(container, "Loading...", Snackbar.LENGTH_INDEFINITE);
         Intent intent = getIntent();
-        if (intent.hasExtra(IS_SIGN_OUT) && !intent.getBooleanExtra(IS_SIGN_OUT, false)) {
+        if (intent == null || intent.hasExtra(IS_SIGN_OUT) &&
+                !intent.getBooleanExtra(IS_SIGN_OUT, false)) {
             mSnackbar.show();
         }
 
