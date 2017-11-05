@@ -5,13 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    card_view:cardBackgroundColor="@color/colorPrimaryDark"
     android:layout_margin="8dp"
     card_view:cardCornerRadius="16dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDarkTransparent">
+        android:background="@android:color/white"
+        android:layout_margin="3dp">
 
         <TextView
             android:id="@+id/user_city"
@@ -30,7 +32,7 @@
         <ImageView
             android:id="@+id/user_image"
             android:layout_width="0dp"
-            android:layout_height="104dp"
+            android:layout_height="0dp"
             android:scaleType="centerCrop"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintDimensionRatio="w,4:3"
@@ -45,11 +47,11 @@
             style="@style/FontText"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginEnd="84dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:gravity="bottom|center_horizontal"
             android:textSize="30sp"
-            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintStart_toEndOf="@+id/user_image"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintVertical_weight="2"
             tools:text="@string/textview"/>
@@ -57,19 +59,21 @@
         <Button
             android:id="@+id/btn_msg"
             style="@style/Text"
-            android:layout_width="153dp"
-            android:layout_height="42dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/custom_button_blue"
+            android:background="@drawable/custom_button_pink"
+            android:padding="8dp"
             android:text="@string/send_a_message"
             android:textSize="14sp"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintStart_toStartOf="@+id/user_name"
+            card_view:layout_constraintStart_toEndOf="@+id/user_image"
             card_view:layout_constraintTop_toBottomOf="@+id/user_name"/>
+
 
     </android.support.constraint.ConstraintLayout>
 

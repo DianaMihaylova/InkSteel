@@ -12,7 +12,7 @@
         android:layout_height="420dp"
         android:padding="16dp"
         swipedeck:card_spacing="10dp"
-        swipedeck:max_visible="3"
+        swipedeck:max_visible="1"
         swipedeck:render_above="true"
         swipedeck:rotation_degrees="15">
 
