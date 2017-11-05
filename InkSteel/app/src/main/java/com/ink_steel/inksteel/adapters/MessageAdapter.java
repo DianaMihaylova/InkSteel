@@ -38,7 +38,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.PostsVie
 
     @Override
     public int getItemViewType(int position) {
-
         if (mUsername.equals(mMessages.get(position).getUserEmail())) {
             return R.layout.item_message_reverse;
         }
@@ -56,7 +55,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.PostsVie
 
         PostsViewHolder(final View itemView) {
             super(itemView);
-
             messageTv = itemView.findViewById(R.id.item_message);
             time = itemView.findViewById(R.id.item_time);
         }

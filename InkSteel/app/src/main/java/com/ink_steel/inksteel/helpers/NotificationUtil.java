@@ -79,5 +79,4 @@ public class NotificationUtil {
                         chatRoom.getLastMessageTime(),
                         chatRoom.getLastMessageSender());
     }
-
 }

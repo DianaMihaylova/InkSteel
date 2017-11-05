@@ -101,7 +101,7 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 selectProfileImage();
             } else {
-                Toast.makeText(getActivity(), "Permission is necessary to get images from your device!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.image_text_permission, Toast.LENGTH_LONG).show();
             }
         }
     }

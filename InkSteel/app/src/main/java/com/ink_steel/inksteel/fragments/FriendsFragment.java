@@ -18,7 +18,8 @@ import com.ink_steel.inksteel.model.User;
 
 import java.util.ArrayList;
 
-public class FriendsFragment extends Fragment implements FriendClickListener, DatabaseManager.UsersListener {
+public class FriendsFragment extends Fragment implements FriendClickListener,
+        DatabaseManager.UsersListener {
 
     private ArrayList<User> mFriends;
     private DatabaseManager mManager;

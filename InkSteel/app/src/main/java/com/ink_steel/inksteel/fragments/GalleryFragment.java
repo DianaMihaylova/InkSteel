@@ -88,7 +88,8 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
                 int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
                         Manifest.permission.READ_EXTERNAL_STORAGE);
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                    PermissionUtil.requestPermission(GalleryFragment.this, PermissionUtil.PermissionType.STORAGE);
+                    PermissionUtil.requestPermission(GalleryFragment.this,
+                            PermissionUtil.PermissionType.STORAGE);
                 } else {
                     selectImage();
                 }
@@ -106,7 +107,8 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 selectImage();
             } else {
-                Toast.makeText(getActivity(), "Permission is necessary to get images from your device!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Permission is necessary to get images from " +
+                        "your device!", Toast.LENGTH_LONG).show();
             }
         }
     }

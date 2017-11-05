@@ -33,6 +33,7 @@ public class HomeActivity extends Activity implements OnReplaceFragmentListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         mReceiver = new NetworkInfoReceiver(this);
         View view = findViewById(R.id.activity_home_container);
         mSnackBar = Snackbar.make(view, "No internet connection",

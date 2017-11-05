@@ -91,11 +91,11 @@ public class LoginFragment extends Fragment {
 
     private boolean areFieldsValid() {
         if (mUserEmail.isEmpty() || mUserEmail == null) {
-            mEmail.setError("Invalid email!");
+            mEmail.setError(getString(R.string.invalid_email));
             return false;
         }
         if (mPassword.isEmpty() || mPassword == null) {
-            mPass.setError("Invalid password!");
+            mPass.setError(getString(R.string.invalid_pass));
             return false;
         }
         return true;

@@ -67,4 +67,7 @@
     <string name="triangle">triangle</string>
     <string name="collapse">collapse</string>
     <string name="reaction">reaction</string>
+    <string name="invalid_pass">Invalid password!</string>
+    <string name="image_text_permission">Permission is necessary to get images from your device!</string>
+    <string name="no_studios">There are no studios available</string>
 </resources>

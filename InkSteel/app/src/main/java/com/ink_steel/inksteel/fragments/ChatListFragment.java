@@ -19,7 +19,8 @@ import com.ink_steel.inksteel.model.ChatRoom;
 
 import java.util.ArrayList;
 
-public class ChatListFragment extends Fragment implements Listeners.ChatListClickListener, DatabaseManager.UserChatRoomsListener {
+public class ChatListFragment extends Fragment implements Listeners.ChatListClickListener,
+        DatabaseManager.UserChatRoomsListener {
 
     private DatabaseManager mManager;
     private ChatListAdapter mAdapter;
@@ -77,6 +78,4 @@ public class ChatListFragment extends Fragment implements Listeners.ChatListClic
         mChatRooms.addAll(mManager.getUserChatRooms());
         mAdapter.notifyDataSetChanged();
     }
-
-
 }

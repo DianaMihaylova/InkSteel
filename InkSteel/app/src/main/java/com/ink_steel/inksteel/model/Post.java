@@ -22,18 +22,6 @@ public class Post implements Comparable<Post> {
     }
 
     public Post(String postId, String userEmail, long createdAt, String urlProfileImage,
-                String urlImage, String urlThumbnailImage, String description,
-                int like, int blush, int devil, int dazed) {
-        this(postId, userEmail, createdAt, urlProfileImage,
-                urlImage, urlThumbnailImage, description);
-        reactions.clear();
-        reactions.add(like);
-        reactions.add(blush);
-        reactions.add(devil);
-        reactions.add(dazed);
-    }
-
-    public Post(String postId, String userEmail, long createdAt, String urlProfileImage,
                 String urlImage, String urlThumbnailImage, String description) {
         this.postId = postId;
         this.userEmail = userEmail;
@@ -44,6 +32,18 @@ public class Post implements Comparable<Post> {
         this.description = description;
         reactions = new ArrayList<>();
         Collections.addAll(reactions, 0, 0, 0, 0);
+    }
+
+    public Post(String postId, String userEmail, long createdAt, String urlProfileImage,
+                String urlImage, String urlThumbnailImage, String description,
+                int like, int blush, int devil, int dazed) {
+        this(postId, userEmail, createdAt, urlProfileImage,
+                urlImage, urlThumbnailImage, description);
+        reactions.clear();
+        reactions.add(like);
+        reactions.add(blush);
+        reactions.add(devil);
+        reactions.add(dazed);
     }
 
     public String getUserEmail() {

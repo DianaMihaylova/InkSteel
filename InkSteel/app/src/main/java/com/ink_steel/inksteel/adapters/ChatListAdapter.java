@@ -64,11 +64,9 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.PostsV
                     mListener.onChatItemClick(getAdapterPosition());
                 }
             });
-
         }
 
         void bind(ChatRoom chatRoom) {
-
             userName.setText(chatRoom.getEmail());
             Picasso.with(itemView.getContext())
                     .load(chatRoom.getProfilePicture())
@@ -81,7 +79,6 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.PostsV
                     Locale.getDefault());
             Date date = new Date(chatRoom.getLastMessageTime());
             time.setText(format.format(date));
-
         }
     }
 }

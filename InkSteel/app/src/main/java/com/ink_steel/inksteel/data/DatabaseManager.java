@@ -79,6 +79,79 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     private HashMap<String, Studio> mStudios;
     private StudiosQueryTask.StudiosListener mListener;
 
+    public interface ChatListener {
+        // new message
+        void onMessageAdded(Message message);
+
+        // history message
+        void onMessagesLoaded();
+    }
+
+    public interface UserChatRoomsListener {
+        // all chatRooms loaded
+        void onChatRoomsLoaded();
+
+        // chatRoom is changed
+        void onChatRoomChanged();
+    }
+
+    public interface UserManagerListener {
+        // already signed in or just signing in
+        void onUserLogInError(String error);
+
+        // new user
+        void onUserSignUpError(String error);
+
+        // user loaded
+        void onUserInfoLoaded();
+    }
+
+    public interface UserInfoListener {
+        // after registration or when change information
+        void onUserInfoSaved();
+    }
+
+    public interface UsersListener {
+        // all users loaded
+        void onUsersLoaded();
+    }
+
+    public interface GalleryImageAddListener {
+        // when added a new image in gallery
+        void onGalleryImageAdded();
+    }
+
+    public interface PostSavedListener {
+        // post saved to database
+        void onPostSaved();
+    }
+
+    public interface PostsListener {
+        // posts added
+        void onPostAdded(Post post);
+
+        // posts changed
+        void onPostsLoaded();
+    }
+
+    public interface PostReactionsListener {
+        // reactions changed
+        void onPostReactionsChanged();
+
+        // reactions added
+        void onReactionAdded(Reaction reaction);
+    }
+
+    public interface ChatRoomCreatedListener {
+        // created chatRoom
+        void onChatRoomCreated(ChatRoom chatRoom);
+    }
+
+    public interface StudioListener {
+        // studio information loaded
+        void onStudioInfoLoaded(Studio studio);
+    }
+
     private DatabaseManager() {
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
@@ -705,77 +778,6 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
             isChatMessagesInitialLoad = true;
             chatMessages.clear();
         }
-    }
-
-    public interface ChatListener {
-        // new message
-        void onMessageAdded(Message message);
-
-        // history message
-        void onMessagesLoaded();
-    }
-
-    public interface UserChatRoomsListener {
-        // all chatRooms loaded
-        void onChatRoomsLoaded();
-
-        // chatRoom is changed
-        void onChatRoomChanged();
-    }
-
-    public interface UserManagerListener {
-        // already signed in or just signing in
-        void onUserLogInError(String error);
-        // new user
-        void onUserSignUpError(String error);
-        // user loaded
-        void onUserInfoLoaded();
-    }
-
-    public interface UserInfoListener {
-        // after registration or when change information
-        void onUserInfoSaved();
-    }
-
-    public interface UsersListener {
-        // all users loaded
-        void onUsersLoaded();
-    }
-
-    public interface GalleryImageAddListener {
-        // when added a new image in gallery
-        void onGalleryImageAdded();
-    }
-
-    public interface PostSavedListener {
-        // post saved to database
-        void onPostSaved();
-    }
-
-    public interface PostsListener {
-        // posts added
-        void onPostAdded(Post post);
-
-        // posts changed
-        void onPostsLoaded();
-    }
-
-    public interface PostReactionsListener {
-        // reactions changed
-        void onPostReactionsChanged();
-
-        // reactions added
-        void onReactionAdded(Reaction reaction);
-    }
-
-    public interface ChatRoomCreatedListener {
-        // created chatRoom
-        void onChatRoomCreated(ChatRoom chatRoom);
-    }
-
-    public interface StudioListener {
-        // studio information loaded
-        void onStudioInfoLoaded(Studio studio);
     }
 
 //    ------------------------------------ Studios ------------------------------------

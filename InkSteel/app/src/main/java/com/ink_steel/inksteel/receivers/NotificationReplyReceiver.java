@@ -8,7 +8,6 @@ import com.ink_steel.inksteel.helpers.NotificationUtil;
 
 import static com.ink_steel.inksteel.helpers.NotificationUtil.NOTIFICATION_ID;
 
-
 public class NotificationReplyReceiver extends BroadcastReceiver {
     public static final String ACTION_REPLY = "com.ink_steel.inksteel.DIRECT_REPLY";
 
@@ -18,5 +17,4 @@ public class NotificationReplyReceiver extends BroadcastReceiver {
             NotificationUtil.removeNotification(intent.getIntExtra(NOTIFICATION_ID, 0));
         }
     }
-
 }

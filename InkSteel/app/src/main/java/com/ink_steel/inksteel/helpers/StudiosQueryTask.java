@@ -19,7 +19,6 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
     private static final String BASE_URL = "https://maps.googleapis.com/maps/api/place/textsearch/json";
     private static final String QUERY_TEXT = "?query=";
     private static final String API_KEY = "&key=AIzaSyACnb8t5MxO5woaX7nQpS3qMowHnSZznno";
-
     private static final String PHOTO_BASE_URL = "https://maps.googleapis.com/maps/api/place/" +
             "photo?maxwidth=600&photoreference=";
 
@@ -27,6 +26,14 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
     private Location mLocation;
     private String mUserProfileLocation;
     private boolean isProfileLocation;
+
+    public interface StudiosListener {
+        void onStudioLoaded(Studio studio);
+
+        void onStudiosLoaded();
+
+        void onNoStudios();
+    }
 
     public StudiosQueryTask(StudiosListener listener, Location location) {
         mListener = listener;
@@ -63,14 +70,6 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
         }
 
         return null;
-    }
-
-    public interface StudiosListener {
-        void onStudioLoaded(Studio studio);
-
-        void onStudiosLoaded();
-
-        void onNoStudios();
     }
 
     @Override
@@ -144,7 +143,5 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
         Response response = client.newCall(request).execute();
         return response.request().httpUrl().toString();
     }
-
-
 }
 
