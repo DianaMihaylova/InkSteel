@@ -13,12 +13,15 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.support.annotation.NonNull;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.fragments.ScreenSlidePageFragment;
 import com.ink_steel.inksteel.fragments.UserInfoFragment;
 import com.ink_steel.inksteel.helpers.Listeners.OnReplaceFragmentListener;
+import com.ink_steel.inksteel.helpers.NetworkService;
+import com.ink_steel.inksteel.helpers.PermissionUtil;
 import com.ink_steel.inksteel.receivers.NetworkReceiver;
 import com.ink_steel.inksteel.services.ChatNotificationService;
 import com.ink_steel.inksteel.model.ChatRoom;

@@ -12,6 +12,7 @@ import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.fragments.LoginFragment;
 import com.ink_steel.inksteel.helpers.Listeners.OnLoginActivityButtonClickListener;
+import com.ink_steel.inksteel.helpers.PermissionUtil;
 
 import static com.ink_steel.inksteel.fragments.ProfileFragment.IS_SIGN_OUT;
 

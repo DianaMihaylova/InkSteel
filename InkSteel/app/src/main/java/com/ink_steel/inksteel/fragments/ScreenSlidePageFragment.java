@@ -33,6 +33,9 @@ public class ScreenSlidePageFragment extends Fragment {
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
+                if (position == 4) {
+                    fragments[position].setUserVisibleHint(true);
+                }
                 return fragments[position];
             }
 

@@ -1,17 +1,22 @@
 package com.ink_steel.inksteel.fragments;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -27,9 +32,11 @@ import com.ink_steel.inksteel.adapters.StudiosAdapter;
 import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.helpers.Listeners.OnReplaceFragmentListener;
 import com.ink_steel.inksteel.helpers.Listeners.StudioClickListener;
+import com.ink_steel.inksteel.helpers.PermissionUtil;
 import com.ink_steel.inksteel.helpers.StudiosQueryTask;
 import com.ink_steel.inksteel.model.Studio;
 
+import static com.ink_steel.inksteel.helpers.PermissionUtil.PermissionType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +67,7 @@ public class StudiosFragment extends Fragment implements StudiosQueryTask.Studio
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_studios, container, false);
 
+        setUserVisibleHint(false);
         RecyclerView recyclerView = v.findViewById(R.id.studios_rv);
         mStudios = new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -74,8 +82,8 @@ public class StudiosFragment extends Fragment implements StudiosQueryTask.Studio
                 .addApi(LocationServices.API)
                 .build();
 
-        if (mClient.isConnected())
-            getStudios();
+//        if (mClient.isConnected())
+//            getStudios();
 
         mGeoDataClient = Places.getGeoDataClient(getActivity(), null);
 
@@ -83,17 +91,15 @@ public class StudiosFragment extends Fragment implements StudiosQueryTask.Studio
     }
 
     @Override
-    public void onStart() {
-        if (!mClient.isConnected()) {
-            mClient.connect();
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (this.isVisible()) {
+            if (isVisibleToUser) {
+                mClient.connect();
+            } else {
+                mClient.disconnect();
+            }
         }
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        mClient.disconnect();
-        super.onStop();
     }
 
     @Override
@@ -112,6 +118,11 @@ public class StudiosFragment extends Fragment implements StudiosQueryTask.Studio
     }
 
     @Override
+    public void onNoStudios() {
+
+    }
+
+    @Override
     public void onStudioClick(int position) {
         mListener.replaceFragment(StudioInfoFragment.newInstance(mStudios.get(position).getPlaceId()));
     }
@@ -119,11 +130,32 @@ public class StudiosFragment extends Fragment implements StudiosQueryTask.Studio
     Location location;
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        getStudios();
+        int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            PermissionUtil.requestPermission(this, PermissionType.LOCATION);
+        } else {
+            getStudios(false);
+        }
     }
 
-    private void getStudios() {
-        try {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        if (requestCode == PermissionUtil.PERMISSION_COARSE_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getStudios(true);
+            } else {
+                getStudios(false);
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getStudios(boolean hasPermission) {
+        if (hasPermission) {
             FusedLocationProviderClient client =
                     LocationServices.getFusedLocationProviderClient(getActivity());
             client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
@@ -131,15 +163,16 @@ public class StudiosFragment extends Fragment implements StudiosQueryTask.Studio
                 public void onComplete(@NonNull Task<Location> task1) {
                     location = task1.getResult();
                     if (location == null) {
-                        location = new Location("");
-                        location.setLatitude(42.698334);
-                        location.setLongitude(23.319941);
+                        mManager.getNearbyProfileCityStudios(StudiosFragment.this, mManager
+                                .getCurrentUser().getCity());
+                    } else {
+                        mManager.getNearbyStudios(StudiosFragment.this, location);
                     }
-                    mManager.getNearbyStudios(StudiosFragment.this, location);
                 }
             });
-        } catch (SecurityException e) {
-
+        } else {
+            mManager.getNearbyProfileCityStudios(StudiosFragment.this, mManager
+                    .getCurrentUser().getCity());
         }
     }
 

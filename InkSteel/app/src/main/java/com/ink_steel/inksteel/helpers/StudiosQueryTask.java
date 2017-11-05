@@ -25,18 +25,30 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
 
     private StudiosListener mListener;
     private Location mLocation;
+    private String mUserProfileLocation;
+    private boolean isProfileLocation;
 
     public StudiosQueryTask(StudiosListener listener, Location location) {
         mListener = listener;
         mLocation = location;
     }
 
+    public StudiosQueryTask(StudiosListener listener, String userProfileLocation) {
+        mListener = listener;
+        mUserProfileLocation = userProfileLocation;
+        isProfileLocation = true;
+    }
+
     @Override
     protected Void doInBackground(Void... voids) {
-
-        String url = BASE_URL + QUERY_TEXT + "tattoo" +
-                "&location=" + mLocation.getLatitude() + "," + mLocation.getLongitude() +
-                "&radius=40000" + API_KEY;
+        String url;
+        if (isProfileLocation) {
+            url = BASE_URL + QUERY_TEXT + "tattoo in " + mUserProfileLocation + API_KEY;
+        } else {
+            url = BASE_URL + QUERY_TEXT + "tattoo" +
+                    "&location=" + mLocation.getLatitude() + "," + mLocation.getLongitude() +
+                    "&radius=40000" + API_KEY;
+        }
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
@@ -57,6 +69,8 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
         void onStudioLoaded(Studio studio);
 
         void onStudiosLoaded();
+
+        void onNoStudios();
     }
 
     @Override
@@ -73,6 +87,11 @@ public class StudiosQueryTask extends AsyncTask<Void, Studio, Void> {
             if (!jsonObject.has("results"))
                 return;
             results = jsonObject.getJSONArray("results");
+
+            if (results.length() == 0) {
+                mListener.onNoStudios();
+                return;
+            }
 
             for (int i = 0; i < results.length(); i++) {
                 studio = getStudioFromJSONObject(results.getJSONObject(i));

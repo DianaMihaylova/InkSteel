@@ -1,22 +1,28 @@
 package com.ink_steel.inksteel.fragments;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.data.DatabaseManager;
+import com.ink_steel.inksteel.helpers.PermissionUtil;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
@@ -55,11 +61,13 @@ public class AddPostFragment extends Fragment implements DatabaseManager.PostSav
         mAddImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"),
-                        IMAGE_CHOOSER_REQUEST_CODE);
+                int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.READ_EXTERNAL_STORAGE);
+                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                    PermissionUtil.requestPermission(AddPostFragment.this, PermissionUtil.PermissionType.STORAGE);
+                } else {
+                    selectImageForPost();
+                }
             }
         });
 
@@ -80,6 +88,27 @@ public class AddPostFragment extends Fragment implements DatabaseManager.PostSav
         });
 
         return view;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionUtil.PERMISSION_READ_EXTERNAL_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                selectImageForPost();
+            } else {
+                Toast.makeText(getActivity(), "Permission is necessary to get images from your device!", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void selectImageForPost() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"),
+                IMAGE_CHOOSER_REQUEST_CODE);
     }
 
     @Override
