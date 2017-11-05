@@ -10,6 +10,7 @@ import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.fragments.LoginFragment;
 import com.ink_steel.inksteel.helpers.Listeners.OnLoginActivityButtonClickListener;
+import com.ink_steel.inksteel.helpers.PermissionUtil;
 
 public class LoginActivity extends AppCompatActivity implements DatabaseManager.UserManagerListener,
         OnLoginActivityButtonClickListener {

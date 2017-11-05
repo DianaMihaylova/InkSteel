@@ -784,6 +784,17 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         }
     }
 
+    public void getNearbyProfileCityStudios(StudiosQueryTask.StudiosListener listener, String location) {
+        if (mStudios == null) {
+            mStudios = new HashMap<>();
+            mListener = listener;
+            StudiosQueryTask task = new StudiosQueryTask(this, location);
+            task.execute();
+        } else {
+            listener.onStudiosLoaded();
+        }
+    }
+
     public ArrayList<Studio> getStudios() {
         return new ArrayList<>(mStudios.values());
     }
@@ -820,5 +831,10 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     @Override
     public void onStudiosLoaded() {
         mListener.onStudiosLoaded();
+    }
+
+    @Override
+    public void onNoStudios() {
+        mListener.onNoStudios();
     }
 }
