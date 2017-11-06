@@ -73,7 +73,7 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
             public void onClick(View view) {
                 String msg = messageEt.getText().toString();
                 if (!msg.isEmpty()) {
-                    Message message = new Message(mManager.getCurrentUser().getName(), msg,
+                    Message message = new Message(mManager.getCurrentUser().getEmail(), msg,
                             new Date().getTime());
                     mManager.addMessage(message, mChatRoom.getChatId(), mChatRoom.getEmail());
                     messageEt.setText("");
@@ -83,7 +83,7 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
 
         mMessages = new ArrayList<>();
         mRecyclerView = view.findViewById(R.id.chat_rv);
-        mAdapter = new MessageAdapter(mMessages, mManager.getCurrentUser().getName());
+        mAdapter = new MessageAdapter(mMessages, mManager.getCurrentUser().getEmail());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 

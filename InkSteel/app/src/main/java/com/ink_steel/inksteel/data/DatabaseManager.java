@@ -55,6 +55,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
     private User mCurrentUser;
     //    -- Users --
     private HashMap<String, User> mUsers;
+    private boolean isInitialUserLoad;
     private HashMap<String, User> exploreUsers;
     private HashMap<String, User> mFriends;
     private String thumbnailDownloadUrl;
@@ -172,23 +173,40 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
 
     public void checkIfSignedIn(UserManagerListener listener) {
         if (mAuth.getCurrentUser() != null) {
+            isInitialUserLoad = true;
             loadUserInfo(listener, mAuth.getCurrentUser().getEmail());
         }
     }
 
     private void loadUserInfo(final UserManagerListener listener, final String email) {
         final DocumentReference userReference = mFirestore.collection("users").document(email);
-        userReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//        userReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot snapshot = task.getResult();
+//                    if (snapshot.exists()) {
+//                        mCurrentUser = snapshot.toObject(User.class);
+//                    } else {
+//                        mCurrentUser = new User(email, "", "", "", "");
+//                        userReference.set(mCurrentUser);
+//                    }
+//                    listener.onUserInfoLoaded();
+//                }
+//            }
+//        });
+
+        userReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot snapshot = task.getResult();
-                    if (snapshot.exists()) {
-                        mCurrentUser = snapshot.toObject(User.class);
-                    } else {
-                        mCurrentUser = new User(email, "", "", "", "");
-                        userReference.set(mCurrentUser);
-                    }
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                if (documentSnapshot.exists()) {
+                    mCurrentUser = documentSnapshot.toObject(User.class);
+                } else {
+                    mCurrentUser = new User(email, "", "", "", "");
+                    userReference.set(mCurrentUser);
+                }
+                if (isInitialUserLoad) {
+                    isInitialUserLoad = false;
                     listener.onUserInfoLoaded();
                 }
             }
@@ -216,6 +234,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            isInitialUserLoad = true;
                             loadUserInfo(listener, email);
                         } else if (task.getException() != null) {
                             listener.onUserLogInError(task.getException().getLocalizedMessage());
@@ -736,7 +755,6 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         mFirestore.collection("chatRooms").document(chatRoomId)
                 .collection("messages").add(message);
         boolean seen = mCurrentUser.getEmail().equals(message.getUserEmail());
-        makeMessageSeen(chatRoomId);
         mFirestore.collection("users").document(mCurrentUser.getEmail())
                 .collection("chatRooms").document(chatRoomId)
                 .update("lastMessage", message.getMessage(),

@@ -28,13 +28,13 @@ public class LoginActivity extends AppCompatActivity implements DatabaseManager.
         setContentView(R.layout.activity_login);
 
         View container = findViewById(R.id.activity_login_container);
-        mSnackbar = Snackbar.make(container, "Loading...", Snackbar.LENGTH_INDEFINITE);
+        mSnackbar = Snackbar.make(container, "Loading...", Snackbar.LENGTH_SHORT);
+        mSnackbar.show();
         Intent intent = getIntent();
         if (intent == null || intent.hasExtra(IS_SIGN_OUT) &&
                 !intent.getBooleanExtra(IS_SIGN_OUT, false)) {
-            mSnackbar.show();
+            Snackbar.make(container, "Loading...", Snackbar.LENGTH_INDEFINITE).show();
         }
-
         mUserManager = DatabaseManager.getInstance();
         mUserManager.checkIfSignedIn(this);
         LoginFragment fragment = new LoginFragment();
