@@ -180,26 +180,10 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
 
     private void loadUserInfo(final UserManagerListener listener, final String email) {
         final DocumentReference userReference = mFirestore.collection("users").document(email);
-//        userReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot snapshot = task.getResult();
-//                    if (snapshot.exists()) {
-//                        mCurrentUser = snapshot.toObject(User.class);
-//                    } else {
-//                        mCurrentUser = new User(email, "", "", "", "");
-//                        userReference.set(mCurrentUser);
-//                    }
-//                    listener.onUserInfoLoaded();
-//                }
-//            }
-//        });
-
         userReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                if (documentSnapshot.exists()) {
+                if (documentSnapshot != null && documentSnapshot.exists()) {
                     mCurrentUser = documentSnapshot.toObject(User.class);
                 } else {
                     mCurrentUser = new User(email, "", "", "", "");
@@ -334,6 +318,9 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         mFirestore.collection("users").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if (e != null || documentSnapshots == null) {
+                    return;
+                }
                 for (DocumentSnapshot snapshot : documentSnapshots) {
                     if (snapshot.exists()) {
                         User user = snapshot.toObject(User.class);
