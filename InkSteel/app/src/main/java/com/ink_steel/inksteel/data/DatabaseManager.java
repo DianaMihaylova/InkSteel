@@ -631,10 +631,10 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
                 new Date().getTime());
         User user = mUsers.get(email);
         ChatRoom chatRoom1 = new ChatRoom(reference.getId(), email, user.getProfileImage(),
-                user.getName(), message.getMessage(), message.getTime(), message.getUserEmail(),
+                user.getEmail(), message.getMessage(), message.getTime(), message.getUserEmail(),
                 false);
         ChatRoom chatRoom2 = new ChatRoom(reference.getId(), mCurrentUser.getEmail(),
-                mCurrentUser.getProfileImage(), mCurrentUser.getName(), message.getMessage(),
+                mCurrentUser.getProfileImage(), mCurrentUser.getEmail(), message.getMessage(),
                 message.getTime(), message.getUserEmail(), false);
         reference.collection("messages").add(message);
 
@@ -691,7 +691,6 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
             chatMessages = new ArrayList<>();
             isChatMessagesInitialLoad = true;
         }
-        makeMessageSeen(chatId);
         chatRegistration = mFirestore.collection("chatRooms").document(chatId)
                 .collection("messages").orderBy("time")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -737,6 +736,7 @@ public class DatabaseManager implements StudiosQueryTask.StudiosListener {
         mFirestore.collection("chatRooms").document(chatRoomId)
                 .collection("messages").add(message);
         boolean seen = mCurrentUser.getEmail().equals(message.getUserEmail());
+        makeMessageSeen(chatRoomId);
         mFirestore.collection("users").document(mCurrentUser.getEmail())
                 .collection("chatRooms").document(chatRoomId)
                 .update("lastMessage", message.getMessage(),

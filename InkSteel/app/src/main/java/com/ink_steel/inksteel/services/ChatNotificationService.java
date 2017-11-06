@@ -27,7 +27,7 @@ public class ChatNotificationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
             listenForMessages();
-        return START_NOT_STICKY;
+        return START_STICKY;
     }
 
     private void listenForMessages() {
