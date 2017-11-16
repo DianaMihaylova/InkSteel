@@ -34,7 +34,7 @@ public class FullScreenImageFragment extends Fragment {
         int position = getArguments().getInt("image");
         User friend = (User) getArguments().getSerializable("friend");
 
-        User mCurrentUser = DatabaseManager.getInstance().getCurrentUser();
+        User mCurrentUser = DatabaseManager.getUserManager().getCurrentUser();
 
         HorizontalInfiniteCycleViewPager viewPager = view.findViewById(R.id.view_pager_horizontal_cycle);
         FullScreenViewAdapter fullScreenViewAdapter;

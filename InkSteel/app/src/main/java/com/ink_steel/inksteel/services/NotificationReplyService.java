@@ -6,20 +6,14 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.RemoteInput;
-import android.util.Log;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.ink_steel.inksteel.data.DatabaseManager;
-import com.ink_steel.inksteel.model.Message;
 import com.ink_steel.inksteel.receivers.NotificationReplyReceiver;
 
-import java.util.Date;
-
-import static com.ink_steel.inksteel.helpers.NotificationUtil.CHAT_ID;
-import static com.ink_steel.inksteel.helpers.NotificationUtil.MESSAGE;
-import static com.ink_steel.inksteel.helpers.NotificationUtil.NOTIFICATION_ID;
-import static com.ink_steel.inksteel.helpers.NotificationUtil.OTHER_USER_EMAIL;
+import static com.ink_steel.inksteel.helpers.NotificationHelper.CHAT_ID_KEY;
+import static com.ink_steel.inksteel.helpers.NotificationHelper.NOTIFICATION_ID_KEY;
+import static com.ink_steel.inksteel.helpers.NotificationHelper.RECEIVER_EMAIL_KEY;
+import static com.ink_steel.inksteel.helpers.NotificationHelper.REPLY_ACTION_RESULT_KEY;
 
 public class NotificationReplyService extends IntentService {
 
@@ -44,29 +38,19 @@ public class NotificationReplyService extends IntentService {
         if (intent != null) {
             Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
             if (remoteInput != null) {
-                CharSequence answer = remoteInput.getCharSequence(MESSAGE);
+                CharSequence answer = remoteInput.getCharSequence(REPLY_ACTION_RESULT_KEY);
                 if (answer != null) {
                     String message = answer.toString();
-                    String chatId = intent.getStringExtra(CHAT_ID);
-                    String otherUserEmail = intent.getStringExtra(OTHER_USER_EMAIL);
-                    int notificationId = intent.getIntExtra(NOTIFICATION_ID, 0);
+                    String chatId = intent.getStringExtra(CHAT_ID_KEY);
+                    String otherUserEmail = intent.getStringExtra(RECEIVER_EMAIL_KEY);
+                    int notificationId = intent.getIntExtra(NOTIFICATION_ID_KEY, 0);
                     if (!chatId.isEmpty() && !chatId.isEmpty() && !message.isEmpty()) {
-                        sendMessage(chatId, message, otherUserEmail, notificationId);
+                        DatabaseManager.NotificationsManager.sendMessage(chatId, message,
+                                otherUserEmail);
+                        sendBroadcast(notificationId, chatId);
                     }
                 }
             }
-        }
-    }
-
-    private void sendMessage(String chatId, String message, String otherUserEmail,
-                             int notificationId) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null && user.getEmail() != null) {
-            DatabaseManager manager = DatabaseManager.getInstance();
-            manager.addMessage(new Message(user.getEmail(),
-                    message, new Date().getTime()), chatId, otherUserEmail);
-            Log.d("noti", otherUserEmail);
-            sendBroadcast(notificationId, chatId);
         }
     }
 
@@ -74,8 +58,8 @@ public class NotificationReplyService extends IntentService {
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction(NotificationReplyReceiver.ACTION_REPLY);
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        broadcastIntent.putExtra(NOTIFICATION_ID, notificationId);
-        broadcastIntent.putExtra(CHAT_ID, chatId);
+        broadcastIntent.putExtra(NOTIFICATION_ID_KEY, notificationId);
+        broadcastIntent.putExtra(CHAT_ID_KEY, chatId);
         sendBroadcast(broadcastIntent);
     }
 

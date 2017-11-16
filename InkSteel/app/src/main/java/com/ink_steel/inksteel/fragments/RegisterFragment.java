@@ -1,11 +1,9 @@
 package com.ink_steel.inksteel.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.util.Patterns;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,19 +11,22 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.activities.LoginActivity;
-import com.ink_steel.inksteel.helpers.Listeners.OnLoginActivityButtonClickListener;
 
-import static com.ink_steel.inksteel.activities.LoginActivity.ButtonType.REGISTER;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class RegisterFragment extends Fragment {
 
-    private EditText mUserEmailEt, mUserPasswordEt, mConfirmPasswordEt;
-    private LoginActivity mLoginActivity;
-    private String mUserEmail;
-    private String mPassword;
-    private String mConfirmPassword;
-    private OnLoginActivityButtonClickListener mListener;
+    @BindView(R.id.fragment_register_email_et)
+    EditText mEmail;
+    @BindView(R.id.fragment_register_password_et)
+    EditText mPassword;
+    @BindView(R.id.fragment_register_password_confirm_et)
+    EditText mConfirmPassword;
+    @BindView(R.id.fragment_register_btn)
+    Button mRegisterButton;
+    private OnRegisterButtonSelectedListener mRegisterButtonSelectedListener;
 
     public RegisterFragment() {
     }
@@ -34,8 +35,11 @@ public class RegisterFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof LoginActivity) {
-            mListener = (LoginActivity) context;
+        if (context instanceof OnRegisterButtonSelectedListener) {
+            mRegisterButtonSelectedListener = (OnRegisterButtonSelectedListener) context;
+        } else {
+            Log.e(LoginFragment.class.getSimpleName(), "Activity not implementing " +
+                    "OnLoginButtonSelectedListener interface");
         }
     }
 
@@ -44,15 +48,9 @@ public class RegisterFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_register, container, false);
+        ButterKnife.bind(this, view);
 
-        mLoginActivity = (LoginActivity) getActivity();
-
-        mUserEmailEt = view.findViewById(R.id.login_email);
-        mUserPasswordEt = view.findViewById(R.id.login_pass);
-        mConfirmPasswordEt = view.findViewById(R.id.login_conf_pass);
-        Button regBtn = view.findViewById(R.id.login_register_btn);
-
-        regBtn.setOnClickListener(new View.OnClickListener() {
+        mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 registerUser();
@@ -63,38 +61,17 @@ public class RegisterFragment extends Fragment {
     }
 
     private void registerUser() {
-        if (mListener == null) {
-            Activity activity = getActivity();
-            if (activity instanceof LoginActivity) {
-                mListener = (OnLoginActivityButtonClickListener) activity;
-            } else {
-                activity.finish();
-            }
-        }
-
-        mUserEmail = mUserEmailEt.getText().toString();
-        mPassword = mUserPasswordEt.getText().toString();
-        mConfirmPassword = mConfirmPasswordEt.getText().toString();
-        if (areFieldsValid()) {
-            Snackbar.make(getActivity().findViewById(R.id.activity_login_container),
-                    "Loading...", Snackbar.LENGTH_LONG).show();
-            mLoginActivity.onButtonClick(REGISTER, mUserEmail, mPassword);
+        String email = mEmail.getText().toString();
+        String password = mPassword.getText().toString();
+        String confirmPassword = mConfirmPassword.getText().toString();
+        if (password.equals(confirmPassword)) {
+            mRegisterButtonSelectedListener.onRegisterButtonSelected(email, password);
+        } else {
+            mConfirmPassword.setError(getString(R.string.pass_not_match));
         }
     }
 
-    private boolean areFieldsValid() {
-        if (mUserEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(mUserEmail).matches()) {
-            mUserEmailEt.setError(getString(R.string.invalid_email));
-            return false;
-        }
-        if (mPassword.length() < 6) {
-            mUserPasswordEt.setError(getString(R.string.pass_short));
-            return false;
-        }
-        if (!mPassword.equals(mConfirmPassword)) {
-            mConfirmPasswordEt.setError(getString(R.string.pass_not_match));
-            return false;
-        }
-        return true;
+    public interface OnRegisterButtonSelectedListener {
+        void onRegisterButtonSelected(String email, String password);
     }
 }

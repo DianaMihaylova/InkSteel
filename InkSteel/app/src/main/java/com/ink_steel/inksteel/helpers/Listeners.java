@@ -2,12 +2,16 @@ package com.ink_steel.inksteel.helpers;
 
 import android.app.Fragment;
 
-import com.ink_steel.inksteel.activities.LoginActivity;
-
 public class Listeners {
 
     public interface OnLoginActivityButtonClickListener {
-        void onButtonClick(LoginActivity.ButtonType buttonType, String email, String password);
+//        void onButtonClick(LoginActivity.ButtonType buttonType, String email, String password);
+    }
+
+    public interface ShowSnackBarListener {
+        void showSnackBar(String message);
+
+        void dismissSnackBar();
     }
 
     public interface OnReplaceFragmentListener {
@@ -16,6 +20,8 @@ public class Listeners {
 
     public interface PostClickListener {
         void onPostClick(int position);
+
+        void onPostsEnding();
     }
 
     public interface GalleryImageLongClickListener {

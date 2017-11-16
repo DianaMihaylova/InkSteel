@@ -1,10 +1,8 @@
 package com.ink_steel.inksteel.model;
 
-import android.support.annotation.NonNull;
-
 import com.google.firebase.firestore.Exclude;
 
-public class ChatRoom implements Comparable<ChatRoom> {
+public class ChatRoom {
 
     private String email;
     private String userName;
@@ -69,14 +67,14 @@ public class ChatRoom implements Comparable<ChatRoom> {
         return obj instanceof ChatRoom && chatId.equals(((ChatRoom) obj).chatId);
     }
 
-    @Exclude
-    @Override
-    public int compareTo(@NonNull ChatRoom chatRoom) {
-        if (chatId.equals(chatRoom.chatId)) return 0;
-        if (!seen && !chatRoom.seen)
-            return (int) (lastMessageTime - chatRoom.lastMessageTime);
-        if (!seen) return 1;
-        return (int) (lastMessageTime - chatRoom.lastMessageTime);
+    public void makeSeen() {
+        seen = true;
+    }
 
+    public void setInfo(ChatRoom chatRoom) {
+        this.lastMessage = chatRoom.lastMessage;
+        this.lastMessageTime = chatRoom.lastMessageTime;
+        this.lastMessageSender = chatRoom.lastMessageSender;
+        this.seen = chatRoom.seen;
     }
 }

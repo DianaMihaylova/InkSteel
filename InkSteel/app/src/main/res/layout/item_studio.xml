@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/colorPrimaryDark"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimaryDark">
 
     <ImageView
         android:id="@+id/studio_iv"
         android:layout_width="0dp"
         android:layout_height="200dp"
-        android:scaleType="centerCrop"
         android:layout_margin="4dp"
+        android:contentDescription="@string/studio_image"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/tattoo3"
-        android:contentDescription="@string/studio_image"/>
+        app:srcCompat="@drawable/tattoo3" />
 
     <View
         android:id="@+id/view"
@@ -26,10 +25,11 @@
         android:background="#aaffffff"
         app:layout_constraintBottom_toBottomOf="@+id/studio_iv"
         app:layout_constraintEnd_toEndOf="@+id/studio_iv"
-        app:layout_constraintStart_toStartOf="@+id/studio_iv"/>
+        app:layout_constraintStart_toStartOf="@+id/studio_iv" />
 
     <TextView
         android:id="@+id/studio_name_tv"
+        style="@style/Text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -39,12 +39,11 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="@string/studioname"
-        style="@style/Text"
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toStartOf="@+id/studio_read_more_tv"
         app:layout_constraintStart_toStartOf="@+id/studio_iv"
-        app:layout_constraintTop_toTopOf="@+id/view"/>
+        app:layout_constraintTop_toTopOf="@+id/view" />
 
     <RatingBar
         android:id="@+id/studio_rb"
@@ -52,29 +51,29 @@
         android:layout_width="wrap_content"
         android:layout_height="13dp"
         android:layout_margin="8dp"
+        android:isIndicator="true"
         android:numStars="5"
         android:progressTint="@color/fbutton_color_sun_flower"
         android:rating="5"
         android:stepSize="0.5"
-        android:isIndicator="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:targetApi="lollipop" />
 
     <TextView
         android:id="@+id/studio_read_more_tv"
+        style="@style/Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/read_more"
-        style="@style/Text"
-        android:textSize="12sp"
         android:textColor="@color/place_autocomplete_search_text"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintTop_toTopOf="@+id/view"/>
+        app:layout_constraintTop_toTopOf="@+id/view" />
 
     <TextView
         android:id="@+id/studio_open_now"

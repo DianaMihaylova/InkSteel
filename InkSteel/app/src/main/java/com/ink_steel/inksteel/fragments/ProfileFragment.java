@@ -29,7 +29,7 @@ public class ProfileFragment extends Fragment {
     private LinearLayout mLayoutGroupBtn;
     private Button mEditProfileBtn, mGalleryFriendBtn;
     private User mCurrentUser;
-    private DatabaseManager mManager;
+    private DatabaseManager.UserManager mManager;
 
     public ProfileFragment() {
     }
@@ -40,7 +40,7 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        mManager = DatabaseManager.getInstance();
+        mManager = DatabaseManager.getUserManager();
         mCurrentUser = mManager.getCurrentUser();
 
         mImageView = view.findViewById(R.id.profile);
@@ -98,7 +98,7 @@ public class ProfileFragment extends Fragment {
         String emailTxt, userNameTxt, cityTxt, ageTxt, picture;
 
         Bundle bundle = getArguments();
-        if (bundle != null ) {
+        if (bundle != null) {
             final User friend = (User) bundle.getSerializable("friend");
             emailTxt = getString(R.string.email_dot) + friend.getEmail();
             userNameTxt = getString(R.string.username_dot) + "  " + friend.getName();

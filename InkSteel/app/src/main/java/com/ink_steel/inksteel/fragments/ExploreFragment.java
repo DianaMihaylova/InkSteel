@@ -3,6 +3,7 @@ package com.ink_steel.inksteel.fragments;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,87 +18,78 @@ import com.ink_steel.inksteel.model.User;
 
 import java.util.ArrayList;
 
-public class ExploreFragment extends Fragment implements DatabaseManager.UsersListener {
 
-    private DatabaseManager mManager;
-    private SwipeDeck mCardStack;
-    private ExploreAdapter mAdapter;
-    private ArrayList<User> mUsers;
+public class ExploreFragment extends Fragment implements SwipeDeck.SwipeEventCallback, DatabaseManager.UsersListener {
+
+    private DatabaseManager.UsersManager mManager;
     private Toast mToast;
-
-    public ExploreFragment() {
-    }
+    private ArrayList<User> mUsers;
+    private ExploreAdapter mExploreAdapter;
 
     @SuppressLint("ShowToast")
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_explore, container, false);
 
-        mManager = DatabaseManager.getInstance();
-        mCardStack = view.findViewById(R.id.swipe_deck);
-
+        mManager = DatabaseManager.getUsersManager();
+        mManager.getUsers(this);
+        SwipeDeck cardStack = view.findViewById(R.id.swipe_deck);
+        mUsers = new ArrayList<>();
         mToast = Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT);
 
-        loadExpolre();
-        setCardStackEvent();
-
+        cardStack.setEventCallback(this);
+        mExploreAdapter = new ExploreAdapter(mUsers, getActivity());
+        cardStack.setAdapter(mExploreAdapter);
         Button againBtn = view.findViewById(R.id.btn_again);
         againBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadExpolre();
+                mManager.getUsers(ExploreFragment.this);
             }
         });
 
         return view;
     }
 
-    private void setCardStackEvent() {
-        mCardStack.setEventCallback(new SwipeDeck.SwipeEventCallback() {
-            @Override
-            public void cardSwipedLeft(int position) {
-                mToast.setText("U N L I K E");
-                mToast.show();
-            }
-
-            @Override
-            public void cardSwipedRight(int position) {
-                mToast.setText("L I K E");
-                mToast.show();
-                User likedUser = mUsers.get(position);
-                String likedEmail = likedUser.getEmail();
-                mManager.addLike(likedEmail);
-            }
-
-            @Override
-            public void cardsDepleted() {
-                mToast.setText("No more cards for users!");
-                mToast.show();
-            }
-
-            @Override
-            public void cardActionDown() {
-            }
-
-            @Override
-            public void cardActionUp() {
-            }
-        });
+    @Override
+    public void cardSwipedLeft(int position) {
+        mToast.setText("U N L I K E");
+        mToast.show();
     }
 
-    private void loadExpolre() {
-        mUsers = new ArrayList<>();
-        mAdapter = new ExploreAdapter(mUsers, getActivity());
-        mManager.loadExplore(this);
-        mCardStack.setAdapter(mAdapter);
+    @Override
+    public void cardSwipedRight(int position) {
+        mToast.setText("L I K E");
+        mToast.show();
+        mManager.like(mUsers.get(position).getEmail());
+    }
+
+    @Override
+    public void cardsDepleted() {
+        mToast.setText("No more cards for users!");
+        mToast.show();
+    }
+
+    @Override
+    public void cardActionDown() {
+
+    }
+
+    @Override
+    public void cardActionUp() {
+
     }
 
     @Override
     public void onUsersLoaded() {
-        mUsers.clear();
         mUsers.addAll(mManager.getExploreUsers());
-        mAdapter.notifyDataSetChanged();
+        mExploreAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onError(String errorMessage) {
+
     }
 }

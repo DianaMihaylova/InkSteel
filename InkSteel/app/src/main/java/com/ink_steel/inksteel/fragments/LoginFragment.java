@@ -1,9 +1,10 @@
 package com.ink_steel.inksteel.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,18 +12,20 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.activities.LoginActivity;
 
-import com.ink_steel.inksteel.helpers.Listeners.OnLoginActivityButtonClickListener;
-
-import static com.ink_steel.inksteel.activities.LoginActivity.ButtonType.LOGIN;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class LoginFragment extends Fragment {
-
-    private EditText mEmail, mPass;
-    private String mUserEmail;
-    private String mPassword;
-    private OnLoginActivityButtonClickListener mListener;
+    @BindView(R.id.fragment_login_email_et)
+    EditText mEmail;
+    @BindView(R.id.fragment_login_password_et)
+    EditText mPassword;
+    @BindView(R.id.fragment_login_login_btn)
+    Button mLoginButton;
+    @BindView(R.id.fragment_login_register_btn)
+    Button mRegisterButton;
+    private OnLoginButtonSelectedListener mLoginButtonSelectedListener;
 
     public LoginFragment() {
     }
@@ -31,8 +34,11 @@ public class LoginFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof LoginActivity) {
-            mListener = (LoginActivity) context;
+        if (context instanceof OnLoginButtonSelectedListener) {
+            mLoginButtonSelectedListener = (OnLoginButtonSelectedListener) context;
+        } else {
+            Log.e(LoginFragment.class.getSimpleName(), "Activity not implementing " +
+                    "OnLoginButtonSelectedListener interface");
         }
     }
 
@@ -41,20 +47,16 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+        ButterKnife.bind(this, view);
 
-        mEmail = view.findViewById(R.id.login_email);
-        mPass = view.findViewById(R.id.login_pass);
-        Button logBtn = view.findViewById(R.id.login_login_btn);
-        Button regBtn = view.findViewById(R.id.login_register_btn);
-
-        logBtn.setOnClickListener(new View.OnClickListener() {
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loginUser();
             }
         });
 
-        regBtn.setOnClickListener(new View.OnClickListener() {
+        mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToRegister();
@@ -68,36 +70,33 @@ public class LoginFragment extends Fragment {
         RegisterFragment fragment = new RegisterFragment();
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_placeholder, fragment)
+                .replace(R.id.activity_login_fragment_placeholder, fragment)
                 .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }
 
     private void loginUser() {
-        if (mListener == null) {
-            Activity activity = getActivity();
-            if (activity instanceof LoginActivity) {
-                mListener = (OnLoginActivityButtonClickListener) activity;
-            } else {
-                activity.finish();
-            }
-        }
-        mUserEmail = mEmail.getText().toString();
-        mPassword = mPass.getText().toString();
-        if (areFieldsValid()) {
-            mListener.onButtonClick(LOGIN, mUserEmail, mPassword);
+        String email = mEmail.getText().toString();
+        String password = mPassword.getText().toString();
+        if (areFieldsValid(email, password)) {
+            mLoginButtonSelectedListener.onLoginButtonSelected(email, password);
         }
     }
 
-    private boolean areFieldsValid() {
-        if (mUserEmail.isEmpty() || mUserEmail == null) {
+    private boolean areFieldsValid(String email, String password) {
+        if (email.isEmpty()) {
             mEmail.setError(getString(R.string.invalid_email));
             return false;
         }
-        if (mPassword.isEmpty() || mPassword == null) {
-            mPass.setError(getString(R.string.invalid_pass));
+        if (password.isEmpty() || mPassword.length() < 6) {
+            mPassword.setError(getString(R.string.invalid_pass));
             return false;
         }
         return true;
+    }
+
+    public interface OnLoginButtonSelectedListener {
+        void onLoginButtonSelected(String email, String password);
     }
 }

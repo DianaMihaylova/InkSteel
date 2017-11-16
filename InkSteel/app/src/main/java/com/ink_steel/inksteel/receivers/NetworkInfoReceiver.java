@@ -8,10 +8,6 @@ import android.net.NetworkInfo;
 
 public class NetworkInfoReceiver extends BroadcastReceiver {
 
-    public interface InternetConnectionListener {
-        void onNetworkStateChanged(NetworkInfo info);
-    }
-
     private InternetConnectionListener mListener;
 
     public NetworkInfoReceiver(InternetConnectionListener listener) {
@@ -26,5 +22,9 @@ public class NetworkInfoReceiver extends BroadcastReceiver {
             NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
             mListener.onNetworkStateChanged(activeNetwork);
         }
+    }
+
+    public interface InternetConnectionListener {
+        void onNetworkStateChanged(NetworkInfo info);
     }
 }

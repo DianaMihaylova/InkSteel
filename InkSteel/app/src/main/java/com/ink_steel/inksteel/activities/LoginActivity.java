@@ -3,58 +3,41 @@ package com.ink_steel.inksteel.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.fragments.LoginFragment;
-import com.ink_steel.inksteel.helpers.Listeners.OnLoginActivityButtonClickListener;
+import com.ink_steel.inksteel.fragments.RegisterFragment;
 
-import static com.ink_steel.inksteel.fragments.ProfileFragment.IS_SIGN_OUT;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class LoginActivity extends AppCompatActivity implements DatabaseManager.UserManagerListener,
-        OnLoginActivityButtonClickListener {
+public class LoginActivity extends AppCompatActivity implements DatabaseManager.OnUserLoginListener,
+        LoginFragment.OnLoginButtonSelectedListener, RegisterFragment.OnRegisterButtonSelectedListener {
 
     public static final String IS_NEW_USER = "isNewUser";
-    private DatabaseManager mUserManager;
-    private Snackbar mSnackbar;
+    @BindView(R.id.activity_login_container)
+    View mContainer;
+    private DatabaseManager.UserManager mDatabaseManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
 
-        View container = findViewById(R.id.activity_login_container);
-        mSnackbar = Snackbar.make(container, "Loading...", Snackbar.LENGTH_SHORT);
-        mSnackbar.show();
-        Intent intent = getIntent();
-        if (intent == null || intent.hasExtra(IS_SIGN_OUT) &&
-                !intent.getBooleanExtra(IS_SIGN_OUT, false)) {
-            Snackbar.make(container, "Loading...", Snackbar.LENGTH_INDEFINITE).show();
-        }
-        mUserManager = DatabaseManager.getInstance();
-        mUserManager.checkIfSignedIn(this);
+        mDatabaseManager = DatabaseManager.getUserManager();
+        Log.d("posts", "opened login activity");
+
         LoginFragment fragment = new LoginFragment();
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_placeholder, fragment)
-                .addToBackStack(null)
+                .replace(R.id.activity_login_fragment_placeholder, fragment)
                 .commit();
-    }
-
-    @Override
-    public void onUserLogInError(String error) {
-        showAlert(error);
-        mSnackbar.dismiss();
-    }
-
-    @Override
-    protected void onStop() {
-        finish();
-        super.onStop();
     }
 
     private void showAlert(String error) {
@@ -74,37 +57,24 @@ public class LoginActivity extends AppCompatActivity implements DatabaseManager.
     }
 
     @Override
-    public void onUserSignUpError(String error) {
-        showAlert(error);
-        mSnackbar.dismiss();
-    }
-
-    @Override
-    public void onUserInfoLoaded() {
+    public void onUserLoggedIn(boolean isNewUser) {
         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-        if (mUserManager.getCurrentUser().getName().isEmpty()) {
-            intent.putExtra(IS_NEW_USER, true);
-        } else {
-            intent.putExtra(IS_NEW_USER, false);
-        }
-        mSnackbar.dismiss();
+        intent.putExtra(IS_NEW_USER, isNewUser);
         startActivity(intent);
     }
 
     @Override
-    public void onButtonClick(ButtonType buttonType, String email, String password) {
-        switch (buttonType) {
-            case LOGIN:
-                mUserManager.loginUser(this, email, password);
-                break;
-            case REGISTER:
-                mUserManager.signUpUser(this, email, password);
-                break;
-        }
-        mSnackbar.dismiss();
+    public void onError(String errorMessage) {
+        showAlert(errorMessage);
     }
 
-    public enum ButtonType {
-        LOGIN, REGISTER
+    @Override
+    public void onLoginButtonSelected(String email, String password) {
+        mDatabaseManager.loginUser(this, email, password);
+    }
+
+    @Override
+    public void onRegisterButtonSelected(String email, String password) {
+        mDatabaseManager.registerUser(this, email, password);
     }
 }

@@ -2,29 +2,27 @@ package com.ink_steel.inksteel.fragments;
 
 import android.Manifest;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ink_steel.inksteel.R;
-import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.data.DatabaseManager;
-import com.ink_steel.inksteel.helpers.PermissionUtil;
+import com.ink_steel.inksteel.helpers.Listeners;
+import com.ink_steel.inksteel.helpers.PermissionHelper;
 import com.ink_steel.inksteel.model.User;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -32,64 +30,96 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 import static android.app.Activity.RESULT_OK;
+import static com.ink_steel.inksteel.activities.LoginActivity.IS_NEW_USER;
 
-public class UserInfoFragment extends Fragment implements DatabaseManager.UserInfoListener {
+public class UserInfoFragment extends Fragment implements DatabaseManager.UserInfoUpdatedListener {
 
-    private static final int CHOOSE_IMAGE = 1;
-    private EditText mName, mAge;
-    private ImageView mImageView;
+    private static final int CHOOSE_IMAGE_REQUEST_CODE = 1;
+
+    @BindView(R.id.fragment_user_info_profile_iv)
+    ImageView mProfileImage;
+    @BindView(R.id.fragment_user_info_user_name_et)
+    EditText mUserName;
+    @BindView(R.id.fragment_user_info_user_city_et)
+    EditText mCity;
+    @BindView(R.id.fragment_user_info_user_age_et)
+    EditText mAge;
+
+    private DatabaseManager.UserManager mManager2;
+    private boolean mIsNewUser;
     private User mCurrentUser;
     private Bitmap mImageBitmap;
-    private DatabaseManager mManager;
-    private TextView mCity;
-    private Snackbar mSnackbar;
+    private Listeners.ShowSnackBarListener mSnackBarListener;
+    private Listeners.OnReplaceFragmentListener mReplaceFragmentListener;
+
+    public UserInfoFragment() {
+    }
+
+    public static UserInfoFragment newInstance(boolean isNewUser) {
+        UserInfoFragment fragment = new UserInfoFragment();
+
+        Bundle bundle = new Bundle(1);
+        bundle.putBoolean(IS_NEW_USER, isNewUser);
+        fragment.setArguments(bundle);
+
+        return fragment;
+    }
+
+    @OnClick(R.id.fragment_user_info_save_btn)
+    public void save() {
+        mSnackBarListener.showSnackBar("Saving...");
+        updateUserInfo();
+    }
+
+    @OnClick(R.id.fragment_user_info_profile_iv)
+    public void changeImage() {
+        int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            PermissionHelper.requestPermission(UserInfoFragment.this,
+                    PermissionHelper.PermissionType.STORAGE);
+        } else {
+            selectProfileImage();
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Listeners.OnReplaceFragmentListener) {
+            mReplaceFragmentListener = (Listeners.OnReplaceFragmentListener) context;
+        } else {
+            Log.e(UserInfoFragment.class.getSimpleName(), "Activity not implementing " +
+                    "ShowSnackBarListener interface");
+        }
+
+        if (context instanceof Listeners.ShowSnackBarListener) {
+            mSnackBarListener = (Listeners.ShowSnackBarListener) context;
+        } else {
+            Log.e(UserInfoFragment.class.getSimpleName(), "Activity not implementing " +
+                    "ShowSnackBarListener interface");
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_user_info, container, false);
-
-        mName = view.findViewById(R.id.qwerty);
-        mAge = view.findViewById(R.id.user_age);
-        mImageView = view.findViewById(R.id.profile_picture);
-        mCity = view.findViewById(R.id.user_city);
-        Button saveBtn = view.findViewById(R.id.button_save);
-        mImageView.setDrawingCacheEnabled(true);
-
-        View layoutContainer = getActivity().findViewById(R.id.activity_home_container);
-        mSnackbar = Snackbar.make(layoutContainer, "Saving...", Snackbar.LENGTH_INDEFINITE);
-
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSnackbar.show();
-                updateUserInfoFromFragment();
-            }
-        });
-
-        mManager = DatabaseManager.getInstance();
-        mCurrentUser = mManager.getCurrentUser();
-        if (mCurrentUser != null) {
-            displayUserInfo();
-        }
-
-        mImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.READ_EXTERNAL_STORAGE);
-                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                    PermissionUtil.requestPermission(UserInfoFragment.this, PermissionUtil.PermissionType.STORAGE);
-                } else {
-                    selectProfileImage();
-                }
-            }
-        });
-
+        ButterKnife.bind(this, view);
+        mProfileImage.setDrawingCacheEnabled(true);
+        mManager2 = DatabaseManager.getUserManager();
+        mCurrentUser = mManager2.getCurrentUser();
+        mIsNewUser = getArguments().getBoolean(IS_NEW_USER);
+        displayUserInfo(mIsNewUser);
         return view;
     }
 
@@ -97,11 +127,12 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PermissionUtil.PERMISSION_READ_EXTERNAL_STORAGE) {
+        if (requestCode == PermissionHelper.PERMISSION_READ_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 selectProfileImage();
             } else {
-                Toast.makeText(getActivity(), R.string.image_text_permission, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.image_text_permission,
+                        Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -111,14 +142,14 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"),
-                CHOOSE_IMAGE);
+                CHOOSE_IMAGE_REQUEST_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK) {
+        if (requestCode == CHOOSE_IMAGE_REQUEST_CODE && resultCode == RESULT_OK) {
             Intent intent = CropImage.activity(data.getData())
                     .setCropShape(CropImageView.CropShape.OVAL)
                     .setFixAspectRatio(true).getIntent(getActivity());
@@ -128,25 +159,22 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
                 CropImage.ActivityResult result = CropImage.getActivityResult(data);
                 mImageBitmap = MediaStore.Images.Media
                         .getBitmap(getActivity().getContentResolver(), result.getUri());
-                Picasso.with(getActivity()).load(result.getUri())
-                        .transform(new CropCircleTransformation())
-                        .into(mImageView);
-
+                loadImage(result.getUri().toString());
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
         }
     }
 
-    private void updateUserInfoFromFragment() {
-        String userName = mName.getText().toString();
+    private void updateUserInfo() {
+        String userName = mUserName.getText().toString();
         String userAge = mAge.getText().toString();
         String country = mCity.getText().toString();
 
         String errorMessage = getString(R.string.empty_field_error);
 
         if (userName.isEmpty()) {
-            mName.setError(errorMessage);
+            mUserName.setError(errorMessage);
             return;
         }
         if (userAge.isEmpty()) {
@@ -158,15 +186,12 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
             return;
         }
         mCurrentUser.updateUserInfo(userName, userAge, country);
-        if (mImageBitmap == null)
-            mManager.updateUserInfo(this);
-        else
-            mManager.updateUserInfo(this, mImageBitmap);
+        mManager2.updateUserInfo(this, mImageBitmap, mIsNewUser);
     }
 
-    private void displayUserInfo() {
-        if (mCurrentUser != null) {
-            mName.setText(mCurrentUser.getName());
+    private void displayUserInfo(boolean isNewUser) {
+        if (!isNewUser) {
+            mUserName.setText(mCurrentUser.getName());
             mCity.setText(mCurrentUser.getCity());
             mAge.setText(mCurrentUser.getAge());
             loadImage(mCurrentUser.getProfileImage());
@@ -176,15 +201,20 @@ public class UserInfoFragment extends Fragment implements DatabaseManager.UserIn
     private void loadImage(String uri) {
         if (!uri.isEmpty()) {
             Picasso.with(getActivity())
-                    .load(Uri.parse(uri))
+                    .load(uri)
                     .transform(new CropCircleTransformation())
-                    .into(mImageView);
+                    .into(mProfileImage);
         }
     }
 
     @Override
-    public void onUserInfoSaved() {
-        mSnackbar.dismiss();
-        ((HomeActivity) getActivity()).replaceFragment(new ScreenSlidePageFragment());
+    public void onUserInfoUpdated() {
+        mSnackBarListener.dismissSnackBar();
+        mReplaceFragmentListener.replaceFragment(new ViewPagerFragment());
+    }
+
+    @Override
+    public void onError(String message) {
+
     }
 }

@@ -2,19 +2,20 @@ package com.ink_steel.inksteel.model;
 
 import com.google.firebase.firestore.Exclude;
 import com.ink_steel.inksteel.R;
+import com.ink_steel.inksteel.model.Post.ReactionType;
 
 public class Reaction {
 
     private boolean initial;
     private String userEmail;
-    private String type;
+    private ReactionType type;
     private long time;
 
     public Reaction() {
     }
 
-    public Reaction(String user, String type, boolean isInitial, long time) {
-        this.userEmail = user;
+    public Reaction(String userEmail, ReactionType type, boolean isInitial, long time) {
+        this.userEmail = userEmail;
         this.type = type;
         this.initial = isInitial;
         this.time = time;
@@ -24,7 +25,7 @@ public class Reaction {
         return userEmail;
     }
 
-    public String getType() {
+    public ReactionType getType() {
         return type;
     }
 
@@ -39,11 +40,11 @@ public class Reaction {
     @Exclude
     public int getReactionIcon() {
         switch (type) {
-            case "like":
+            case LIKE:
                 return R.drawable.like;
-            case "blush":
+            case BLUSH:
                 return R.drawable.blush;
-            case "devil":
+            case DEVIL:
                 return R.drawable.devil;
             default:
                 return R.drawable.dazed;

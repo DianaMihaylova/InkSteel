@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,7 +14,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/item_chat_list"/>
+        tools:listitem="@layout/item_chat_list" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/chat_list_add"
@@ -28,6 +27,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:rippleColor="@color/cardview_shadow_end_color"
-        tools:ignore="NewApi"/>
+        tools:ignore="NewApi" />
 
 </android.support.constraint.ConstraintLayout>

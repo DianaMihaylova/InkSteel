@@ -1,11 +1,12 @@
 package com.ink_steel.inksteel.fragments;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.support.design.widget.Snackbar;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,43 +20,69 @@ import com.ink_steel.inksteel.R;
 import com.ink_steel.inksteel.adapters.ReactionsAdapter;
 import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.model.Post;
+import com.ink_steel.inksteel.model.Post.ReactionType;
 import com.ink_steel.inksteel.model.Reaction;
 import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
-import java.util.List;
 
-public class PostInfoFragment extends Fragment implements View.OnClickListener, DatabaseManager.PostReactionsListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 
+
+public class PostInfoFragment extends Fragment implements DatabaseManager.PostListener {
+
+    @BindView(R.id.post_info_user_picture)
+    ImageView mPostsUserProfilePictureIv;
+    @BindView(R.id.post_info_username)
+    TextView mPostsUserUsernameTv;
+    @BindView(R.id.post_info_description)
+    AppCompatTextView mPostDescription;
+    @BindView(R.id.fragment_post_info_post_iv)
+    ImageView mPostImageIv;
+    @BindView(R.id.fragment_post_info_prev_v)
+    View mPrevV;
+    @BindView(R.id.fragment_post_info_next_v)
+    View mNextV;
+    @BindView(R.id.collapse_btn)
+    ImageButton mCollapseBtn;
+    @BindView(R.id.reaction_like)
+    ImageButton mReactionLike;
+    @BindView(R.id.reaction_blush)
+    ImageButton mReactionBlush;
+    @BindView(R.id.reaction_devil)
+    ImageButton mReactionDevil;
+    @BindView(R.id.reaction_dazed)
+    ImageButton mReactionDazed;
+    @BindView(R.id.reaction_like_count)
+    TextView mReactionLikeCount;
+    @BindView(R.id.reaction_blush_count)
+    TextView mReactionBlushCount;
+    @BindView(R.id.reaction_devil_count)
+    TextView mReactionDevilCount;
+    @BindView(R.id.reaction_dazed_count)
+    TextView mReactionDazedCount;
+    @BindView(R.id.fragment_post_info_reactions_rv)
+    RecyclerView mReactionsRv;
+    @BindView(R.id.post_cl)
+    ConstraintLayout mPostCl;
+    Unbinder unbinder;
+    private Post mPost;
+    private DatabaseManager.PostsManager mManager;
     private boolean isCollapsed;
+    private ConstraintSet mSet;
+    private LinkedList<Reaction> mReactions;
     private ReactionsAdapter mAdapter;
-    private boolean isFullScreen;
-    private TextView mLikeCount;
-    private TextView mBlushCount;
-    private TextView mDevilCount;
-    private TextView mDazedCount;
-    private ImageView mPostUserProfileImage;
-    private TextView mReactionUserEmail;
-    private ImageView mPostImage;
-    private List<Reaction> mReactions;
-    private RecyclerView mRecyclerView;
-    private View mUserInfoView;
-    private View mReactionsView;
-    private ImageButton mCollapse;
-    private ConstraintSet mCs;
-    private ConstraintLayout mCl;
-    private TextView mPostDescription;
-    private Post mCurrentPost;
-    private DatabaseManager mManager;
-    private Picasso mPicasso;
 
     public PostInfoFragment() {
     }
 
-    public static PostInfoFragment newInstance(String postId) {
+    public static PostInfoFragment newInstance(long createdAt) {
         PostInfoFragment postInfoFragment = new PostInfoFragment();
         Bundle bundle = new Bundle(1);
-        bundle.putString("postId", postId);
+        bundle.putLong("createdAt", createdAt);
         postInfoFragment.setArguments(bundle);
         return postInfoFragment;
     }
@@ -65,184 +92,126 @@ public class PostInfoFragment extends Fragment implements View.OnClickListener, 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post_info, container, false);
+        unbinder = ButterKnife.bind(this, view);
 
-        mPostUserProfileImage = view.findViewById(R.id.post_info_user_picture);
-        mPostImage = view.findViewById(R.id.post_info_post_image);
-        mReactionUserEmail = view.findViewById(R.id.post_info_username);
-        mRecyclerView = view.findViewById(R.id.post_info_recycler_view);
-        mUserInfoView = view.findViewById(R.id.user_info);
-        mPostDescription = mUserInfoView.findViewById(R.id.post_info_description);
-        View next = view.findViewById(R.id.next);
-        View prev = view.findViewById(R.id.previous);
-        mReactionsView = view.findViewById(R.id.reactions_layout);
-        mLikeCount = mReactionsView.findViewById(R.id.reaction_like_count);
-        mBlushCount = mReactionsView.findViewById(R.id.reaction_blush_count);
-        mDevilCount = mReactionsView.findViewById(R.id.reaction_devil_count);
-        mDazedCount = mReactionsView.findViewById(R.id.reaction_dazed_count);
-        ImageButton likeBtn = mReactionsView.findViewById(R.id.reaction_like);
-        ImageButton blushBtn = mReactionsView.findViewById(R.id.reaction_blush);
-        ImageButton devilBtn = mReactionsView.findViewById(R.id.reaction_devil);
-        ImageButton dazedBtn = mReactionsView.findViewById(R.id.reaction_dazed);
-        mCollapse = mReactionsView.findViewById(R.id.collapse_btn);
-
-        View layoutContainer = getActivity().findViewById(R.id.activity_home_container);
-        Snackbar.make(layoutContainer, "Loading...", Snackbar.LENGTH_SHORT).show();
-
-        mCollapse.setImageResource(R.drawable.ic_expand_more);
-        String postId = getArguments().getString("postId");
+        mManager = DatabaseManager.getPostsManager();
         mReactions = new LinkedList<>();
+        mPost = mManager.getPostByCreatedAt(getArguments().getLong("createdAt"), this);
+        if (mPost == null) {
+            getActivity().onBackPressed();
+        }
         isCollapsed = true;
-        isFullScreen = false;
-        mCs = new ConstraintSet();
-        mCl = view.findViewById(R.id.post_cl);
-        mPicasso = new Picasso.Builder(getActivity()).build();
+        displayPost();
+        mSet = new ConstraintSet();
 
-        mManager = DatabaseManager.getInstance();
-        mCurrentPost = mManager.getPost(getActivity(), this, postId);
-        displayPost(true);
-
-        mCollapse.setOnClickListener(this);
-        next.setOnClickListener(this);
-        prev.setOnClickListener(this);
-        likeBtn.setOnClickListener(this);
-        blushBtn.setOnClickListener(this);
-        devilBtn.setOnClickListener(this);
-        dazedBtn.setOnClickListener(this);
-
-        mPostImage.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                toggleImageFullscreen();
-                return true;
-            }
-        });
-
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        mReactionsRv.setLayoutManager(layoutManager);
         mAdapter = new ReactionsAdapter(mReactions);
-        mRecyclerView.setAdapter(mAdapter);
+        mReactionsRv.setAdapter(mAdapter);
 
         return view;
     }
 
-    private void toggleImageFullscreen() {
-        if (!isCollapsed)
-            toggleReactionsRecycler();
-
-        if (isFullScreen) {
-            mUserInfoView.setVisibility(View.GONE);
-            mReactionsView.setVisibility(View.GONE);
-        } else {
-            mUserInfoView.setVisibility(View.VISIBLE);
-            mReactionsView.setVisibility(View.VISIBLE);
-        }
-        isFullScreen = !isFullScreen;
+    private void displayPost() {
+        Context context = getActivity();
+        Picasso.with(context).load(mPost.getUrlProfileImage()).into(mPostsUserProfilePictureIv);
+        mPostsUserUsernameTv.setText(mPost.getUserEmail());
+        if (mPost.getDescription().isEmpty()) mPostDescription.setVisibility(View.INVISIBLE);
+        else mPostDescription.setText(mPost.getDescription());
+        Picasso.with(context).load(mPost.getUrlImage()).into(mPostImageIv);
+        displayReactions();
     }
 
-    private void toggleReactionsRecycler() {
+    private void displayReactions() {
+        mReactionLikeCount.setText(String.valueOf(mPost.getReactionCount(ReactionType.LIKE)));
+        mReactionBlushCount.setText(String.valueOf(mPost.getReactionCount(ReactionType.BLUSH)));
+        mReactionDevilCount.setText(String.valueOf(mPost.getReactionCount(ReactionType.DEVIL)));
+        mReactionDazedCount.setText(String.valueOf(mPost.getReactionCount(ReactionType.DAZED)));
+    }
+
+    @Override
+    public void onDestroyView() {
+        unbinder.unbind();
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mManager.unregisterPostListener();
+    }
+
+    @OnClick({R.id.fragment_post_info_prev_v, R.id.fragment_post_info_next_v, R.id.collapse_btn,
+            R.id.reaction_like, R.id.reaction_blush, R.id.reaction_devil, R.id.reaction_dazed})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.fragment_post_info_prev_v:
+                navigatePost(false);
+                break;
+            case R.id.fragment_post_info_next_v:
+                navigatePost(true);
+                break;
+            case R.id.collapse_btn:
+                toggleReactionsRv();
+                break;
+            case R.id.reaction_like:
+                mManager.react(ReactionType.LIKE);
+                break;
+            case R.id.reaction_blush:
+                mManager.react(ReactionType.BLUSH);
+                break;
+            case R.id.reaction_devil:
+                mManager.react(ReactionType.DEVIL);
+                break;
+            case R.id.reaction_dazed:
+                mManager.react(ReactionType.DAZED);
+                break;
+        }
+    }
+
+    private void navigatePost(boolean isNext) {
+        Post post;
+        if (isNext) post = mManager.getNextPost();
+        else post = mManager.getPreviousPost();
+        if (post != null) {
+            mPost = post;
+            mReactions.clear();
+            displayPost();
+        }
+    }
+
+    private void toggleReactionsRv() {
         int weight;
         if (isCollapsed) {
             weight = 1;
-            mCollapse.setImageResource(R.drawable.ic_expand_less);
+            mCollapseBtn.setImageResource(R.drawable.ic_expand_less);
         } else {
             weight = 0;
-            mCollapse.setImageResource(R.drawable.ic_expand_more);
+            mCollapseBtn.setImageResource(R.drawable.ic_expand_more);
         }
+        mSet.clone(mPostCl);
+        mSet.setVerticalWeight(mReactionsRv.getId(), weight);
+        mSet.applyTo(mPostCl);
         isCollapsed = !isCollapsed;
-        mCs.clone(mCl);
-        mCs.setVerticalWeight(mRecyclerView.getId(), weight);
-        mCs.applyTo(mCl);
-    }
-
-
-    private void displayPost(boolean isInitial) {
-        if (mCurrentPost != null) {
-
-            mReactionUserEmail.setText(mCurrentPost.getUserEmail());
-
-            mPicasso.load(mCurrentPost.getUrlProfileImage())
-                    .placeholder(R.drawable.placeholder_posts)
-                    .into(mPostUserProfileImage);
-            mPicasso.load(mCurrentPost.getUrlImage())
-                    .placeholder(R.drawable.placeholder_posts)
-                    .into(mPostImage);
-
-            String description = mCurrentPost.getDescription();
-            if (!description.isEmpty()) {
-                mPostDescription.setVisibility(View.VISIBLE);
-                mPostDescription.setText(mCurrentPost.getDescription());
-            } else {
-                mPostDescription.setVisibility(View.INVISIBLE);
-            }
-            updateReactions();
-
-            if (!isInitial)
-                clearRecyclerView();
-        }
-    }
-
-    private void clearRecyclerView() {
-        mRecyclerView.getRecycledViewPool().clear();
-        mReactions.clear();
-        mAdapter.notifyDataSetChanged();
-    }
-
-    private void updateReactions() {
-
-        mLikeCount.setText(String.valueOf(mCurrentPost.getReactions().get(0)));
-        mBlushCount.setText(String.valueOf(mCurrentPost.getReactions().get(1)));
-        mDevilCount.setText(String.valueOf(mCurrentPost.getReactions().get(2)));
-        mDazedCount.setText(String.valueOf(mCurrentPost.getReactions().get(3)));
     }
 
     @Override
-    public void onClick(View v) {
-        String reaction = "";
-        switch (v.getId()) {
-            case R.id.reaction_like:
-                reaction = getString(R.string.like);
-                break;
-            case R.id.reaction_blush:
-                reaction = getString(R.string.blush);
-                break;
-            case R.id.reaction_devil:
-                reaction = getString(R.string.devil);
-                break;
-            case R.id.reaction_dazed:
-                reaction = getString(R.string.dazed);
-                break;
-            case R.id.collapse_btn:
-                toggleReactionsRecycler();
-                break;
-            case R.id.next: {
-                Post post = mManager.getNextPost(getActivity(), this);
-                if (post != null) {
-                    mCurrentPost = post;
-                    displayPost(false);
-                }
-            }
-                break;
-            case R.id.previous: {
-                Post post = mManager.getPreviousPost(getActivity(), this);
-                if (post != null) {
-                    mCurrentPost = post;
-                    displayPost(false);
-                }
-            }
-                break;
-        }
-        if (!reaction.isEmpty())
-            mManager.saveUserReaction(reaction);
-    }
-
-    @Override
-    public void onPostReactionsChanged() {
-        updateReactions();
+    public void onPostChanged(Post post) {
+        mPost = post;
+        displayReactions();
     }
 
     @Override
     public void onReactionAdded(Reaction reaction) {
+
         mReactions.add(0, reaction);
         mAdapter.notifyItemInserted(0);
-        mRecyclerView.scrollToPosition(0);
+        mReactionsRv.scrollToPosition(0);
+
+    }
+
+    @Override
+    public void onError(String errorMessage) {
+
     }
 }

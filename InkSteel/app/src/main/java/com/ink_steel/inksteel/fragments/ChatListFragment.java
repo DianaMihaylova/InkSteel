@@ -17,14 +17,14 @@ import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.helpers.Listeners;
 import com.ink_steel.inksteel.model.ChatRoom;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class ChatListFragment extends Fragment implements Listeners.ChatListClickListener,
-        DatabaseManager.UserChatRoomsListener {
+        DatabaseManager.ChatRoomListener {
 
-    private DatabaseManager mManager;
+    private DatabaseManager.ChatManager mManager;
     private ChatListAdapter mAdapter;
-    private ArrayList<ChatRoom> mChatRooms;
+    private LinkedList<ChatRoom> mChatRooms;
 
     public ChatListFragment() {
     }
@@ -36,9 +36,8 @@ public class ChatListFragment extends Fragment implements Listeners.ChatListClic
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
 
-        mManager = DatabaseManager.getInstance();
-        mManager.getUserChatRooms(this);
-
+        mManager = DatabaseManager.getChatManager();
+        mChatRooms = new LinkedList<>();
         FloatingActionButton fab = view.findViewById(R.id.chat_list_add);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -47,8 +46,6 @@ public class ChatListFragment extends Fragment implements Listeners.ChatListClic
                 ((HomeActivity) getActivity()).replaceFragment(new FriendsFragment());
             }
         });
-
-        mChatRooms = mManager.getUserChatRooms();
 
         RecyclerView recyclerView = view.findViewById(R.id.chat_list_rv);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -60,22 +57,42 @@ public class ChatListFragment extends Fragment implements Listeners.ChatListClic
     }
 
     @Override
+    public void onStart() {
+        mManager.registerChatRoomsListener(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mManager.unregisterChatRoomsListener();
+    }
+
+    @Override
     public void onChatItemClick(int position) {
         ((HomeActivity) getActivity()).replaceFragment(ChatFragment
                 .newInstance(mChatRooms.get(position).getEmail()));
     }
 
     @Override
-    public void onChatRoomsLoaded() {
-        mChatRooms.clear();
-        mChatRooms.addAll(mManager.getUserChatRooms());
+    public void onChatRoomAdded(ChatRoom chatRoom) {
+        mChatRooms.add(chatRoom);
+        mAdapter.notifyItemInserted(mChatRooms.size() - 1);
+    }
+
+    @Override
+    public void onChatRoomModified(ChatRoom chatRoom) {
+        mAdapter.notifyItemChanged(mChatRooms.indexOf(chatRoom));
+    }
+
+    @Override
+    public void onChatRoomLoaded() {
+        mChatRooms.addAll(mManager.getChatRooms());
         mAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onChatRoomChanged() {
-        mChatRooms.clear();
-        mChatRooms.addAll(mManager.getUserChatRooms());
-        mAdapter.notifyDataSetChanged();
+    public void onError(String message) {
+
     }
 }

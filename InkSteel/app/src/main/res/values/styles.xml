@@ -6,12 +6,22 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/colorBackground</item>
+        <item name="editTextStyle">@style/EditText</item>
+        <item name="android:buttonStyle">@style/CustomButton</item>
     </style>
 
     <style name="Text" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/colorText</item>
         <item name="android:fontFamily">serif</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CustomButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/custom_button_blue</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/colorText</item>
     </style>
 
     <style name="DateText" parent="Text">
@@ -21,6 +31,11 @@
     <style name="FontText" parent="@style/Text">
         <item name="android:fontFamily">cursive</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="EditText" parent="Base.V7.Widget.AppCompat.EditText">
+        <item name="backgroundTint">@color/colorPrimaryDark</item>
+        <item name="android:maxLines">1</item>
     </style>
 
 </resources>

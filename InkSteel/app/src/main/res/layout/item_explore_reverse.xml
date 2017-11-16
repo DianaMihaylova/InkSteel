@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
@@ -13,53 +12,53 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:layout_margin="3dp">
+        android:layout_margin="3dp"
+        android:background="@android:color/white">
 
         <ImageView
             android:id="@+id/profile_pic"
             android:layout_width="304dp"
             android:layout_height="308dp"
-            android:layout_marginStart="12dp"
             android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            android:contentDescription="@string/user_profile_image"
             android:padding="8dp"
             android:scaleType="centerCrop"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/user_name"
-            card_view:srcCompat="@drawable/tatto1"
-            android:contentDescription="@string/user_profile_image" />
+            card_view:srcCompat="@drawable/tatto1" />
 
         <TextView
             android:id="@+id/user_name"
+            style="@style/FontText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            style="@style/FontText"
             android:textSize="36sp"
             card_view:layout_constraintEnd_toStartOf="@+id/user_city"
             card_view:layout_constraintHorizontal_bias="0.097"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintVertical_weight="2"
-            tools:text="@string/username"/>
+            tools:text="@string/username" />
 
         <TextView
             android:id="@+id/user_city"
+            style="@style/FontText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:textSize="24sp"
-            style="@style/FontText"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintVertical_weight="2"
-            tools:text="@string/user_city"/>
+            tools:text="@string/user_city" />
 
     </android.support.constraint.ConstraintLayout>
 

@@ -18,11 +18,11 @@ import com.ink_steel.inksteel.model.User;
 
 import java.util.ArrayList;
 
-public class FriendsFragment extends Fragment implements FriendClickListener,
-        DatabaseManager.UsersListener {
+public class FriendsFragment extends Fragment implements FriendClickListener, DatabaseManager.UsersListener {
 
     private ArrayList<User> mFriends;
-    private DatabaseManager mManager;
+    private DatabaseManager.UsersManager mManager;
+    private FriendAdapter mAdapter;
 
     public FriendsFragment() {
     }
@@ -35,13 +35,13 @@ public class FriendsFragment extends Fragment implements FriendClickListener,
 
         RecyclerView recyclerView = view.findViewById(R.id.friend_rv);
 
-        mManager = DatabaseManager.getInstance();
-        mFriends = new ArrayList<>();
-        mManager.loadFriends(this);
-
-        FriendAdapter mAdapter = new FriendAdapter(getActivity(), mFriends, this);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(mLayoutManager);
+        mManager = DatabaseManager.getUsersManager();
+        mFriends = mManager.getFriends(this);
+        if (mFriends == null)
+            mFriends = new ArrayList<>();
+        mAdapter = new FriendAdapter(getActivity(), mFriends, this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
@@ -61,7 +61,12 @@ public class FriendsFragment extends Fragment implements FriendClickListener,
 
     @Override
     public void onUsersLoaded() {
-        mFriends.clear();
-        mFriends = mManager.getFriends();
+        mFriends.addAll(mManager.getFriends(this));
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onError(String errorMessage) {
+
     }
 }

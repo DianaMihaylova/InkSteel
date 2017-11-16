@@ -13,7 +13,6 @@
     <string name="gallery">gallery</string>
     <string name="register">Register</string>
     <string name="log_in">Log in</string>
-    <string name="password">Password</string>
     <string name="not_a_member_register">Not a member? Register</string>
     <string name="confirm_password">Confirm password</string>
     <string name="send_a_message">Send a message</string>
@@ -25,7 +24,7 @@
     <string name="log_out">Log out</string>
     <string name="last_message">Last Message</string>
     <string name="_16_34_1_nov">16:34, 1 Nov</string>
-    <string name="user_city">UserCity:</string>
+    <string name="user_city">City</string>
     <string name="textview">TextView</string>
     <string name="reacted_with">reacted with</string>
     <string name="studioname">StudioName</string>
@@ -34,29 +33,19 @@
     <string name="message">Message</string>
     <string name="back">BACK</string>
     <string name="warning_msg">WARNING MESSAGE</string>
-    <string name="user_name">Username:</string>
+    <string name="user_name">Username</string>
     <string name="do_you_want">Do you want to delete the image?</string>
-    <string name="like">like</string>
-    <string name="blush">blush</string>
-    <string name="devil">devil</string>
-    <string name="dazed">dazed</string>
     <string name="email_dot">Email:</string>
     <string name="username_dot">Username:</string>
     <string name="city_dot">City:</string>
     <string name="age_dot">Age:</string>
     <string name="invalid_email">Invalid email!</string>
-    <string name="pass_short">Password too short! Minimum length - 6 characters.</string>
     <string name="pass_not_match">Passwords don\'t match!</string>
     <string name="feed">FEED</string>
     <string name="explore">EXPLORE</string>
     <string name="studios">STUDIOS</string>
     <string name="chat_fragment">CHAT</string>
-    <string name="tel">tel:</string>
     <string name="empty_field_error">Field can\'t be empty</string>
-    <string name="reply">Reply</string>
-    <string name="new_message">New Message from</string>
-    <string name="channel_id">messages_chanel</string>
-    <string name="reply_hint">Reply to the message</string>
     <string name="send_button">Send button</string>
     <string name="user_profile_image">user profile image</string>
     <string name="open_now">OPEN NOW</string>
@@ -69,5 +58,5 @@
     <string name="reaction">reaction</string>
     <string name="invalid_pass">Invalid password!</string>
     <string name="image_text_permission">Permission is necessary to get images from your device!</string>
-    <string name="no_studios">There are no studios available</string>
+    <string name="password">Password</string>
 </resources>

@@ -1,49 +1,88 @@
 package com.ink_steel.inksteel.model;
 
-import com.google.android.gms.location.places.Place;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class Studio {
 
-    private String placeId;
+    @SerializedName("formatted_address")
+    @Expose
+    private String address;
+
+    private LatLng location;
+
+    @SerializedName("name")
+    @Expose
     private String name;
-    private float rating;
-    private String imageUrl;
-    private Place googlePlace;
+
     private boolean isOpenNow;
 
-    public Studio(String name, float rating, String id, String imageUrl, boolean isOpenNow) {
-        this.name = name;
-        this.rating = rating;
-        this.placeId = id;
-        this.imageUrl = imageUrl;
-        this.isOpenNow = isOpenNow;
+    private String photoReference;
+
+    private String photoUrl;
+
+    @SerializedName("place_id")
+    @Expose
+    private String placeId;
+
+    @SerializedName("rating")
+    @Expose
+    private float rating;
+
+    public String getAddress() {
+        return address;
     }
 
-    public boolean isOpenNow() {
-        return isOpenNow;
+    public LatLng getLocation() {
+        return location;
     }
 
-    public String getPlaceId() {
-        return placeId;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setGooglePlace(Place googlePlace) {
-        this.googlePlace = googlePlace;
-    }
-
-    public Place getGooglePlace() {
-        return googlePlace;
+    public void setLocation(LatLng location) {
+        this.location = location;
     }
 
     public String getName() {
         return name;
     }
 
+    public boolean isOpenNow() {
+        return isOpenNow;
+    }
+
+    public void setOpenNow(boolean openNow) {
+        isOpenNow = openNow;
+    }
+
+    public String getPhotoReference() {
+        return photoReference;
+    }
+
+    public void setPhotoReference(String photoReference) {
+        this.photoReference = photoReference;
+    }
+
+    public String getPlaceId() {
+        return placeId;
+    }
+
     public float getRating() {
         return rating;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    @Override
+    public String toString() {
+        if (location != null) {
+            return placeId + " " + isOpenNow + " " + photoReference + " " + location.toString();
+        }
+        return placeId + " " + isOpenNow + " " + photoReference + " " + null;
     }
 }

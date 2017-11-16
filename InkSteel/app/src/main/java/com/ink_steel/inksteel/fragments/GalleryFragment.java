@@ -24,7 +24,7 @@ import com.ink_steel.inksteel.activities.HomeActivity;
 import com.ink_steel.inksteel.adapters.GalleryRecyclerViewAdapter;
 import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.helpers.Listeners.GalleryImageLongClickListener;
-import com.ink_steel.inksteel.helpers.PermissionUtil;
+import com.ink_steel.inksteel.helpers.PermissionHelper;
 import com.ink_steel.inksteel.model.User;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
     private static final int CHOOSE_IMAGE = 1;
     private GalleryRecyclerViewAdapter mAdapter;
     private User mCurrentUser;
-    private DatabaseManager mUserManager;
+    private DatabaseManager.GalleryManager mUserManager;
     private boolean isFriendGallery;
     private User mFriend;
     private ArrayList<String> mImages;
@@ -55,7 +55,7 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
         View layoutContainer = getActivity().findViewById(R.id.activity_home_container);
         mSnackbar = Snackbar.make(layoutContainer, "Saving...", Snackbar.LENGTH_INDEFINITE);
 
-        mUserManager = DatabaseManager.getInstance();
+        mUserManager = DatabaseManager.getGalleryManager();
         mCurrentUser = mUserManager.getCurrentUser();
         mImages = new ArrayList<>();
         FloatingActionButton fab = view.findViewById(R.id.btn_fab);
@@ -88,8 +88,8 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
                 int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
                         Manifest.permission.READ_EXTERNAL_STORAGE);
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                    PermissionUtil.requestPermission(GalleryFragment.this,
-                            PermissionUtil.PermissionType.STORAGE);
+                    PermissionHelper.requestPermission(GalleryFragment.this,
+                            PermissionHelper.PermissionType.STORAGE);
                 } else {
                     selectImage();
                 }
@@ -103,7 +103,7 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PermissionUtil.PERMISSION_READ_EXTERNAL_STORAGE) {
+        if (requestCode == PermissionHelper.PERMISSION_READ_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 selectImage();
             } else {
@@ -133,7 +133,6 @@ public class GalleryFragment extends Fragment implements GalleryImageLongClickLi
     @Override
     public void onGalleryImageLongClick(int position, boolean isLongClick) {
         if (isFriendGallery) {
-            isLongClick = false;
             ((HomeActivity) getActivity())
                     .replaceFragment(FullScreenImageFragment.newInstance(position, mFriend));
         } else {

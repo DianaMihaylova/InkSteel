@@ -1,76 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.theartofdev.edmodo.cropper.CropImageView
-        android:id="@+id/crop_iv"
+        android:id="@+id/fragment_add_post_crop_iv"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/description_et"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_add_post_description_et"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/add_image_b"
+        android:id="@+id/fragment_add_post_choose_image_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/custom_button_pink"
         android:text="@string/add_image"
-        app:layout_constraintBottom_toBottomOf="@id/crop_iv"
+        app:layout_constraintBottom_toBottomOf="@id/fragment_add_post_crop_iv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/save_b"
+        android:id="@+id/fragment_add_post_save_btn"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="@string/save"
-        android:visibility="invisible"
         android:textColor="@color/colorText"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cancel_b"/>
+        app:layout_constraintStart_toEndOf="@+id/fragment_add_post_cancel_btn" />
 
     <Button
-        android:id="@+id/cancel_b"
+        android:id="@+id/fragment_add_post_cancel_btn"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/cancel"
         android:textColor="@color/colorText"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/save_b"
+        app:layout_constraintEnd_toStartOf="@+id/fragment_add_post_save_btn"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/description_et"
+        android:id="@+id/fragment_add_post_description_et"
+        style="@style/Text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        style="@style/Text"
         android:hint="@string/add_description_if_you_like_20_chars"
         android:inputType="textShortMessage"
-        android:textSize="14sp"
-        android:textColorHint="@color/colorText"
         android:maxLength="20"
         android:maxLines="1"
+        android:textColorHint="@color/colorText"
+        android:textSize="14sp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/save_b"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_add_post_save_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

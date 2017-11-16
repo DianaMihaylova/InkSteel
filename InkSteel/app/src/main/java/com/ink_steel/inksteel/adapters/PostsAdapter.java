@@ -1,6 +1,5 @@
 package com.ink_steel.inksteel.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +21,10 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHolder> {
 
-    private Context mContext;
     private List<Post> mPosts;
     private PostClickListener mListener;
 
-    public PostsAdapter(Context context, List<Post> posts, PostClickListener listener) {
-        mContext = context;
+    public PostsAdapter(List<Post> posts, PostClickListener listener) {
         mPosts = posts;
         mListener = listener;
     }
@@ -79,12 +76,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
                     Locale.getDefault());
             Date date = new Date(post.getCreatedAt());
             postText.setText(format.format(date));
-            Picasso.with(mContext)
+            Picasso.with(itemView.getContext())
                     .load(post.getUrlProfileImage())
                     .transform(new CropCircleTransformation())
                     .placeholder(R.drawable.placeholder_posts)
                     .into(profilePic);
-            Picasso.with(mContext)
+            Picasso.with(itemView.getContext())
                     .load(post.getUrlThumbnailImage())
                     .placeholder(R.drawable.placeholder_posts)
                     .into(postPic);

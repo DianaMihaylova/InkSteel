@@ -12,25 +12,33 @@ import android.view.ViewGroup;
 import com.ToxicBakery.viewpager.transforms.ZoomInTransformer;
 import com.ink_steel.inksteel.R;
 
-public class ScreenSlidePageFragment extends Fragment {
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    public ScreenSlidePageFragment() {
+public class ViewPagerFragment extends Fragment {
+
+    @BindView(R.id.fragment_view_pager_tl)
+    TabLayout mTabLayout;
+    @BindView(R.id.fragment_view_pager_vp)
+    ViewPager mViewPager;
+
+    public ViewPagerFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_screen_slide_page,
+        View view = inflater.inflate(R.layout.fragment_view_pager,
                 container, false);
+        ButterKnife.bind(this, view);
 
         final Fragment[] fragments = {new ProfileFragment(), new FeedFragment(),
                 new ExploreFragment(), new ChatListFragment(), new StudiosFragment()};
         final String[] tabTitle = {"", getString(R.string.feed), getString(R.string.explore),
                 getString(R.string.chat_fragment), getString(R.string.studios)};
 
-        final ViewPager viewPager = view.findViewById(R.id.viewPager);
-        viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
+        mViewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 if (position == 4) {
@@ -50,12 +58,11 @@ public class ScreenSlidePageFragment extends Fragment {
             }
         });
 
-        viewPager.setCurrentItem(1);
-        viewPager.setPageTransformer(true, new ZoomInTransformer());
+        mViewPager.setCurrentItem(1);
+        mViewPager.setPageTransformer(true, new ZoomInTransformer());
 
-        TabLayout tabLayout = view.findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(viewPager);
-        TabLayout.Tab tab = tabLayout.getTabAt(0);
+        mTabLayout.setupWithViewPager(mViewPager);
+        TabLayout.Tab tab = mTabLayout.getTabAt(0);
         if (tab != null) tab.setIcon(R.drawable.notification_icon);
 
         return view;

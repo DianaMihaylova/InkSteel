@@ -1,5 +1,4 @@
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,36 +10,36 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@android:color/transparent"
+        android:contentDescription="@string/collapse"
         android:scaleType="fitXY"
+        android:src="@drawable/ic_expand_more"
         app:layout_constraintBottom_toBottomOf="@id/reaction_blush"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/reaction_like"
-        app:srcCompat="@drawable/ic_expand_more"
-        android:contentDescription="@string/collapse" />
+        app:layout_constraintRight_toLeftOf="@id/reaction_like" />
 
     <ImageButton
         android:id="@+id/reaction_like"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@android:color/transparent"
+        android:contentDescription="@string/reaction"
         android:scaleType="fitCenter"
         android:src="@drawable/like"
         app:layout_constraintBottom_toBottomOf="@+id/reaction_blush"
         app:layout_constraintLeft_toLeftOf="@id/collapse_btn"
-        app:layout_constraintRight_toLeftOf="@+id/reaction_blush"
-        android:contentDescription="@string/reaction" />
+        app:layout_constraintRight_toLeftOf="@+id/reaction_blush" />
 
     <ImageButton
         android:id="@+id/reaction_blush"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@android:color/transparent"
+        android:contentDescription="@string/reaction"
         android:scaleType="fitCenter"
         android:src="@drawable/blush"
         app:layout_constraintBottom_toBottomOf="@+id/reaction_devil"
         app:layout_constraintLeft_toRightOf="@+id/reaction_like"
-        app:layout_constraintRight_toLeftOf="@+id/reaction_devil"
-        android:contentDescription="@string/reaction" />
+        app:layout_constraintRight_toLeftOf="@+id/reaction_devil" />
 
     <ImageButton
         android:id="@+id/reaction_devil"
@@ -49,25 +48,25 @@
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
+        android:contentDescription="@string/reaction"
         android:scaleType="fitCenter"
         android:src="@drawable/devil"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/reaction_blush"
         app:layout_constraintRight_toLeftOf="@+id/reaction_dazed"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/reaction" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/reaction_dazed"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@android:color/transparent"
+        android:contentDescription="@string/reaction"
         android:scaleType="fitCenter"
         android:src="@drawable/dazed"
         app:layout_constraintBottom_toBottomOf="@+id/reaction_devil"
         app:layout_constraintLeft_toRightOf="@+id/reaction_devil"
-        app:layout_constraintRight_toRightOf="parent"
-        android:contentDescription="@string/reaction" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
         android:id="@+id/reaction_like_count"
@@ -79,7 +78,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/reaction_like"
         app:layout_constraintRight_toLeftOf="@+id/reaction_blush"
         app:layout_constraintTop_toTopOf="@+id/reaction_blush_count"
-        tools:text="5"/>
+        tools:text="5" />
 
     <TextView
         android:id="@+id/reaction_blush_count"
@@ -91,7 +90,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/reaction_blush"
         app:layout_constraintRight_toLeftOf="@+id/reaction_devil"
         app:layout_constraintTop_toTopOf="@+id/reaction_devil_count"
-        tools:text="15"/>
+        tools:text="15" />
 
     <TextView
         android:id="@+id/reaction_devil_count"
@@ -104,7 +103,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/reaction_devil"
         app:layout_constraintRight_toLeftOf="@+id/reaction_dazed"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="150"/>
+        tools:text="150" />
 
     <TextView
         android:id="@+id/reaction_dazed_count"
@@ -115,5 +114,5 @@
         android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="@+id/reaction_dazed"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/reaction_devil_count"/>
+        app:layout_constraintTop_toTopOf="@+id/reaction_devil_count" />
 </android.support.constraint.ConstraintLayout>

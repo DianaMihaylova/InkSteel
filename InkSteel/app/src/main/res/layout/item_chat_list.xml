@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -19,17 +18,18 @@
 
     <TextView
         android:id="@+id/item_chat_username"
+        style="@style/Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="@string/username"
-        style="@style/Text"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/item_chat_image"
-        app:layout_constraintTop_toTopOf="@+id/item_chat_image"/>
+        app:layout_constraintTop_toTopOf="@+id/item_chat_image" />
 
     <TextView
         android:id="@+id/item_chat_msg"
+        style="@style/Text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -37,30 +37,29 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="@string/last_message"
-        style="@style/Text"
-        android:textStyle="normal"
         android:textSize="16sp"
+        android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="@+id/item_chat_image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/item_chat_username"/>
+        app:layout_constraintStart_toStartOf="@+id/item_chat_username" />
 
     <TextView
         android:id="@+id/item_chat_time"
+        style="@style/Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/_16_34_1_nov"
         android:textSize="12sp"
-        style="@style/Text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:background="@color/colorPrimary"
-        app:layout_constraintTop_toBottomOf="@id/item_chat_image"/>
+        app:layout_constraintTop_toBottomOf="@id/item_chat_image" />
 
 </android.support.constraint.ConstraintLayout>

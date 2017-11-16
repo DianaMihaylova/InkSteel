@@ -5,11 +5,12 @@ public class Message {
     private String userEmail;
     private String message;
     private long time;
+    private boolean seen;
 
     public Message() {
     }
 
-    public Message(String userEmail, String message, long time) {
+    public Message(String userEmail, String message, long time, boolean seen) {
         this.userEmail = userEmail;
         this.message = message;
         this.time = time;
@@ -25,5 +26,13 @@ public class Message {
 
     public long getTime() {
         return time;
+    }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 }

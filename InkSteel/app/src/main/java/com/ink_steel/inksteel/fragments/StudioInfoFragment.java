@@ -1,8 +1,6 @@
 package com.ink_steel.inksteel.fragments;
 
 import android.app.Fragment;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,20 +28,31 @@ import com.ink_steel.inksteel.data.DatabaseManager;
 import com.ink_steel.inksteel.model.Studio;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class StudioInfoFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        OnMapReadyCallback, DatabaseManager.StudioListener {
+        OnMapReadyCallback, DatabaseManager.StudioInfoListener {
+
 
     private static final String STUDIO_ID = "studioId";
+    @BindView(R.id.fragment_studio_info_rb)
+    RatingBar mRatingBar;
+    @BindView(R.id.fragment_studio_info_name_tv)
+    TextView mNameTv;
+    @BindView(R.id.fragment_studio_info_iv)
+    ImageView mStudioImage;
+    @BindView(R.id.fragment_studio_info_address_tv)
+    TextView mAddressTv;
+    @BindView(R.id.fragment_studio_info_phone_btn)
+    ImageButton mPhoneBtn;
+    @BindView(R.id.fragment_studio_info_website_btn)
+    ImageButton mWebsiteBtn;
     private GoogleApiClient mClient;
-    private TextView mName;
-    private TextView mAddress;
-    private ImageButton mNumber;
-    private ImageButton mWebsite;
-    private RatingBar mRating;
     private Studio mStudio;
-    private DatabaseManager mManager;
-
+    private DatabaseManager.StudiosManager mManager;
+    private GoogleMap mMap;
     public StudioInfoFragment() {
     }
 
@@ -59,33 +68,29 @@ public class StudioInfoFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_studio_info,
-                container, false);
-
+        View view = inflater.inflate(R.layout.fragment_studio_info, container, false);
+        ButterKnife.bind(this, view);
         String mId = getArguments().getString(STUDIO_ID);
-
-        mName = view.findViewById(R.id.studio_text_title);
-        mAddress = view.findViewById(R.id.studio_text_address);
-        mNumber = view.findViewById(R.id.studio_text_phone);
-        mWebsite = view.findViewById(R.id.studio_text_website);
-        mRating = view.findViewById(R.id.studio_text_rating);
-
-        ImageView imageView = view.findViewById(R.id.studio_text_image);
 
         mClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        mManager = DatabaseManager.getInstance();
+
+        mManager = DatabaseManager.getStudiosManager();
+
         mStudio = mManager.getStudioById(mId);
-        String url = mStudio.getImageUrl();
-        if (url != null)
-            Picasso.with(getActivity())
-                .load(mStudio.getImageUrl())
-                .into(imageView);
-        else imageView.setImageResource(R.drawable.placeholder);
-        MapFragment mMapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+
+        String url = mStudio.getPhotoUrl();
+
+        if (url != null) Picasso.with(getActivity())
+                .load(url)
+                .into(mStudioImage);
+        else mStudioImage.setImageResource(R.drawable.placeholder);
+
+        MapFragment mMapFragment = (MapFragment)
+                getChildFragmentManager().findFragmentById(R.id.fragment_studio_info_map);
         if (mMapFragment != null)
             mMapFragment.getMapAsync(this);
         return view;
@@ -107,7 +112,7 @@ public class StudioInfoFragment extends Fragment implements
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         GeoDataClient geoDataClient = Places.getGeoDataClient(getActivity(), null);
-        mManager.getStudioInfoById(mStudio.getPlaceId(), geoDataClient, this);
+//        mManager.loadStudioInfoById(mStudio.getPlaceId(), geoDataClient, this);
     }
 
     @Override
@@ -120,46 +125,56 @@ public class StudioInfoFragment extends Fragment implements
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        LatLng position = mStudio.getGooglePlace().getLatLng();
-        googleMap.addMarker(new MarkerOptions()
-                .position(position)
-                .title(mStudio.getName()));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 12));
+        mMap = googleMap;
+        LatLng position = mStudio.getLocation();
+        showMarker(position);
     }
 
-    @Override
-    public void onStudioInfoLoaded(Studio studio) {
-        mStudio = studio;
-        displayInfo();
+    private void showMarker(LatLng position) {
+        mMap.addMarker(new MarkerOptions()
+                .position(position)
+                .title(mStudio.getName()));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 12));
     }
 
     private void displayInfo() {
-        mName.setText(mStudio.getGooglePlace().getName());
-        mAddress.setText(mStudio.getGooglePlace().getAddress());
+//        mNameTv.setText(mStudio.getGooglePlace().getName());
+//        mAddressTv.setText(mStudio.getGooglePlace().getAddress());
 
-        mNumber.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse(getString(R.string.tel) + mStudio.getGooglePlace().getPhoneNumber()));
-            }
-        });
+//        mPhoneBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(Intent.ACTION_DIAL);
+////                intent.setData(Uri.parse(getString(R.string.tel) + mStudio.getGooglePlace().getPhoneNumber()));
+//            }
+//        });
 
-        mWebsite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri website = mStudio.getGooglePlace().getWebsiteUri();
-                if (website != null) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(website);
-                    startActivity(i);
-                } else {
-                    mWebsite.setImageResource(R.drawable.ic_earth_off_black_48dp);
-                    mWebsite.setEnabled(false);
-                }
-            }
-        });
+//        mWebsiteBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Uri website = mStudio.getGooglePlace().getWebsiteUri();
+//                if (website != null) {
+//                    Intent i = new Intent(Intent.ACTION_VIEW);
+//                    i.setData(website);
+//                    startActivity(i);
+//                } else {
+//                    mWebsiteBtn.setImageResource(R.drawable.ic_earth_off_black_48dp);
+//                    mWebsiteBtn.setEnabled(false);
+//                }
+//            }
+//        });
 
-        mRating.setRating(mStudio.getRating());
+        mRatingBar.setRating(mStudio.getRating());
+    }
+
+    @Override
+    public void onStudioInfoLoaded() {
+//        displayInfo();
+        showMarker(mStudio.getLocation());
+    }
+
+    @Override
+    public void onStudioLoaded(Studio source) {
+
     }
 }

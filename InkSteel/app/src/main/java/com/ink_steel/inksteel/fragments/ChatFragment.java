@@ -23,16 +23,15 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCreatedListener,
-        DatabaseManager.ChatListener {
+public class ChatFragment extends Fragment implements
+        DatabaseManager.ChatRoomListener, DatabaseManager.ChatListener {
 
     private static final String EMAIL = "email";
     private ImageView mImageView;
     private TextView mTextView;
-    private DatabaseManager mManager;
+    private DatabaseManager.ChatManager mManager;
     private ArrayList<Message> mMessages;
     private MessageAdapter mAdapter;
-    private RecyclerView mRecyclerView;
     private ChatRoom mChatRoom;
 
     public ChatFragment() {
@@ -58,15 +57,14 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
         ImageButton mMsgbtn = view.findViewById(R.id.chat_send_btn);
         final EditText messageEt = view.findViewById(R.id.chat_message_et);
 
-        String email = getArguments().getString(EMAIL);
-        mManager = DatabaseManager.getInstance();
-        mChatRoom = mManager.isChatRoomCreated(email);
-        if (mChatRoom == null)
-            mManager.createChatRoom(email, this);
-        else {
-            displayChatRoom();
-            loadChatRoomMessages();
-        }
+        mManager = DatabaseManager.getChatManager();
+
+        mMessages = new ArrayList<>();
+        RecyclerView recyclerView = view.findViewById(R.id.chat_rv);
+        mAdapter = new MessageAdapter(mMessages, mManager.getCurrentUser().getEmail());
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mManager.getChatRoom(this, getArguments().getString(EMAIL));
 
         mMsgbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,18 +72,13 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
                 String msg = messageEt.getText().toString();
                 if (!msg.isEmpty()) {
                     Message message = new Message(mManager.getCurrentUser().getEmail(), msg,
-                            new Date().getTime());
+                            new Date().getTime(), false);
                     mManager.addMessage(message, mChatRoom.getChatId(), mChatRoom.getEmail());
                     messageEt.setText("");
                 }
             }
         });
 
-        mMessages = new ArrayList<>();
-        mRecyclerView = view.findViewById(R.id.chat_rv);
-        mAdapter = new MessageAdapter(mMessages, mManager.getCurrentUser().getEmail());
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return view;
     }
@@ -98,33 +91,46 @@ public class ChatFragment extends Fragment implements DatabaseManager.ChatRoomCr
     }
 
     @Override
-    public void onChatRoomCreated(ChatRoom chatRoom) {
-        mChatRoom = chatRoom;
-        displayChatRoom();
-        loadChatRoomMessages();
-    }
-
-    @Override
-    public void onMessagesLoaded() {
-        mMessages.addAll(mManager.getChatMessages());
-        mRecyclerView.scrollToPosition(mMessages.size() - 1);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onMessageAdded(Message message) {
-        mMessages.add(message);
-        mRecyclerView.scrollToPosition(mMessages.size() - 1);
-        mAdapter.notifyItemInserted(mMessages.size() - 1);
+    public void onStart() {
+        super.onStart();
+        mManager.registerChatRoomListener(this);
     }
 
     @Override
     public void onStop() {
-        mManager.unregisterChatListener();
+        mManager.unregisterChatRoomListener();
         super.onStop();
     }
 
-    private void loadChatRoomMessages() {
-        mManager.getChatMessagesById(mChatRoom.getChatId(), this);
+    @Override
+    public void onChatRoomAdded(ChatRoom chatRooms) {
+
+    }
+
+    @Override
+    public void onChatRoomModified(ChatRoom chatRoom) {
+
+    }
+
+    @Override
+    public void onChatRoomLoaded() {
+        mChatRoom = mManager.getChatRoom();
+        displayChatRoom();
+    }
+
+    @Override
+    public void onError(String message) {
+
+    }
+
+    @Override
+    public void onMessageAdded(Message message, boolean isNew) {
+        if (!isNew) {
+            mMessages.add(0, message);
+            mAdapter.notifyItemInserted(0);
+        } else {
+            mMessages.add(message);
+            mAdapter.notifyItemInserted(mMessages.size() - 1);
+        }
     }
 }

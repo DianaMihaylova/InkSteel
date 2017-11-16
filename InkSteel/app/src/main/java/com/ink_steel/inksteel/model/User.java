@@ -1,11 +1,13 @@
 package com.ink_steel.inksteel.model;
 
-import android.support.annotation.NonNull;
+import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class User implements Serializable, Comparable<User> {
+public class User implements Serializable {
 
     private String email;
     private String name;
@@ -17,6 +19,10 @@ public class User implements Serializable, Comparable<User> {
     private ArrayList<String> liked;
 
     public User() {
+    }
+
+    public User(String email) {
+        this.email = email;
     }
 
     public User(String email, String name, String age, String city, String profileImage,
@@ -31,11 +37,7 @@ public class User implements Serializable, Comparable<User> {
         this.liked = liked;
     }
 
-    public User(String email, String name, String age, String city, String profileImage) {
-        this(email, name, age, city, profileImage,
-                new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>());
-    }
-
+    @Exclude
     public void updateUserInfo(String name, String age, String city) {
         this.name = name;
         this.age = age;
@@ -63,19 +65,36 @@ public class User implements Serializable, Comparable<User> {
     }
 
     public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
+        if (profileImage != null && !profileImage.isEmpty())
+            this.profileImage = profileImage;
     }
 
     public ArrayList<String> getGallery() {
+        if (gallery == null)
+            gallery = new ArrayList<>();
         return gallery;
     }
 
     public ArrayList<String> getFriends() {
+        if (friends == null)
+            friends = new ArrayList<>();
         return friends;
     }
 
     public ArrayList<String> getLiked() {
+        if (liked == null)
+            liked = new ArrayList<>();
         return liked;
+    }
+
+    @Exclude
+    public Map<String, Object> getUserInfo() {
+        Map<String, Object> info = new HashMap<>();
+        info.put("name", name);
+        info.put("city", city);
+        info.put("age", age);
+        info.put("profileImage", profileImage);
+        return info;
     }
 
     @Override
@@ -83,8 +102,4 @@ public class User implements Serializable, Comparable<User> {
         return obj instanceof User && email.equals(((User) obj).email);
     }
 
-    @Override
-    public int compareTo(@NonNull User o) {
-        return email.compareTo(o.email);
-    }
 }

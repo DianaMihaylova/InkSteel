@@ -65,9 +65,9 @@ public class StudiosAdapter extends RecyclerView.Adapter<StudiosAdapter.PostsVie
         }
 
         void bind(Studio studio) {
-            String url = studio.getImageUrl();
+            String url = studio.getPhotoUrl();
             if (url != null)
-                Picasso.with(itemView.getContext()).load(studio.getImageUrl()).into(image);
+                Picasso.with(itemView.getContext()).load(studio.getPhotoUrl()).into(image);
             else {
                 image.setImageResource(R.drawable.placeholder);
             }

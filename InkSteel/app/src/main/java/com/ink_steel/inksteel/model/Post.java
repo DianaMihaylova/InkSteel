@@ -1,13 +1,11 @@
 package com.ink_steel.inksteel.model;
 
-import android.support.annotation.NonNull;
-
 import com.google.firebase.firestore.Exclude;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Post implements Comparable<Post> {
+public class Post {
 
     private String postId;
     private String userEmail;
@@ -22,28 +20,23 @@ public class Post implements Comparable<Post> {
     }
 
     public Post(String postId, String userEmail, long createdAt, String urlProfileImage,
-                String urlImage, String urlThumbnailImage, String description) {
+                String urlImage, String urlThumbnailImage, String description,
+                ArrayList<Integer> reactions) {
         this.postId = postId;
         this.userEmail = userEmail;
-        this.createdAt = createdAt;
         this.urlProfileImage = urlProfileImage;
         this.urlImage = urlImage;
+        this.createdAt = createdAt;
         this.urlThumbnailImage = urlThumbnailImage;
         this.description = description;
-        reactions = new ArrayList<>();
-        Collections.addAll(reactions, 0, 0, 0, 0);
+        if (reactions.size() == 0) {
+            Collections.addAll(reactions, 0, 0, 0, 0);
+        }
+        this.reactions = reactions;
     }
 
-    public Post(String postId, String userEmail, long createdAt, String urlProfileImage,
-                String urlImage, String urlThumbnailImage, String description,
-                int like, int blush, int devil, int dazed) {
-        this(postId, userEmail, createdAt, urlProfileImage,
-                urlImage, urlThumbnailImage, description);
-        reactions.clear();
-        reactions.add(like);
-        reactions.add(blush);
-        reactions.add(devil);
-        reactions.add(dazed);
+    public String getPostId() {
+        return postId;
     }
 
     public String getUserEmail() {
@@ -62,10 +55,6 @@ public class Post implements Comparable<Post> {
         return urlImage;
     }
 
-    public String getPostId() {
-        return postId;
-    }
-
     public String getUrlThumbnailImage() {
         return urlThumbnailImage;
     }
@@ -79,26 +68,68 @@ public class Post implements Comparable<Post> {
     }
 
     @Exclude
-    public int getReactionCount(String type) {
-        if (type == null)
-            return 0;
+    public int getReactionCount(ReactionType type) {
         switch (type) {
-            case "like":
+            case LIKE:
                 return reactions.get(0);
-            case "blush":
+            case BLUSH:
                 return reactions.get(1);
-            case "devil":
+            case DEVIL:
                 return reactions.get(2);
-            case "dazed":
+            case DAZED:
                 return reactions.get(3);
         }
         return 0;
     }
 
-    @Override
-    public int compareTo(@NonNull Post post) {
-        if (postId.equals(post.postId))
-            return 0;
-        return (int) (post.createdAt - createdAt);
+    @Exclude
+    public void addReaction(ReactionType type) {
+        int reaction;
+        switch (type) {
+            case LIKE:
+                reaction = reactions.get(0) + 1;
+                reactions.set(0, reaction);
+                break;
+            case BLUSH:
+                reaction = reactions.get(1) + 1;
+                reactions.set(1, reaction);
+                break;
+            case DEVIL:
+                reaction = reactions.get(2) + 1;
+                reactions.set(2, reaction);
+                break;
+            case DAZED:
+                reaction = reactions.get(3) + 1;
+                reactions.set(3, reaction);
+                break;
+        }
     }
+
+    @Exclude
+    public void removeReaction(ReactionType type) {
+        int reaction;
+        switch (type) {
+            case LIKE:
+                reaction = reactions.get(0) - 1;
+                reactions.set(0, reaction);
+                break;
+            case BLUSH:
+                reaction = reactions.get(1) - 1;
+                reactions.set(1, reaction);
+                break;
+            case DEVIL:
+                reaction = reactions.get(2) - 1;
+                reactions.set(2, reaction);
+                break;
+            case DAZED:
+                reaction = reactions.get(3) - 1;
+                reactions.set(3, reaction);
+                break;
+        }
+    }
+
+    public enum ReactionType {
+        LIKE, BLUSH, DEVIL, DAZED
+    }
+
 }

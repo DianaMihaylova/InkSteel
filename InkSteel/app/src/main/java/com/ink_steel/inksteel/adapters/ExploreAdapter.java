@@ -26,6 +26,7 @@ public class ExploreAdapter extends BaseAdapter {
         mContext = context;
     }
 
+
     @Override
     public int getCount() {
         return mUsers.size();
@@ -46,9 +47,11 @@ public class ExploreAdapter extends BaseAdapter {
 
         View v;
         if (position % 2 == 0) {
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_explore, parent, false);
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_explore, parent,
+                    false);
         } else {
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_explore_reverse, parent, false);
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_explore_reverse,
+                    parent, false);
         }
 
         User user = (User) getItem(position);

@@ -1,110 +1,116 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:background="@color/colorBackgroundDark"
-              tools:context="com.ink_steel.inksteel.fragments.ProfileFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackgroundDark"
+    android:orientation="vertical"
+    tools:context="com.ink_steel.inksteel.fragments.ProfileFragment">
 
     <TextView
+        style="@style/FontText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        style="@style/FontText"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="@string/profile"
         android:textColor="@android:color/black"
-        android:textSize="36sp"/>
+        android:textSize="36sp" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/colorPrimaryDark"/>
+        android:background="@color/colorPrimaryDark" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:paddingBottom="16dp"
-        android:paddingTop="16dp"
         android:background="@color/colorPrimary"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp">
+
         <ImageView
             android:id="@+id/profile"
             android:layout_width="wrap_content"
-            android:layout_gravity="center"
             android:layout_height="0dp"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:contentDescription="@string/user_s_profile_picture"
-            android:src="@drawable/tatto1"/>
+            android:src="@drawable/tatto1" />
 
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/colorPrimaryDark"/>
+        android:background="@color/colorPrimaryDark" />
+
     <TextView
         android:id="@+id/qwerty"
+        style="@style/FontText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="@string/username"
-        android:layout_marginTop="8dp"
-        android:textSize="30sp"
-        style="@style/FontText"/>
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/user_email"
+        style="@style/FontText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/email"
-        android:textSize="30sp"
-        style="@style/FontText"/>
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/user_age"
+        style="@style/FontText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/age"
-        android:textSize="30sp"
-        style="@style/FontText"/>
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/user_city"
+        style="@style/FontText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/city"
         android:paddingBottom="8dp"
-        android:textSize="30sp"
-        style="@style/FontText"/>
+        android:text="@string/city"
+        android:textSize="30sp" />
 
     <LinearLayout
         android:id="@+id/layout_btn"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:visibility="gone"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/btn_gallery"
+            style="@style/Text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_weight="2"
             android:background="@drawable/custom_button_blue"
             android:text="@string/gallery"
-            style="@style/Text"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/btn_msg"
+            style="@style/Text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
@@ -112,47 +118,46 @@
             android:layout_weight="2"
             android:background="@drawable/custom_button_blue"
             android:text="@string/friends"
-            android:textSize="20sp"
-            style="@style/Text"/>
+            android:textSize="20sp" />
 
         <ImageButton
             android:id="@+id/btn_logout"
+            style="@style/Text"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:background="@drawable/custom_button_blue"
+            android:contentDescription="@string/user_profile_image"
             android:src="@android:drawable/ic_lock_power_off"
-            android:text="@string/log_out"
-            style="@style/Text"
-            android:contentDescription="@string/user_profile_image" />
+            android:text="@string/log_out" />
 
     </LinearLayout>
 
     <Button
         android:id="@+id/btn_edit_profile"
+        style="@style/Text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/custom_button_blue"
-        android:visibility="gone"
         android:text="@string/edit_profile"
         android:textSize="20sp"
-        style="@style/Text"/>
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/btn_friend_gallery"
+        style="@style/Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="16dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/custom_button_blue"
-        android:text="@string/gallery"
         android:padding="8dp"
-        android:visibility="gone"
+        android:text="@string/gallery"
         android:textSize="24sp"
-        style="@style/Text"/>
+        android:visibility="gone" />
 
 </LinearLayout>

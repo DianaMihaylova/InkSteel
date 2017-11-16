@@ -72,7 +72,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.PostsV
                     .load(chatRoom.getProfilePicture())
                     .placeholder(R.drawable.placeholder_posts)
                     .into(image);
-            if (!chatRoom.isSeen())
+            if (!chatRoom.isSeen() && chatRoom.getLastMessageSender().equals(chatRoom.getEmail()))
                 lastMsg.setTypeface(null, Typeface.BOLD);
             lastMsg.setText(chatRoom.getLastMessage());
             SimpleDateFormat format = new SimpleDateFormat("hh:mm, dd MMM",
